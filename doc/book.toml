@@ -1,0 +1,6 @@
+[book]
+authors = ["Lucas S. Vieira"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Majestic Lisp"

@@ -1,0 +1,19 @@
+#+TITLE: Teste de exportação
+#+language: pt-br
+#+options: toc:nil
+
+* Testando a Exportação
+
+Exportação.
+
+#+begin_src C
+#include <u.h>
+#include <libc.h>
+
+void
+main()
+{
+    print("Hello, world!\n");
+    exits(0);
+}
+#+end_src
