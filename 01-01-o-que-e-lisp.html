@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Teste - Majestic Lisp</title>
+        <title>O que é Lisp? - Majestic Lisp</title>
 
 
         <!-- Custom HTML head -->
@@ -81,7 +81,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="teste.html" class="active"><strong aria-hidden="true">1.</strong> Teste</a></li><li class="chapter-item expanded "><a href="00-agradecimentos.html"><strong aria-hidden="true">2.</strong> Agradecimentos</a></li><li class="chapter-item expanded "><a href="01-introducao.html"><strong aria-hidden="true">3.</strong> Introdução</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="01-01-o-que-e-lisp.html"><strong aria-hidden="true">3.1.</strong> O que é Lisp?</a></li><li class="chapter-item expanded "><a href="01-02-majestic-lisp.html"><strong aria-hidden="true">3.2.</strong> Majestic Lisp</a></li><li class="chapter-item expanded "><a href="01-03-sobre-programacao-instruida.html"><strong aria-hidden="true">3.3.</strong> Sobre Programação Instruída</a></li><li class="chapter-item expanded "><a href="01-04-como-ler-este-documento.html"><strong aria-hidden="true">3.4.</strong> Como ler este documento</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="teste.html"><strong aria-hidden="true">1.</strong> Teste</a></li><li class="chapter-item expanded "><a href="00-agradecimentos.html"><strong aria-hidden="true">2.</strong> Agradecimentos</a></li><li class="chapter-item expanded "><a href="01-introducao.html"><strong aria-hidden="true">3.</strong> Introdução</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="01-01-o-que-e-lisp.html" class="active"><strong aria-hidden="true">3.1.</strong> O que é Lisp?</a></li><li class="chapter-item expanded "><a href="01-02-majestic-lisp.html"><strong aria-hidden="true">3.2.</strong> Majestic Lisp</a></li><li class="chapter-item expanded "><a href="01-03-sobre-programacao-instruida.html"><strong aria-hidden="true">3.3.</strong> Sobre Programação Instruída</a></li><li class="chapter-item expanded "><a href="01-04-como-ler-este-documento.html"><strong aria-hidden="true">3.4.</strong> Como ler este documento</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -142,25 +142,58 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="testando-a-exportação"><a class="header" href="#testando-a-exportação">Testando a Exportação</a></h1>
-<p>Exportação.</p>
-<pre><code class="language-C">#include &lt;u.h&gt;
-#include &lt;libc.h&gt;
+                        <h1 id="o-que-é-lisp"><a class="header" href="#o-que-é-lisp">O que é Lisp?</a></h1>
+<p>Antes de mais nada, é essencial ressaltar que a linguagem que construiremos ao longo desse texto é um dialeto de Lisp.</p>
+<p>LISP, acrônimo para <em>List Processor</em> (processador de listas), é um formalismo inicialmente definido por <mccarthy1960>, e então polido até tornar-se uma linguagem de programação propriamente dita. Posteriormente, essa linguagem seria lançada como LISP 1.5.</p>
+<p>Sendo LISP um <em>processador de listas</em>, há uma pretensão de que o usuário possa usufruir de uma situação inusitada: tanto <em>código</em> quanto <em>dados</em> poderiam ser expressados sob a mesma estrutura, uma <em>lista simplesmente encadeada</em> <cormen-pt>.</p>
+<p>Desde o lançamento do LISP 1.5 de McCarthy, a linguagem acabou por tornar-se uma família de linguagens, dotada de diversos dialetos, cada qual com suas idiossincrasias. Mas a maioria deles acabou conservando a característica de expressar diretamente as listas em seus códigos, em uma sintaxe que chamamos de <em>s-expressions</em>. Por isso, dialetos de Lisp normalmente possuem a característica de serem dotados de muitos parênteses na escrita.</p>
+<center>
+<p><img src="./img/Symbolics3640.png" alt="img" /></p>
+<p><small>Symbolics 3640 Lisp Machine.  Fonte: https://en.wikipedia.org/wiki/Lisp_machine. Acesso em 12/09/2020.</small></p>
+</center>
+<p>Muitos dialetos de Lisp tornaram-se populares ao longo da história, inclusive em máquinas comerciais feitas exclusivamente para execução de Lisps, comumente chamadas de <em>Lisp Machines</em>. Nessas máquinas otimizadas para computação simbólica e processamento de listas, todo o sistema operacional era construído usando-se um dialeto de Lisp. Os sistemas incluíam programas extras como um editor de texto vinculado ao sistema, por exemplo. Através do próprio editor de texto, pode-se realizar alterações com impacto em todo o sistema operacional.</p>
+<center>
+<p><img src="img/zmacs.png" alt="img" title="Editor de texto Zmacs, editor do TI Explorer." /></p>
+<p><small>Editor de texto Zmacs, editor do TI Explorer. Fonte: https://alchetron.com/Zmacs. Acesso em 18/09/2020.</small></p>
+</center>
+<p>Apesar dos mais de 50 anos de idade de LISP 1.5, os dialetos de Lisp não deixaram de ter sua popularidade, ainda que modesta. Há muitos dialetos de Lisp modernos, como podemos verificar a seguir.</p>
+<p>O dialeto Common Lisp possui implementações com compiladores nativos, tendo sua performance comparável a linguagens como C e C++. As implementações mais maduras vêm também acompanhadas de um sistema de orientação a objetos poderoso, com despacho de métodos baseado em tipos, e também de um sistema maduro de condições que permite recuperar-se de erros imprevistos manualmente, enquanto o programa é executado.</p>
+<pre><code class="language-lisp">(defun say-hello (name)
+  (format t &quot;Hello, ~a!~%&quot; name))
 
-void
-main()
-{
-    print(&quot;Hello, world!\n&quot;);
-    exits(0);
-}
+(say-hello &quot;Fulano&quot;)
 </code></pre>
+<center><small>Exemplo de código em Common Lisp.</small></center>
+<p>A linguagem Scheme é uma linguagem simples, com uma especificação sucinta. Sendo o carro-chefe dos exemplos explicados em <sicp>, é uma excelente escolha para iniciantes, sobretudo para aqueles que querem melhor entender o paradigma da <em>programação funcional</em>. Sua contraparte – a linguagem Racket, por vezes figurada como um dialeto de Scheme – é como Scheme com ``pilhas incluídas'', possuindo até mesmo um <em>ambiente integrado de desenvolvimento</em> (IDE) próprio, sendo um ambiente propício até mesmo para iniciantes na programação de computadores.</p>
+<pre><code class="language-scheme">(define (say-hello name)
+  (display &quot;Hello, &quot;)
+  (display name)
+  (newline))
+
+(say-hello &quot;Fulano&quot;)
+</code></pre>
+<center><small>Exemplo de código em Scheme.</small></center>
+<p>A linguagem Clojure foi criada por Rich Hickey para ser compatível com a máquina virtual da linguagem Java – a JVM. Atualmente possui grande uso comercial, sendo um dos maiores incentivos para o aprendizado da <em>programação funcional</em>. Sua flexibilidade auxilia inclusive na operabilidade entre programas em Clojure e bibliotecas anteriormente escritas em Java. Possui uma contraparte chamada ClojureScript, que pode ser usada para desenvolvimento web Frontend.</p>
+<pre><code class="language-clojure">(defn say-hello [name]
+  (format &quot;Hello, %s!\n&quot; name))
+
+(say-hello &quot;Fulano&quot;)
+</code></pre>
+<center><small>Exemplo de código em Clojure.</small></center>
+<p>O dialeto Emacs Lisp é utilizado como linguagem de <em>script</em> no editor de texto Emacs. Muito similar a Common Lisp, porém com algumas diferenças bem profundas, permite um nível de modificação extremo no editor de texto homônimo. Isso garante ao editor de texto Emacs a flexibilidade de permitir a construção de extensões poderosas, desde ferramentas avançadas para auxílio na codificação de programas, até a utilização do próprio editor de texto como um gerenciador de janelas do sistema operacional.</p>
+<p><img src="img/elisp.png" alt="img" /></p>
+<p><small>Editor de texto Emacs, editando código Emacs Lisp e Rust ao mesmo tempo, enquanto também navega por notícias via feed RSS.</small></p>
+<p>A seguir, introduziremos as ideias principais do dialeto com atual maior relevância para você, que lê este texto: Majestic Lisp.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="01-introducao.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
 
-                            <a rel="next" href="00-agradecimentos.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="01-02-majestic-lisp.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -170,8 +203,11 @@ main()
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="01-introducao.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
 
-                    <a rel="next" href="00-agradecimentos.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="01-02-majestic-lisp.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

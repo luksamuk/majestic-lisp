@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Teste - Majestic Lisp</title>
+        <title>Como ler este documento - Majestic Lisp</title>
 
 
         <!-- Custom HTML head -->
@@ -81,7 +81,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="teste.html" class="active"><strong aria-hidden="true">1.</strong> Teste</a></li><li class="chapter-item expanded "><a href="00-agradecimentos.html"><strong aria-hidden="true">2.</strong> Agradecimentos</a></li><li class="chapter-item expanded "><a href="01-introducao.html"><strong aria-hidden="true">3.</strong> Introdução</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="01-01-o-que-e-lisp.html"><strong aria-hidden="true">3.1.</strong> O que é Lisp?</a></li><li class="chapter-item expanded "><a href="01-02-majestic-lisp.html"><strong aria-hidden="true">3.2.</strong> Majestic Lisp</a></li><li class="chapter-item expanded "><a href="01-03-sobre-programacao-instruida.html"><strong aria-hidden="true">3.3.</strong> Sobre Programação Instruída</a></li><li class="chapter-item expanded "><a href="01-04-como-ler-este-documento.html"><strong aria-hidden="true">3.4.</strong> Como ler este documento</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="teste.html"><strong aria-hidden="true">1.</strong> Teste</a></li><li class="chapter-item expanded "><a href="00-agradecimentos.html"><strong aria-hidden="true">2.</strong> Agradecimentos</a></li><li class="chapter-item expanded "><a href="01-introducao.html"><strong aria-hidden="true">3.</strong> Introdução</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="01-01-o-que-e-lisp.html"><strong aria-hidden="true">3.1.</strong> O que é Lisp?</a></li><li class="chapter-item expanded "><a href="01-02-majestic-lisp.html"><strong aria-hidden="true">3.2.</strong> Majestic Lisp</a></li><li class="chapter-item expanded "><a href="01-03-sobre-programacao-instruida.html"><strong aria-hidden="true">3.3.</strong> Sobre Programação Instruída</a></li><li class="chapter-item expanded "><a href="01-04-como-ler-este-documento.html" class="active"><strong aria-hidden="true">3.4.</strong> Como ler este documento</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -142,27 +142,30 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="testando-a-exportação"><a class="header" href="#testando-a-exportação">Testando a Exportação</a></h1>
-<p>Exportação.</p>
-<pre><code class="language-C">#include &lt;u.h&gt;
-#include &lt;libc.h&gt;
+                        <h1 id="como-ler-este-documento"><a class="header" href="#como-ler-este-documento">Como ler este documento</a></h1>
+<p>Como citado anteriormente, este documento funciona de forma dupla, constituindo-se de duas partes: primeiro, uma prosa com blocos de código nela inseridos; segundo, o <em>entrelaçamento</em> dos blocos de código em seus respectivos arquivos, o que compõe o texto do código do interpretador de Majestic Lisp.</p>
+<p>A linguagem utilizada na construção do interpretador é a linguagem Rust<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>, uma linguagem construída para <em>programação de sistemas</em>. Usufruiremos dos recursos de Rust para construir o interpretador, mas o livro não é um tutorial dessa linguagem; dito isso, os blocos de código em Rust foram construídos com cuidado para que possam ser o quanto mais acessíveis for possível para leigos nessa linguagem.</p>
+<p>Blocos de implementação de métodos em Rust (iniciados pela palavra-chave <code>impl</code>) foram divididos em certas partes, de forma que pode haver redundância em sua declaração. Isso foi feito para que cada método possa ser estudado e descrito separadamente, onde esse procedimento for pertinente.</p>
+<p>No caso dos exemplos envolvendo código em Majestic Lisp, algumas vezes precisaremos simular entrada e saída de comandos em uma estrutura chamada REPL. O REPL (acrônimo para <em>read, eval, print, loop</em>) nada mais é que a ideia de um console interativo, onde o usuário digitará uma entrada, e em seguida o resultado do processamento dessa entrada será impresso logo abaixo.</p>
+<p>Seguiremos um formato de descrição do REPL onde a entrada do usuário é precedida por um caractere <code>&gt;</code>. O resultado da operação virá logo abaixo, sem um recuo. Em entradas multilinha da parte do usuário, estas respeitarão o recuo produzido pelo caractere <code>&gt;</code>.</p>
+<pre><code>&gt; entrada do usuário
+resultado
 
-void
-main()
-{
-    print(&quot;Hello, world!\n&quot;);
-    exits(0);
-}
+&gt; entrada do usuário
+  com múltiplas linhas
+resultado
 </code></pre>
+<h2 id="footnotes"><a class="header" href="#footnotes">Footnotes</a></h2>
+<p><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <a href="https://www.rust-lang.org/">https://www.rust-lang.org/</a></p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-
-                            <a rel="next" href="00-agradecimentos.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                            <a rel="prev" href="01-03-sobre-programacao-instruida.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
                             </a>
+
 
                         <div style="clear: both"></div>
                     </nav>
@@ -170,10 +173,10 @@ main()
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-
-                    <a rel="next" href="00-agradecimentos.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                    <a rel="prev" href="01-03-sobre-programacao-instruida.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
                     </a>
+
             </nav>
 
         </div>

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Teste - Majestic Lisp</title>
+        <title>Introdução - Majestic Lisp</title>
 
 
         <!-- Custom HTML head -->
@@ -81,7 +81,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="teste.html" class="active"><strong aria-hidden="true">1.</strong> Teste</a></li><li class="chapter-item expanded "><a href="00-agradecimentos.html"><strong aria-hidden="true">2.</strong> Agradecimentos</a></li><li class="chapter-item expanded "><a href="01-introducao.html"><strong aria-hidden="true">3.</strong> Introdução</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="01-01-o-que-e-lisp.html"><strong aria-hidden="true">3.1.</strong> O que é Lisp?</a></li><li class="chapter-item expanded "><a href="01-02-majestic-lisp.html"><strong aria-hidden="true">3.2.</strong> Majestic Lisp</a></li><li class="chapter-item expanded "><a href="01-03-sobre-programacao-instruida.html"><strong aria-hidden="true">3.3.</strong> Sobre Programação Instruída</a></li><li class="chapter-item expanded "><a href="01-04-como-ler-este-documento.html"><strong aria-hidden="true">3.4.</strong> Como ler este documento</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="teste.html"><strong aria-hidden="true">1.</strong> Teste</a></li><li class="chapter-item expanded "><a href="00-agradecimentos.html"><strong aria-hidden="true">2.</strong> Agradecimentos</a></li><li class="chapter-item expanded "><a href="01-introducao.html" class="active"><strong aria-hidden="true">3.</strong> Introdução</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="01-01-o-que-e-lisp.html"><strong aria-hidden="true">3.1.</strong> O que é Lisp?</a></li><li class="chapter-item expanded "><a href="01-02-majestic-lisp.html"><strong aria-hidden="true">3.2.</strong> Majestic Lisp</a></li><li class="chapter-item expanded "><a href="01-03-sobre-programacao-instruida.html"><strong aria-hidden="true">3.3.</strong> Sobre Programação Instruída</a></li><li class="chapter-item expanded "><a href="01-04-como-ler-este-documento.html"><strong aria-hidden="true">3.4.</strong> Como ler este documento</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -142,25 +142,28 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="testando-a-exportação"><a class="header" href="#testando-a-exportação">Testando a Exportação</a></h1>
-<p>Exportação.</p>
-<pre><code class="language-C">#include &lt;u.h&gt;
-#include &lt;libc.h&gt;
-
-void
-main()
-{
-    print(&quot;Hello, world!\n&quot;);
-    exits(0);
-}
-</code></pre>
+                        <h1 id="introdução"><a class="header" href="#introdução">Introdução</a></h1>
+<p>Programação pode ser considerada um trabalho majoritariamente artesanal. Mas uma consideração como essa não é adotada de forma predominante; longe disso, torna-se algo digno de debate, e deixa uma margem para uma interessante troca de opiniões divergentes. Há aqueles que pensem no ato de escrever um programa de computador como algo mecânico em princípio: existiria um quê de criatividade, já que o programador precisa tomar as melhores decisões do ponto de vista do projeto de <em>software</em>; Mas, para tal, enumera-se ferramentas e processos que o auxiliam com planejamento e que, muitas vezes, acabam apontando, sem auxílio de ``intuição'', o melhor caminho a ser seguido nesse processo criativo.</p>
+<p>Apesar de ver a pertinência do uso desses processos (como nos apresenta a disciplina de <em>Engenharia de Software</em>, por exemplo), ainda acredito na programação de computadores como uma <em>arte</em>, algo que envolve muito mais que apenas seguir práticas consolidadas.</p>
+<p>&lt;&amp;verna2018&gt; (p. 4) endossa o aspecto artístico na programação – que, por alguns, é considerado mera luxúria –, inclusive citando antigos apoiadores dessas ideias (como Knuth, Dijkstra e Ershov). Esses pensadores ilustres também buscavam clarificar que a descrição de um programa de computador envolve noções intrínsecas de <em>estética</em>, <em>beleza</em>, <em>estilo</em>, <em>prazer</em> e <em>emoção</em>, que tendem a pender muito mais para o lado artístico que o científico.</p>
+<p>Penso na escrita de um código de programação como sendo um processo muito similar à boa escrita em prosa de qualquer outro tipo de texto. O objetivo do autor é fazer-se entender através do que escreve; para tanto, é imperativo que palavras, orações e demais expressões gramaticais sejam ordenadas de forma inteligível, e o melhor recurso para garantir que o leitor compreenda o texto escrito é a própria leitura do mesmo, especialmente quando é feita por parte do autor.</p>
+<p>Ao escrevermos um programa de computador, realizamos um processo muito similar à composição ou redação. A escrita do código acaba, no fim das contas, por envolver três leitores: o <em>próprio autor</em>, um eventual <em>futuro leitor</em> do código e a <em>máquina</em> em si (leia-se, o compilador ou interpretador, que fica efetivamente responsável por ``compreender'' o código em questão e transformá-lo em linguagem de máquina).</p>
+<p>O ``leitor'' mais fácil de agradar neste trio é a <em>máquina</em>, que não reclamará de aspectos como a estética do código, salvo quando programas como <em>linters</em> forçarem um certo estilo de escrita no processo de programação. Porém, a <em>máquina</em> ainda está suscetível a erros gramaticais ou de interpretação, provenientes de deficiências na escrita do código: estes poderão ocasionar tanto erros que antecedem a execução (quando tratarem-se de código sintaticamente inválido), quanto a execução de algo não-pretendido pelo programador (sendo este o caso do erro de semântica).</p>
+<p>Aqui entra em ação outro potencial leitor do código: o próprio <em>autor</em>, o programador daquele segmento de código em si. O programador precisa verificar o código por erros, e também precisa criar correções. Se a forma como o código foi escrito não facilita o próprio trabalho daquele que o escreveu, então é sinal de que é necessário revisar a forma como o mesmo foi escrito. Escrever código sem preocupar-se com estética ou beleza é um erro comum de muitos programadores, que costumam ignorá-lo por não representar um problema em curto prazo. Mas, se aquele código precisar ser revisitado após algum tempo, o programador será o primeiro a sofrer com as consequências da ilegibilidade e/ou desorganização do próprio trabalho.</p>
+<p>Por fim, temos o último tipo de leitor: o <em>futuro leitor</em> do código, que normalmente seria um terceiro; mas poderíamos pensar até mesmo no programador original, passado um bom tempo desde a última vez que viu o código: aos seus olhos, o programa ter-se-á tornado algo completamente desconhecido… um alienígena.</p>
+<p>Precisamos pensar no código como uma ferramenta <em>didática</em>. O código precisa ser dotado de uma simplicidade autoexplicativa. O <em>futuro leitor</em> precisará consertar algo no mesmo ou adicionar uma nova funcionalidade; para tanto, a forma de escrever o código será o melhor guia para deixá-lo a par dos passos a serem tomados, ou dos processos a serem seguidos para adicionar, remover ou modificar certas operações.</p>
+<p>No espírito deste <em>aspecto didático</em> do código, que requer certa elegância e senso de beleza, é que escrevo este pequeno <em>software</em> em formato de livro. Escrever o interpretador de uma linguagem de programação e definir a especificação da mesma não é uma tarefa trivial, mas é uma tarefa <em>tangível</em>. Para provar esse argumento e também para encorajar outros programadores a utilizarem-se dessas ideias, detalho passo-a-passo todo o raciocínio por trás do planejamento para que se conceba uma linguagem de programação – como um caso especial, uma linguagem que seja um dialeto de Lisp.</p>
+<p>A intenção não é apresentar um produto que seja extremamente polido e que não possa ser modificado posteriormente; antes, o <em>software</em>, assim como qualquer outro texto, é algo <em>vivo</em>, e pode inclusive ser modificado, melhorado ou até mesmo ``traduzido'' para outras linguagens. Por isso, trabalho sob alguns pressupostos, que mais tarde enumerarei, e que segui como regras informais de estilo para esse processo de desenvolvimento.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="00-agradecimentos.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
 
-                            <a rel="next" href="00-agradecimentos.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="01-01-o-que-e-lisp.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -170,8 +173,11 @@ main()
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="00-agradecimentos.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
 
-                    <a rel="next" href="00-agradecimentos.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="01-01-o-que-e-lisp.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
