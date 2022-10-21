@@ -1,0 +1,24 @@
+# Como ler este documento
+
+Como citado anteriormente, este documento funciona de forma dupla, constituindo-se de duas partes: primeiro, uma prosa com blocos de código nela inseridos; segundo, o *entrelaçamento* dos blocos de código em seus respectivos arquivos, o que compõe o texto do código do interpretador de Majestic Lisp.
+
+A linguagem utilizada na construção do interpretador é a linguagem Rust<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>, uma linguagem construída para *programação de sistemas*. Usufruiremos dos recursos de Rust para construir o interpretador, mas o livro não é um tutorial dessa linguagem; dito isso, os blocos de código em Rust foram construídos com cuidado para que possam ser o quanto mais acessíveis for possível para leigos nessa linguagem.
+
+Blocos de implementação de métodos em Rust (iniciados pela palavra-chave `impl`) foram divididos em certas partes, de forma que pode haver redundância em sua declaração. Isso foi feito para que cada método possa ser estudado e descrito separadamente, onde esse procedimento for pertinente.
+
+No caso dos exemplos envolvendo código em Majestic Lisp, algumas vezes precisaremos simular entrada e saída de comandos em uma estrutura chamada REPL. O REPL (acrônimo para *read, eval, print, loop*) nada mais é que a ideia de um console interativo, onde o usuário digitará uma entrada, e em seguida o resultado do processamento dessa entrada será impresso logo abaixo.
+
+Seguiremos um formato de descrição do REPL onde a entrada do usuário é precedida por um caractere `>`. O resultado da operação virá logo abaixo, sem um recuo. Em entradas multilinha da parte do usuário, estas respeitarão o recuo produzido pelo caractere `>`.
+
+```
+> entrada do usuário
+resultado
+
+> entrada do usuário
+  com múltiplas linhas
+resultado
+```
+
+## Footnotes
+
+<sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <https://www.rust-lang.org/>

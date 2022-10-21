@@ -1,0 +1,46 @@
+#+language: pt-br
+#+options: toc:nil
+#+startup: showall inlineimages
+
+* Agradecimentos
+
+A linguagem construída nesse livro dá ao leitor a ideia de um software
+primariamente artesanal, o que leva à crença de que Majestic Lisp seja
+o "esforço  de um  homem só". De  fato, a maior  parte dessa  obra foi
+realizada  em momentos  solitários  e muitas  noites  e madrugadas  de
+insônia e muito café. Todavia, esta não é toda a história.
+
+Nenhuma  obra  pode  ser  concebida   apenas  com  o  esforço  de  uma
+pessoa. Mais especificamente, seria impossível realizar um esforço tão
+audacioso quanto um  livro que ensina como programar  uma linguagem de
+programação, usando apenas o conhecimento contido em uma mente -- que,
+por definição, é extremamente limitado.
+
+Por  esse motivo,  gostaria  de  agradecer a  algumas  pessoas que  me
+ajudaram  ou  ajudam ao  longo  da  escrita  desse projeto;  se  fosse
+possível dizer  que uma parte  de mim viveria, para  a posterioridade,
+nesta obra,  então certamente parte  dessas outras pessoas  sofreria o
+mesmo destino.
+
+Obrigado  a Paul  Graham,  criador  da linguagem  Bel,  que serviu  de
+inspiração direta para Majestic Lisp.  Se Bel não tivesse sido criada,
+a  possibilidade da  criação de  Majestic  Lisp não  teria surgido  em
+primeiro lugar.
+
+Obrigado a Jerônimo Pellegrini, que  muito me forneceu recomendações e
+orientações a  respeito da forma  como linguagens da família  Lisp são
+programadas.  Ainda que  não  tenha seguido  seus  conselhos à  risca,
+isso tornou Majestic Lisp uma linguagem melhor.
+
+Obrigado  aos meus  amigos da  comunidade Rust  Brasil: Elias,  Bruno,
+Tiago, Renan,  e muitos outros mais  a quem recorri ao  discutir sobre
+aspectos em especial da linguagem,  bem como recorri na necessidade de
+conselhos sobre implementação desse projeto na linguagem Rust.
+
+Finalmente,  sem menos  importância,  obrigado ao  Manoel, ao  Edgard;
+novamente  ao Renan  e  ao Jerônimo,  e também  aos  demais amigos  da
+comunidade  Common Lisp  Brasil, onde  tudo se  discute, o  que inclui
+tecnologia  em geral  e  outros dialetos  de Lisp.   Ali  mesmo foi  o
+berçário de  Majestic; ali se criou,  muito antes da linguagem  Bel, o
+embrião do que  seria um Lisp baseado em algumas  das minhas opiniões,
+ainda que muitas vezes infundadas.
