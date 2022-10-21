@@ -1,0 +1,50 @@
+name: Deploy Book
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:36
+    steps:
+      - name: Adjust locale and dependencies
+        continue-on-error: true
+        run: |
+          dnf install -y langpacks-pt_BR glibc-locale-source curl tar \
+          cmake gcc clang make git rsync
+          localedef --verbose --force -i pt_BR -f UTF-8 pt_BR.UTF-8
+          export LANG=pt_BR.UTF-8
+          echo "LANG=pt_BR.UTF-8" >> $GITHUB_ENV
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+        with:
+          profile: minimal
+          toolchain: stable
+
+      - name: Rust build cache
+        uses: Swatinem/rust-cache@v2
+          
+      - name: Install mdBook
+        run: |
+          cargo install mdbook
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Generate book
+        run: |
+          cd doc
+          mdbook build
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: doc/book
