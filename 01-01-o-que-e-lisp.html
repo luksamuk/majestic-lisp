@@ -1,237 +1,380 @@
-<!DOCTYPE HTML>
-<html lang="en" class="sidebar-visible no-js light">
-    <head>
-        <!-- Book generated using mdBook -->
-        <meta charset="UTF-8">
-        <title>O que é Lisp? - Majestic Lisp</title>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+<head>
+<!-- 2022-10-23 dom 20:03 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>O que é Lisp?</title>
+<meta name="author" content="Lucas S. Vieira" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="./main.css" />
+<link rel="stylesheet" type="text/css" href="./syntax.css" />
+<link id="theme-css" rel="stylesheet" type="text/css" href="./dark-theme.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="../img/cat-i-mage.jpg">
+<meta name="theme-color" content="#14171e">
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="01-introducao.html"> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">O que é Lisp?</h1>
+<p>
+Antes  de  mais  nada,  é  essencial ressaltar  que  a  linguagem  que
+construiremos    ao   longo    desse   texto    é   um    dialeto   de
+Lisp.
+</p>
+
+<p>
+LISP,  acrônimo para  <i>List  Processor</i> (processador  de  listas), é  um
+formalismo inicialmente definido  por McCarthy (1960), e então
+polido  até  tornar-se  uma   linguagem  de  programação  propriamente
+dita. Posteriormente, essa linguagem seria lançada como LISP 1.5.
+</p>
+
+<p>
+Sendo LISP um <i>processador de listas</i>, há uma pretensão de que o usuário
+possa usufruir  de uma situação  inusitada: tanto <i>código</i>  quanto <i>dados</i>
+poderiam ser expressados sob a mesma estrutura, uma <i>lista simplesmente
+encadeada</i> (CORMEN <i>et al</i>, 2012).
+</p>
+
+<p>
+Desde o  lançamento do LISP  1.5 de  McCarthy, a linguagem  acabou por
+tornar-se uma família de linguagens, dotada de diversos dialetos, cada
+qual com suas idiossincrasias. Mas  a maioria deles acabou conservando
+a característica de  expressar diretamente as listas  em seus códigos,
+em uma  sintaxe que chamamos  de <i>s-expressions</i>. Por isso,  dialetos de
+Lisp normalmente possuem  a característica de serem  dotados de muitos
+parênteses na escrita.
+</p>
 
 
-        <!-- Custom HTML head -->
-        
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#ffffff" />
-
-        <link rel="icon" href="favicon.svg">
-        <link rel="shortcut icon" href="favicon.png">
-        <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
-        <link rel="stylesheet" href="css/print.css" media="print">
-
-        <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="fonts/fonts.css">
-
-        <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
-
-        <!-- Custom theme stylesheets -->
-
-    </head>
-    <body>
-        <!-- Provide site root to javascript -->
-        <script type="text/javascript">
-            var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
-        </script>
-
-        <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
-            try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
-
-                if (theme.startsWith('"') && theme.endsWith('"')) {
-                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
-                }
-
-                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
-                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
-                }
-            } catch (e) { }
-        </script>
-
-        <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
-            var theme;
-            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
-            if (theme === null || theme === undefined) { theme = default_theme; }
-            var html = document.querySelector('html');
-            html.classList.remove('no-js')
-            html.classList.remove('light')
-            html.classList.add(theme);
-            html.classList.add('js');
-        </script>
-
-        <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
-            var html = document.querySelector('html');
-            var sidebar = 'hidden';
-            if (document.body.clientWidth >= 1080) {
-                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
-                sidebar = sidebar || 'visible';
-            }
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
-        </script>
-
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="teste.html"><strong aria-hidden="true">1.</strong> Teste</a></li><li class="chapter-item expanded "><a href="00-agradecimentos.html"><strong aria-hidden="true">2.</strong> Agradecimentos</a></li><li class="chapter-item expanded "><a href="01-introducao.html"><strong aria-hidden="true">3.</strong> Introdução</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="01-01-o-que-e-lisp.html" class="active"><strong aria-hidden="true">3.1.</strong> O que é Lisp?</a></li><li class="chapter-item expanded "><a href="01-02-majestic-lisp.html"><strong aria-hidden="true">3.2.</strong> Majestic Lisp</a></li><li class="chapter-item expanded "><a href="01-03-sobre-programacao-instruida.html"><strong aria-hidden="true">3.3.</strong> Sobre Programação Instruída</a></li><li class="chapter-item expanded "><a href="01-04-como-ler-este-documento.html"><strong aria-hidden="true">3.4.</strong> Como ler este documento</a></li></ol></li></ol>
-            </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
-        </nav>
-
-        <div id="page-wrapper" class="page-wrapper">
-
-            <div class="page">
-                                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky bordered">
-                    <div class="left-buttons">
-                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
-                        </button>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
-                        </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
-                        </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-
-                    <h1 class="menu-title">Majestic Lisp</h1>
-
-                    <div class="right-buttons">
-                        <a href="print.html" title="Print this book" aria-label="Print this book">
-                            <i id="print-button" class="fa fa-print"></i>
-                        </a>
-
-                    </div>
-                </div>
-
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
-                    </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
-                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
-                    });
-                </script>
-
-                <div id="content" class="content">
-                    <main>
-                        <h1 id="o-que-é-lisp"><a class="header" href="#o-que-é-lisp">O que é Lisp?</a></h1>
-<p>Antes de mais nada, é essencial ressaltar que a linguagem que construiremos ao longo desse texto é um dialeto de Lisp.</p>
-<p>LISP, acrônimo para <em>List Processor</em> (processador de listas), é um formalismo inicialmente definido por <mccarthy1960>, e então polido até tornar-se uma linguagem de programação propriamente dita. Posteriormente, essa linguagem seria lançada como LISP 1.5.</p>
-<p>Sendo LISP um <em>processador de listas</em>, há uma pretensão de que o usuário possa usufruir de uma situação inusitada: tanto <em>código</em> quanto <em>dados</em> poderiam ser expressados sob a mesma estrutura, uma <em>lista simplesmente encadeada</em> <cormen-pt>.</p>
-<p>Desde o lançamento do LISP 1.5 de McCarthy, a linguagem acabou por tornar-se uma família de linguagens, dotada de diversos dialetos, cada qual com suas idiossincrasias. Mas a maioria deles acabou conservando a característica de expressar diretamente as listas em seus códigos, em uma sintaxe que chamamos de <em>s-expressions</em>. Por isso, dialetos de Lisp normalmente possuem a característica de serem dotados de muitos parênteses na escrita.</p>
-<center>
-<p><img src="./img/Symbolics3640.png" alt="img" /></p>
-<p><small>Symbolics 3640 Lisp Machine.  Fonte: https://en.wikipedia.org/wiki/Lisp_machine. Acesso em 12/09/2020.</small></p>
-</center>
-<p>Muitos dialetos de Lisp tornaram-se populares ao longo da história, inclusive em máquinas comerciais feitas exclusivamente para execução de Lisps, comumente chamadas de <em>Lisp Machines</em>. Nessas máquinas otimizadas para computação simbólica e processamento de listas, todo o sistema operacional era construído usando-se um dialeto de Lisp. Os sistemas incluíam programas extras como um editor de texto vinculado ao sistema, por exemplo. Através do próprio editor de texto, pode-se realizar alterações com impacto em todo o sistema operacional.</p>
-<center>
-<p><img src="img/zmacs.png" alt="img" title="Editor de texto Zmacs, editor do TI Explorer." /></p>
-<p><small>Editor de texto Zmacs, editor do TI Explorer. Fonte: https://alchetron.com/Zmacs. Acesso em 18/09/2020.</small></p>
-</center>
-<p>Apesar dos mais de 50 anos de idade de LISP 1.5, os dialetos de Lisp não deixaram de ter sua popularidade, ainda que modesta. Há muitos dialetos de Lisp modernos, como podemos verificar a seguir.</p>
-<p>O dialeto Common Lisp possui implementações com compiladores nativos, tendo sua performance comparável a linguagens como C e C++. As implementações mais maduras vêm também acompanhadas de um sistema de orientação a objetos poderoso, com despacho de métodos baseado em tipos, e também de um sistema maduro de condições que permite recuperar-se de erros imprevistos manualmente, enquanto o programa é executado.</p>
-<pre><code class="language-lisp">(defun say-hello (name)
-  (format t &quot;Hello, ~a!~%&quot; name))
-
-(say-hello &quot;Fulano&quot;)
-</code></pre>
-<center><small>Exemplo de código em Common Lisp.</small></center>
-<p>A linguagem Scheme é uma linguagem simples, com uma especificação sucinta. Sendo o carro-chefe dos exemplos explicados em <sicp>, é uma excelente escolha para iniciantes, sobretudo para aqueles que querem melhor entender o paradigma da <em>programação funcional</em>. Sua contraparte – a linguagem Racket, por vezes figurada como um dialeto de Scheme – é como Scheme com ``pilhas incluídas'', possuindo até mesmo um <em>ambiente integrado de desenvolvimento</em> (IDE) próprio, sendo um ambiente propício até mesmo para iniciantes na programação de computadores.</p>
-<pre><code class="language-scheme">(define (say-hello name)
-  (display &quot;Hello, &quot;)
-  (display name)
-  (newline))
-
-(say-hello &quot;Fulano&quot;)
-</code></pre>
-<center><small>Exemplo de código em Scheme.</small></center>
-<p>A linguagem Clojure foi criada por Rich Hickey para ser compatível com a máquina virtual da linguagem Java – a JVM. Atualmente possui grande uso comercial, sendo um dos maiores incentivos para o aprendizado da <em>programação funcional</em>. Sua flexibilidade auxilia inclusive na operabilidade entre programas em Clojure e bibliotecas anteriormente escritas em Java. Possui uma contraparte chamada ClojureScript, que pode ser usada para desenvolvimento web Frontend.</p>
-<pre><code class="language-clojure">(defn say-hello [name]
-  (format &quot;Hello, %s!\n&quot; name))
-
-(say-hello &quot;Fulano&quot;)
-</code></pre>
-<center><small>Exemplo de código em Clojure.</small></center>
-<p>O dialeto Emacs Lisp é utilizado como linguagem de <em>script</em> no editor de texto Emacs. Muito similar a Common Lisp, porém com algumas diferenças bem profundas, permite um nível de modificação extremo no editor de texto homônimo. Isso garante ao editor de texto Emacs a flexibilidade de permitir a construção de extensões poderosas, desde ferramentas avançadas para auxílio na codificação de programas, até a utilização do próprio editor de texto como um gerenciador de janelas do sistema operacional.</p>
-<p><img src="img/elisp.png" alt="img" /></p>
-<p><small>Editor de texto Emacs, editando código Emacs Lisp e Rust ao mesmo tempo, enquanto também navega por notícias via feed RSS.</small></p>
-<p>A seguir, introduziremos as ideias principais do dialeto com atual maior relevância para você, que lê este texto: Majestic Lisp.</p>
-
-                    </main>
-
-                    <nav class="nav-wrapper" aria-label="Page navigation">
-                        <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="01-introducao.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
-                            </a>
-
-                            <a rel="next" href="01-02-majestic-lisp.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-
-                        <div style="clear: both"></div>
-                    </nav>
-                </div>
-            </div>
-
-            <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="01-introducao.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
-                    </a>
-
-                    <a rel="next" href="01-02-majestic-lisp.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
-            </nav>
-
-        </div>
+<div id="org9a566f9" class="figure">
+<p><img src="./img/Symbolics3640.png" alt="Symbolics3640.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Symbolics 3640 Lisp Machine.  Fonte: <a href="https://en.wikipedia.org/wiki/Lisp_machine">https://en.wikipedia.org/wiki/Lisp_machine</a>. Acesso em 12/09/2020.</p>
+</div>
 
 
+<p>
+Muitos dialetos  de Lisp tornaram-se  populares ao longo  da história,
+inclusive em  máquinas comerciais feitas exclusivamente  para execução
+de  Lisps,  comumente  chamadas  de <i>Lisp  Machines</i>.   Nessas  máquinas
+otimizadas para computação simbólica e processamento de listas, todo o
+sistema operacional  era construído usando-se  um dialeto de  Lisp. Os
+sistemas incluíam programas  extras como um editor  de texto vinculado
+ao sistema, por  exemplo. Através do próprio editor  de texto, pode-se
+realizar alterações com impacto em todo o sistema operacional.
+</p>
 
 
-        <script type="text/javascript">
-            window.playground_copyable = true;
-        </script>
+<div id="org66ffc8b" class="figure">
+<p><img src="img/zmacs.png" alt="zmacs.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Editor de texto Zmacs, editor do TI Explorer. Fonte: <a href="https://alchetron.com/Zmacs">https://alchetron.com/Zmacs</a>. Acesso em 18/09/2020.</p>
+</div>
 
 
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
-
-        <!-- Custom JS scripts -->
+<p>
+Apesar dos mais de  50 anos de idade de LISP 1.5,  os dialetos de Lisp
+não deixaram  de ter  sua popularidade, ainda  que modesta.  Há muitos
+dialetos de Lisp modernos, como podemos verificar a seguir.
+</p>
 
 
-    </body>
+<p>
+O dialeto Common Lisp  possui implementações com compiladores nativos,
+tendo  sua  performance comparável  a  linguagens  como  C e  C++.  As
+implementações mais maduras  vêm também acompanhadas de  um sistema de
+orientação  a objetos  poderoso, com  despacho de  métodos baseado  em
+tipos,  e  também  de  um  sistema maduro  de  condições  que  permite
+recuperar-se de  erros imprevistos manualmente, enquanto  o programa é
+executado.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 1: </span>Exemplo de código em Common Lisp.</label><pre class="src src-lisp"><span style="color: #ffd700;">(</span><span style="color: #569cd6;">defun</span> <span style="color: #dcdcaa;">say-hello</span> <span style="color: #da70d6;">(</span>name<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>format t <span style="color: #ce9178;">"Hello, ~a!~%"</span> name<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span>say-hello <span style="color: #ce9178;">"Fulano"</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<p>
+A  linguagem Scheme  é uma  linguagem simples,  com uma  especificação
+sucinta.   Sendo   o   carro-chefe    dos   exemplos   explicados   em
+Abelson, Sussman e Sussman (1996), é  uma excelente  escolha para  iniciantes, sobretudo
+para aqueles  que querem  melhor entender  o paradigma  da <i>programação
+funcional</i>. Sua contraparte  &#x2013; a linguagem Racket,  por vezes figurada
+como um dialeto  de Scheme &#x2013; é como Scheme  com ``pilhas incluídas'',
+possuindo  até mesmo  um <i>ambiente  integrado de  desenvolvimento</i> (IDE)
+próprio,  sendo um  ambiente  propício até  mesmo  para iniciantes  na
+programação de computadores.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 2: </span>Exemplo de código em Scheme.</label><pre class="src src-scheme"><span style="color: #ffd700;">(</span><span style="color: #569cd6;">define</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">say-hello</span> name<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>display <span style="color: #ce9178;">"Hello, "</span><span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>display name<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>newline<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span>say-hello <span style="color: #ce9178;">"Fulano"</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<p>
+A linguagem Clojure foi criada por Rich Hickey para ser compatível com
+a máquina virtual da linguagem Java &#x2013; a JVM. Atualmente possui grande
+uso comercial, sendo  um dos maiores incentivos para  o aprendizado da
+<i>programação   funcional</i>.  Sua   flexibilidade  auxilia   inclusive  na
+operabilidade entre  programas em Clojure e  bibliotecas anteriormente
+escritas em  Java. Possui  uma contraparte chamada  ClojureScript, que
+pode ser usada para desenvolvimento web Frontend.
+</p>
+
+<div class="org-src-container">
+<label class="org-src-name"><span class="listing-number">Listing 3: </span>Exemplo de código em Clojure.</label><pre class="src src-clojure"><span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> <span style="color: #dcdcaa;">say-hello</span> <span style="color: #da70d6;">[</span>name<span style="color: #da70d6;">]</span>
+  <span style="color: #da70d6;">(</span>format <span style="color: #ce9178;">"Hello, %s!</span><span style="color: #ce9178; font-weight: bold;">\n</span><span style="color: #ce9178;">"</span> name<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span>say-hello <span style="color: #ce9178;">"Fulano"</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<p>
+O dialeto Emacs Lisp é utilizado como linguagem de <i>script</i> no editor de
+texto Emacs. Muito similar a Common Lisp, porém com algumas diferenças
+bem profundas,  permite um nível  de modificação extremo no  editor de
+texto homônimo. Isso garante ao  editor de texto Emacs a flexibilidade
+de  permitir a  construção de  extensões poderosas,  desde ferramentas
+avançadas para auxílio  na codificação de programas,  até a utilização
+do próprio editor  de texto como um gerenciador de  janelas do sistema
+operacional.
+</p>
+
+
+<div id="org3d1a027" class="figure">
+<p><img src="img/elisp.png" alt="elisp.png" />
+</p>
+<p><span class="figure-number">Figure 3: </span>Editor de texto Emacs, editando código Emacs Lisp e Rust ao mesmo tempo, enquanto também navega por notícias via feed RSS.</p>
+</div>
+
+
+<p>
+A seguir,  introduziremos as  ideias principais  do dialeto  com atual
+maior relevância para você, que lê este texto: Majestic Lisp.
+</p>
+
+<div id="outline-container-orga6ecaad" class="outline-2">
+<h2 id="orga6ecaad">Bibliografia</h2>
+<div class="outline-text-2" id="text-orga6ecaad">
+<p>
+
+</p>
+
+<p>
+Harold Abelson and Gerald Jay Sussman and Julie Sussman (1996). <i>Structure and Interpretation of Computer Programs</i>, MIT Press.</p>
+
+<p>
+John McCarthy (1960). <i>Recursive Functions of Symbolic Expressions and Their Computation by Machine, Part I</i>, Association for Computing Machinery.</p>
+
+<p>
+Thomas H. Cormen and Charles E. Leiserson and Ronald R. Rivest and Clifford Stein (2012). <i>Algoritmos</i>, Elsevier.</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Lucas S. Vieira</p>
+<p class="date">Created: 2022-10-23 dom 20:03</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
 </html>

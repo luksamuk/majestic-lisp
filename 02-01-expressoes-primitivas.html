@@ -1,0 +1,818 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+<head>
+<!-- 2022-10-23 dom 20:03 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Expressões primitivas</title>
+<meta name="author" content="Lucas S. Vieira" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="./main.css" />
+<link rel="stylesheet" type="text/css" href="./syntax.css" />
+<link id="theme-css" rel="stylesheet" type="text/css" href="./dark-theme.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="../img/cat-i-mage.jpg">
+<meta name="theme-color" content="#14171e">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="02-sintaxe.html"> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Expressões primitivas</h1>
+<p>
+Majestic Lisp é uma linguagem cuja construção se inicia por seus tipos
+mais básicos  de dados. Por  isso, é pertinente que  comecemos falando
+dos tipos como elementos mais básicos da linguagem.
+</p>
+
+<p>
+As expressões analisadas a seguir  são <i>expressões primitivas</i>, ou seja,
+os  tipos  mais  básicos  de  expressões que  podem  ser  escritas  na
+linguagem.
+</p>
+
+<div id="outline-container-orgb0cd712" class="outline-2">
+<h2 id="orgb0cd712"><span class="section-number-2">1.</span> Números</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Expressões  numéricas   representam  <i>símbolos</i>  especiais,   que  serão
+tratados como sendo  do tipo básico dos <i>números</i>.  Por exemplo, podemos
+representar  números  inteiros  (matematicamente,  parte  do  conjunto
+\(\mathbb{Z}\)) diretamente, com ou sem um sinal negativo em sua frente.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">-1
+</pre>
+</div>
+
+<pre class="example">
+-1
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-majestic">23
+</pre>
+</div>
+
+<pre class="example">
+23
+</pre>
+
+
+<p>
+Apesar  de os  <i>números</i> comporem  um  único grande  tipo, temos  alguns
+desdobramentos   de    subtipos   nos   mesmos,   por    questões   de
+praticidade.    O   exemplo    acima   demonstra    números   <i>inteiros</i>
+(<code>integer</code>). Abaixo,  podemos ver  um exemplo de  números do  tipo <i>ponto
+flutuante</i>  (<code>float</code>). Esse  subtipo  numérico é  capaz  de armazenar  um
+número  onde  casas  decimais   possam  ser  discriminadas,  sendo  um
+simulacro de números pertencentes ao conjunto dos números reais (\(\mathbb{R}\)).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">0.5
+</pre>
+</div>
+
+<pre class="example">
+0.5
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-majestic">1.0
+</pre>
+</div>
+
+<pre class="example">
+1.0
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-majestic">.125
+</pre>
+</div>
+
+<pre class="example">
+0.125
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-majestic">2.
+</pre>
+</div>
+
+<pre class="example">
+2.0
+</pre>
+
+
+<p>
+Um  <code>float</code> sempre  será escrito  com um  único <i>ponto</i>  em alguma  parte,
+geralmente  dividindo a  parte  inteira  e a  parte  decimal do  ponto
+flutuante. Caso o  ponto esteja no início, Majestic Lisp  assume que a
+<i>parte inteira</i> do número seja nula; caso esteja no final, assume-se que
+a <i>parte decimal</i> do número seja nula.
+</p>
+
+<p>
+Quando a exatidão no cálculo  com um número decimal for imprescindível
+para um cálculo, pode-se usar esse número na forma de <i>fração</i>.
+</p>
+
+<p>
+As <i>frações</i> de Majestic Lisp são  também um simulacro de outro conjunto
+da Matemática,  o conjunto dos números  racionais (\(\mathbb{Q}\)). Esse
+conjunto é  normalmente definido  como qualquer  número que  possa ser
+escrito com  um <i>numerador</i>  e um <i>denominador</i>  que sejam  inteiros (\(\in
+\mathbb{Z}\)). Para completar, o <i>denominador</i> não pode valer zero:
+</p>
+
+\begin{equation*}
+        \mathbb{Q} = \left\{\frac{p}{q}\, \mid \, p \in \mathbb{Z}, q \in \mathbb{Z}^{*} \right\}
+\end{equation*}
+
+<p>
+Isso  é muito  importante  para a  sintaxe de  Majestic  Lisp, já  que
+nos faz  entender que não  é possível construir partes  individuais de
+uma fração com um subtipo numérico que não seja <code>integer</code>.
+</p>
+
+<p>
+Frações em Majestic  Lisp são representadas usando um  caractere <code>/</code> que
+divide  o  <i>numerador</i> e  o  <i>denominador</i>,  respectivamente. Nenhuma  das
+partes pode ser omitida, mesmo quando o numerador for nulo.
+</p>
+
+<p>
+Quando   uma    fração   não    estiver   descrita   em    sua   forma
+simplificada<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>,  Majestic tratará  essa situação  e realizará  tal
+conversão de valor equivalente quando for possível.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">1/2
+</pre>
+</div>
+
+<pre class="example">
+1/2
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-majestic">4/6
+</pre>
+</div>
+
+<pre class="example">
+2/3
+</pre>
+
+
+<p>
+O último subtipo  de um número é o <i>número  complexo</i>. Números complexos
+são quaisquer números que  possam ser escritos na forma \(z  = a + bi\),
+onde \(a\) é chamado de parte <i>real</i>,  e \(b\) é chamado de parte <i>imaginária</i>
+do número<sup><a id="fnr.2" class="footref" href="#fn.2" role="doc-backlink">2</a></sup>.
+</p>
+
+\begin{equation*}
+        \mathbb{C} = \left\{ z = a + bi \mid a, b \in \mathbb{R} \right\}
+\end{equation*}
+
+<p>
+Como podemos  ver, \(a\) e  \(b\) podem ser números  reais (\(\mathbb{R}\)),
+mas  também   podem  pertencer   a  quaisquer  de   seus  subconjuntos
+(\(\mathbb{N}\), \(\mathbb{Z}\) e até mesmo \(\mathbb{Q}\)).
+</p>
+
+<p>
+Essa observação  é importante  para os números  do subtipo  <code>complex</code> de
+Majestic Lisp.  Nela, um  número complexo  pode ser  escrito com  um <code>J</code>
+separando duas partes do  número<sup><a id="fnr.3" class="footref" href="#fn.3" role="doc-backlink">3</a></sup>, que devem obrigatoriamente ser
+descritas. Do lado esquerdo, teremos a  parte <i>real</i> do número; do outro
+lado, teremos a parte <i>imaginária</i>.
+</p>
+
+<p>
+Por se  tratar de um  número com  potenciais subtipos, o  <code>complex</code> pode
+possuir qualquer  número que se  enquadre nos subtipos  anteriores, em
+suas partes <i>real</i> ou <i>imaginária</i>. Mas essas partes precisam ser escritas
+mesmo quando forem nulas.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">2J5
+</pre>
+</div>
+
+<pre class="example">
+2J5
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-majestic">-3J6/4
+</pre>
+</div>
+
+<pre class="example">
+-3J3/2
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-majestic">0J1
+</pre>
+</div>
+
+<pre class="example">
+0J1
+</pre>
+
+
+<p>
+Os  exemplos acima  descrevem, respectivamente,  os números  complexos
+\(2+5i\), \(-3+{}^{3}/_{2}\,i\) e \(0+1i\), tal  que este último poderia ser
+escrito simplesmente como \(i\).
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd14f5f6" class="outline-2">
+<h2 id="orgd14f5f6"><span class="section-number-2">2.</span> Caracteres</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Outro  tipo  básico  de   Majestic  Lisp  envolve  <i>caracteres</i>,  também
+conhecidos como <code>char</code>.  Um <code>char</code> pode ser  informado diretamente através
+de sua escrita, precedida pelos caracteres <code>#\</code>, que indicam o uso de um
+caractere.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">#\a
+</pre>
+</div>
+
+<pre class="example">
+#\a
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-majestic">#\C
+</pre>
+</div>
+
+<pre class="example">
+#\C
+</pre>
+
+
+<p>
+Certos caracteres não possuem representação textual, e portanto, podem
+ser  escritos  diretamente  através  de   uma  forma  textual  que  os
+lembre. Por exemplo, o caractere  de <i>campainha</i> (<i>bell</i>) pode ser escrito
+como <code>#\bel</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfebca4e" class="outline-2">
+<h2 id="orgfebca4e"><span class="section-number-2">3.</span> Símbolos e <i>Quoting</i></h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Antes de falarmos do tipo  mais fundamental (e talvez mais importante)
+não apenas de Majestic Lisp, mas  talvez de todos os Lisps, precisamos
+falar do processo de <i>quoting</i>.
+</p>
+
+<p>
+<i>Quoting</i>, palavra em  Inglês também conhecida como <i>citação</i>,  é o nome
+que damos ao ato de fornecer certas expressões para o interpretador de
+Majestic Lisp,  <b>sem que o interpretador  efetivamente interprete essas
+expressões</b>.   Em outras  palavras,  é como  fornecer  um valor  "entre
+aspas".
+</p>
+
+<p>
+O interpretador  de um  dialeto de  Lisp tem a  missão de  receber uma
+expressão,  interpretá-la  e assim  retornar  ao  usuário o  valor  da
+mesma. Assim, escrever uma expressão como  <code>-5</code> passa por um processo de
+interpretação, em que identifica-se que aquilo  é um número, e o valor
+de tal número é retornado ao usuário.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">-5
+</pre>
+</div>
+
+<pre class="example">
+-5
+</pre>
+
+
+<p>
+Quando a  expressão em questão  não é um  <i>número</i> ou um  <i>caractere</i>, ela
+pode ser um  <i>símbolo</i>. E normalmente, símbolos  funcionam como <i>rótulos</i>:
+eles estarão  associados a um <i>valor</i>  em algum tipo de  <i>tabela</i> que, por
+enquanto, não é muito relevante conhecermos.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #dcdcaa;">eq</span>
+</pre>
+</div>
+
+<pre class="example">
+#&lt;function (prim eq (arity (required 2)))&gt;
+</pre>
+
+
+<p>
+Quando um <i>símbolo</i> (como <code>eq</code>) é fornecido ao interpretador, este tentará
+buscar o valor <b>associado</b> a esse  símbolo (nesse caso, uma função, algo
+que  conheceremos mais  adiante).  Se o  nosso  objetivo fosse  tratar
+apenas do próprio símbolo  <code>eq</code>, então precisaríamos <i>quotá-lo</i>, colocando
+um apóstrofo antes de escrevê-lo:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">'<span style="color: #dcdcaa;">eq</span>
+</pre>
+</div>
+
+<pre class="example">
+eq
+</pre>
+
+
+<p>
+Ao  <i>quotarmos</i> um  certo  símbolo  ou um  outro  tipo  de expressão,  o
+interpretador  entenderá que  não  deve processar  o conteúdo  daquela
+expressão,  mas  sim retorná-la  da  forma  como  está escrita.  Se  a
+expressão  quotada  for  um  <i>símbolo</i>, portanto,  aquele  símbolo  será
+retornado.
+</p>
+</div>
+
+<div id="outline-container-org054940e" class="outline-3">
+<h3 id="org054940e"><span class="section-number-3">3.1.</span> Símbolos comuns</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Símbolos, como já foi dito antes,  operam como <i>rótulos</i> para valores na
+linguagem, mas  eles em si  são também um  tipo especial de  valor. Um
+símbolo   é  representado,   textualmente,   como   uma  palavra   sem
+espaços.
+</p>
+
+<p>
+Tratar  símbolos   diretamente  com  valores   frequentemente  exigirá
+<i>quotá-los</i>, com algumas raras exceções, que veremos em breve.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">'foo
+</pre>
+</div>
+
+<pre class="example">
+foo
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-majestic">'bar
+</pre>
+</div>
+
+<pre class="example">
+bar
+</pre>
+
+
+<p>
+Normalmente separamos as "palavras" de  um símbolo com hífens <code>-</code>, sendo
+esta uma convenção de quase todos os dialetos de Lisp, algo que também
+adotaremos aqui.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">'fulano-de-tal
+</pre>
+</div>
+
+<pre class="example">
+fulano-de-tal
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org14ce450" class="outline-3">
+<h3 id="org14ce450"><span class="section-number-3">3.2.</span> Símbolos autointerpretáveis</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Alguns  poucos símbolos  são  <i>autointerpretáveis</i>, isto  é, não  exigem
+nenhum tipo  de <i>quoting</i>, pois  o único valor  associado a eles  é eles
+mesmos.
+</p>
+
+<p>
+Esses  símbolos (como  <code>t</code> e  <code>nil</code>) normalmente  possuem uso  especial, e
+podem ser considerados como <i>axiomas</i><sup><a id="fnr.4" class="footref" href="#fn.4" role="doc-backlink">4</a></sup> da linguagem.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">t
+</pre>
+</div>
+
+<pre class="example">
+t
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-majestic">nil
+</pre>
+</div>
+
+<pre class="example">
+nil
+</pre>
+
+
+<p>
+<code>nil</code> é o  símbolo geral para denotar  <i>falsidade</i> ou o fim  de uma <i>lista</i>,
+que veremos em uma  situação mais adiante. Já o símbolo  <code>t</code> é o símbolo
+específico para denotar a ideia de <i>verdade</i> em Majestic Lisp &#x2013; mas, de
+maneira geral, tudo que não for <code>nil</code> é tratado como <i>verdade</i>.
+</p>
+
+<p>
+Números,  apesar de  pertencerem  ao seu  próprio  tipo, poderiam  ser
+pensados sintaticamente como símbolos autointerpretáveis que designam,
+axiomaticamente, seu próprio valor.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgea04ef9" class="outline-2">
+<h2 id="orgea04ef9"><span class="section-number-2">4.</span> Cons</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+O <i>cons</i> (ou  célula <i>cons</i>)<sup><a id="fnr.5" class="footref" href="#fn.5" role="doc-backlink">5</a></sup> é um <i>par de  valores</i>.  Essa definição é
+propositalmente vaga:  os componentes  de um  <i>cons</i> podem  ser qualquer
+outro tipo  de valor, inclusive  outros <i>cons</i>. Dessa forma,  fica claro
+que este tipo tem a função de <i>combinar</i> valores em Majestic Lisp.
+</p>
+
+<p>
+Há várias  formas de  criar um  <i>cons</i>. Uma delas  é através  do próprio
+processo de <i>quoting</i>. Por exemplo, para criarmos um par com os símbolos
+<code>a</code> e <code>b</code>,  podemos usar uma notação em que  colocamos estes dois símbolos
+entre parênteses, separados por um ponto.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">'<span style="color: #ffd700;">(</span>a . b<span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+(a . b)
+</pre>
+
+
+<p>
+Um <i>cons</i>  sempre estará  estaticamente escrito  como uma  combinação de
+dois elementos separados por ponto, e unidos entre parênteses.
+</p>
+
+<p>
+Aqui podemos  também ver  uma propriedade do  processo de  <i>quoting</i>: ao
+<i>quotarmos</i> um <i>cons</i>,  os elementos que o compõem  também serão quotados,
+recursivamente.
+</p>
+
+<p>
+Podemos, por exemplo, construir um  <i>cons</i> onde o primeiro elemento seja
+outro <i>cons</i>, e o segundo, seja o símbolo <code>c</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">'<span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span>a . b<span style="color: #da70d6;">)</span> . c<span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+((a . b) . c)
+</pre>
+
+
+<p>
+Os componentes  de um <i>cons</i>  possuem nomes, por influência  da história
+dos dialetos  de Lisp. Ao primeiro  elemento, damos o nome  <i>car</i> (lê-se
+<i>cár</i>); ao segundo  elemento, damos o nome <i>cdr</i>  (lê-se <i>coul-der</i>). Assim,
+em <code>(a . b)</code>, <code>a</code>  é o <i>car</i>, e <code>b</code> é o <i>cdr</i>. Podemos  dar outros nomes a essas
+partes, mas isso será melhor compreendido posteriormente.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfeecc95" class="outline-2">
+<h2 id="orgfeecc95"><span class="section-number-2">5.</span> Streams</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+<i>Streams</i> são objetos  abstratos de Majestic Lisp,  usados para designar
+fluxos por onde informações passam.  Esses fluxos podem ser de <i>entrada</i>
+ou  <i>saída</i>, e  podem designar  <i>arquivos</i> no  sistema, o  fluxo por  onde
+recebe-se a informação digitada pelo usuário, ou até mesmo o fluxo por
+onde imprime-se a informação, de modo que ela seja mostrada na tela.
+</p>
+
+<p>
+Estes dois <i>streams</i>  são conhecidos como variáveis  na linguagem, sendo
+eles respectivamente <code>*stdin*</code> e <code>*stdout*</code>.
+</p>
+
+<p>
+<i>Streams</i> não possuem uma representação sintática e só podem ser abertos
+ou fechados por intermédio de funções.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> stream <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">open-stream</span> 'out <span style="color: #ce9178;">"/home/alchemist/testando.txt"</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">write-string</span> <span style="color: #ce9178;">"Teste"</span> stream<span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">close-stream</span> stream<span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+t
+</pre>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1" role="doc-backlink">1</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+Uma  fração pode  ser  entendida  como  estando em  sua  <i>forma
+simplificada</i> quando  numerador e denominador  são <i>primos entre  si</i>, ou
+seja, quando não há número que  realize sua divisão inteira, a não ser
+o  número 1.  Para chegar  a essa  forma, basta  dividir continuamente
+ambos os números pelo <i>máximo divisor comum</i> de ambos.
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2" role="doc-backlink">2</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+Ao contrário do que sua péssima escolha de nome sugere, números
+imaginários são  tão "reais" quanto  números reais. Esses  números são
+utilizados    em     circuitos    elétricos,     eletromagnetismo    e
+aerodinâmica.  Mas  há  outras aplicações,  sobretudo  relacionadas  a
+trigonometria e situações que envolvam pares de números, por exemplo.
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3" role="doc-backlink">3</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+Essa notação foi diretamente importada de dialetos da linguagem
+APL, mais especificamente  GNU APL (<a href="https://www.gnu.org/software/apl/">https://www.gnu.org/software/apl/</a>)
+e Dyalog APL (<a href="https://www.dyalog.com/">https://www.dyalog.com/</a>).
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.4" class="footnum" href="#fnr.4" role="doc-backlink">4</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+Matematicamente,  um  <i>axioma</i>   é  uma  regra  autoevidente  ou
+universalmente aceita,  ou uma regra/princípio/lei estabelecido  em um
+sistema.   Aqui, o  comportamento  desses símbolos  é  como uma  regra
+estabelecida e universal de Majestic Lisp.
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.5" class="footnum" href="#fnr.5" role="doc-backlink">5</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+O nome "cons" advém de "construção", ou <i>construct</i> em Inglês.
+</p></div></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<p class="author">Author: Lucas S. Vieira</p>
+<p class="date">Created: 2022-10-23 dom 20:03</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

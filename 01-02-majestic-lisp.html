@@ -1,237 +1,486 @@
-<!DOCTYPE HTML>
-<html lang="en" class="sidebar-visible no-js light">
-    <head>
-        <!-- Book generated using mdBook -->
-        <meta charset="UTF-8">
-        <title>Majestic Lisp - Majestic Lisp</title>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+<head>
+<!-- 2022-10-23 dom 20:03 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Majestic Lisp</title>
+<meta name="author" content="Lucas S. Vieira" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
 
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="./main.css" />
+<link rel="stylesheet" type="text/css" href="./syntax.css" />
+<link id="theme-css" rel="stylesheet" type="text/css" href="./dark-theme.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="../img/cat-i-mage.jpg">
+<meta name="theme-color" content="#14171e">
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="01-introducao.html"> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Majestic Lisp</h1>
+<p>
+Majestic  Lisp  é  o  dialeto  de Lisp  implementado  nesse  livro.  A
+implementação dele é  baseada em cinco pontos  principais, que definem
+as decisões de design da linguagem e da implementação:
+</p>
 
-        <!-- Custom HTML head -->
-        
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#ffffff" />
-
-        <link rel="icon" href="favicon.svg">
-        <link rel="shortcut icon" href="favicon.png">
-        <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
-        <link rel="stylesheet" href="css/print.css" media="print">
-
-        <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="fonts/fonts.css">
-
-        <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" href="highlight.css">
-        <link rel="stylesheet" href="tomorrow-night.css">
-        <link rel="stylesheet" href="ayu-highlight.css">
-
-        <!-- Custom theme stylesheets -->
-
-    </head>
-    <body>
-        <!-- Provide site root to javascript -->
-        <script type="text/javascript">
-            var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
-        </script>
-
-        <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
-            try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
-
-                if (theme.startsWith('"') && theme.endsWith('"')) {
-                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
-                }
-
-                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
-                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
-                }
-            } catch (e) { }
-        </script>
-
-        <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
-            var theme;
-            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
-            if (theme === null || theme === undefined) { theme = default_theme; }
-            var html = document.querySelector('html');
-            html.classList.remove('no-js')
-            html.classList.remove('light')
-            html.classList.add(theme);
-            html.classList.add('js');
-        </script>
-
-        <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
-            var html = document.querySelector('html');
-            var sidebar = 'hidden';
-            if (document.body.clientWidth >= 1080) {
-                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
-                sidebar = sidebar || 'visible';
-            }
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
-        </script>
-
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="teste.html"><strong aria-hidden="true">1.</strong> Teste</a></li><li class="chapter-item expanded "><a href="00-agradecimentos.html"><strong aria-hidden="true">2.</strong> Agradecimentos</a></li><li class="chapter-item expanded "><a href="01-introducao.html"><strong aria-hidden="true">3.</strong> Introdução</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="01-01-o-que-e-lisp.html"><strong aria-hidden="true">3.1.</strong> O que é Lisp?</a></li><li class="chapter-item expanded "><a href="01-02-majestic-lisp.html" class="active"><strong aria-hidden="true">3.2.</strong> Majestic Lisp</a></li><li class="chapter-item expanded "><a href="01-03-sobre-programacao-instruida.html"><strong aria-hidden="true">3.3.</strong> Sobre Programação Instruída</a></li><li class="chapter-item expanded "><a href="01-04-como-ler-este-documento.html"><strong aria-hidden="true">3.4.</strong> Como ler este documento</a></li></ol></li></ol>
-            </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
-        </nav>
-
-        <div id="page-wrapper" class="page-wrapper">
-
-            <div class="page">
-                                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky bordered">
-                    <div class="left-buttons">
-                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
-                        </button>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
-                        </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
-                        </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-
-                    <h1 class="menu-title">Majestic Lisp</h1>
-
-                    <div class="right-buttons">
-                        <a href="print.html" title="Print this book" aria-label="Print this book">
-                            <i id="print-button" class="fa fa-print"></i>
-                        </a>
-
-                    </div>
-                </div>
-
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
-                    </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
-                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
-                    });
-                </script>
-
-                <div id="content" class="content">
-                    <main>
-                        <h1 id="majestic-lisp"><a class="header" href="#majestic-lisp">Majestic Lisp</a></h1>
-<p>Majestic Lisp é o dialeto de Lisp implementado nesse livro. A implementação dele é baseada em cinco pontos principais, que definem as decisões de design da linguagem e da implementação:</p>
-<ol>
-<li>Performance não é um objetivo central, ainda que seja bem-vinda. Certamente é conveniente que o interpretador de Majestic Lisp tenha certas otimizações mas, dado que essa obra seja direcionada também para iniciantes em programação, não é necessário que o interpretador tenha uma performance a nível de uma linguagem usada para trabalhos profissionais;</li>
-<li>A implementação busca ser didática ao máximo, e por isso foi feita utilizando <em>literate programming</em> <knuth1984> que aqui é traduzido livremente como <em>programação instruída</em>. Esse paradigma é discutido mais adiante;</li>
-<li>A linguagem em si deve ser algo simples, em especial para aqueles que já tenham algum costume com outros dialetos de Lisp (como Scheme, Clojure e Common Lisp) – onde houver mudanças, elas deverão ser inteligíveis ao máximo;</li>
-<li>A obra em si deve mostrar ao leitor que a criação de uma linguagem de programação e de seu interpretador, ainda que não seja uma atividade trivial, está longe de ser uma atividade <em>intangível</em>;</li>
-<li>A linguagem em si foi pensada tanto para uso em computador quanto para uso <em>algébrico</em>, isto é, como uma notação que pode ser escrita à mão, sendo então uma ferramenta para explicar alguns conceitos de computação, quando pertinente.</li>
+<ol class="org-ol">
+<li>Performance  não   é  um   objetivo  central,   ainda  que   seja
+bem-vinda. Certamente é conveniente que o interpretador de Majestic
+Lisp  tenha  certas  otimizações  mas,  dado  que  essa  obra  seja
+direcionada também para iniciantes em programação, não é necessário
+que o interpretador tenha uma  performance a nível de uma linguagem
+usada para trabalhos profissionais;</li>
+<li>A implementação busca ser didática  ao máximo, e por isso foi feita
+utilizando <i>literate programming</i> (KNUTH, 1984) que aqui é traduzido
+livremente como  <i>programação instruída</i>. Esse paradigma  é discutido
+mais adiante;</li>
+<li>A linguagem  em si deve ser algo simples,  em especial para aqueles
+que  já tenham  algum costume  com  outros dialetos  de Lisp  (como
+Scheme,  Clojure  e Common  Lisp)  &#x2013;  onde houver  mudanças,  elas
+deverão ser inteligíveis ao máximo;</li>
+<li>A obra em si deve mostrar  ao leitor que a criação de uma linguagem
+de  programação e  de seu  interpretador,  ainda que  não seja  uma
+atividade trivial, está longe de ser uma atividade <i>intangível</i>;</li>
+<li>A linguagem  em si foi pensada tanto para  uso em computador quanto
+para uso <i>algébrico</i>, isto é, como uma notação que pode ser escrita à
+mão, sendo então  uma ferramenta para explicar  alguns conceitos de
+computação, quando pertinente.</li>
 </ol>
-<p>O primeiro ponto é evidente quando partimos do pressuposto de que o ideal para um programa é não realizar <em>otimização prematura</em>, o que não significa que não possamos usar boas ideias logo no início de um projeto. O software descrito nesse livro é algo acessível, do ponto de vista de um iniciante curioso em programação que já tenha uma certa prática.</p>
-<p>A didática é essencial, e também é a causa determinante do segundo e terceiro pontos, também por razões de acessibilidade anteriormente descritas. Isso acaba por culminar na justificativa para o quarto ponto: um programador iniciante pode ficar facilmente intimidado pela ideia da construção da própria linguagem de programação. Todavia, um interpretador de uma linguagem é um programa como qualquer outro.</p>
-<p>O quinto ponto vem inspirado diretamente em <iverson80>, que ressalta o uso da notação – nesse caso, a linguagem de programação em si – como uma ferramenta usada para raciocinar. Um Lisp simples, com regras facilmente compreensíveis, pode ser uma excelente ferramenta para explicar conceitos matemáticos envolvendo <em>Lambda Calculus</em> <church36a> ou os famosos <em>numerais de Church</em>, por exemplo.</p>
-<p>Majestic Lisp possui uma sintaxe não muito diferente do que se encontra nos demais Lisps, no sentido de que também é baseada em <em>s-expressions</em>. Mas ela também possui suas próprias idiossincrasias que a difere dos demais dialetos. Posteriormente, observaremos adequadamente esses detalhes.</p>
-<h1 id="design-do-interpretador"><a class="header" href="#design-do-interpretador">Design do Interpretador</a></h1>
-<p>O interpretador de Majestic Lisp segue vagamente os moldes determinados por <sicp>, que definem o chamado <em>interpretador metacircular</em>.</p>
-<p>Definimos este tipo de interpretador para uma linguagem de programação como sendo <em>circular</em>, por apresentar uma recursão mútua entre dois procedimentos principais: <code>eval</code> e <code>apply</code>. O uso do sufixo <em>meta</em> na denominação diz respeito à natureza metalinguística do mesmo: definimos o interpretador da linguagem em questão, usando a própria linguagem que se quer interpretar. Em <sicp>, define-se o interpretador de Scheme – um dialeto de Lisp – usando a própria linguagem Scheme.</p>
-<p><img src="img/metacircular.png" alt="img" title="Recursão mútua em um interpretador metacircular." /></p>
-<p>Esse tipo de abstração é extremamente poderosa, porque nos permite observar apenas o cerne do interpretador de uma linguagem de programação, sem demais considerações. Por exemplo, aqui assumimos que a <em>expressão</em> a ser interpretada já esteja em um formato que possa ser consumido pelo interpretador. Um programa de computador, normalmente, precisa ser digitado em um arquivo-texto, e esse arquivo então deverá ser processado para ser consumido pelo cerne do interpretador.</p>
-<p>Para um <em>interpretador metacircular</em> de um dialeto de Lisp, esse processo é ignorável: pode-se tirar vantagem da própria estrutura da linguagem, que já realiza essa transformação. Assim, o programador só precisa preocupar-se com as implementações dos procedimentos <code>eval</code> e <code>apply</code>, as funções principais na descrição de um interpretador nesse modelo.</p>
-<p>O interpretador de Majestic Lisp aqui descrito foi construido usando a linguagem de programação Rust. Sua descrição, portanto, não possui a característica de ser <em>metalinguística</em>, mas isso não significa que abandonaremos o modelo da circularidade mútua entre <code>eval</code> e <code>apply</code>. Ao invés disso, lidaremos com mais alguns passos extras, como a transormação de um arquivo-texto em uma estrutura que possa ser interpretada.</p>
-<p><img src="img/modelo_geral.png" alt="img" title="Esquema ilustrativo do interpretador de Majestic Lisp." /></p>
-<p>A Figura <a href="#orgae803c8">17</a> descreve um esquema geral da arquitetura do interpretador de Majestic Lisp. Esse interpretador consiste de três <em>módulos</em> principais, além de um <em>componente global</em> trabalhando para a execução do interpretador.</p>
-<p>O <em>componente global</em> de Majestic Lisp constitui-se, grosso modo, de duas partes importantes: o <em>núcleo</em> e o <em>estado global</em>.</p>
-<p>O <em>núcleo</em> estipula certos <strong>axiomas</strong> e <strong>funções primitivas</strong> da linguagem, de forma que esses elementos e valores estejam disponíveis ao ambiente assim que o mesmo se inicia – o código em si poderá ser executado de forma subsequente.</p>
-<p>O <em>estado global</em> encerra certas coleções vitais para a execução de um programa, podendo inclusive serem mutáveis. Essas coleções são:</p>
-<ul>
-<li><strong>Tabela de Símbolos:</strong> Um programa Lisp é composto principalmente por listas de símbolos, uma vez que Lisps são linguagens para computação simbólica. A tabela de símbolos é responsável por <em>manter referências</em> de símbolos, permitindo que sejam reutilizados ao longo do programa.</li>
-<li><strong>Contexto Global:</strong> Em Majestic Lisp, trata-se de uma tabela que associa certos <em>símbolos</em> a <em>valores específicos</em>. Esse contexto é visível em todas as partes do programa, sendo esta a sua principal diferença com relação a um <em>contexto léxico</em>, que será melhor explorado em outro local.</li>
-<li><strong>Tabela de <em>Streams</em>:</strong> Categoriza e gerencia <em>streams</em> abertos, que são estruturas muito similares a <em>descritores de arquivo</em> <a href="silberschatz2015">p. 445</a>. Em Majestic Lisp, os <em>streams</em> são responsáveis por toda a comunicação de <em>entrada</em> (por exemplo, fornecer o código ao Leitor) e <em>saída</em> (redirecionar o que será escrito na Tela ou em um arquivo). <em>Streams</em> são estruturas opacas que dependem de detalhes do sistema em que o programa do interpretador é executado.</li>
+
+<p>
+O primeiro  ponto é evidente quando  partimos do pressuposto de  que o
+ideal para um programa é não  realizar <i>otimização prematura</i>, o que não
+significa  que não  possamos usar  boas ideias  logo no  início de  um
+projeto. O software descrito nesse livro é algo acessível, do ponto de
+vista de  um iniciante curioso em  programação que já tenha  uma certa
+prática.
+</p>
+
+<p>
+A didática é  essencial, e também é a causa  determinante do segundo e
+terceiro  pontos, também  por razões  de acessibilidade  anteriormente
+descritas.  Isso  acaba por  culminar na  justificativa para  o quarto
+ponto: um programador iniciante  pode ficar facilmente intimidado pela
+ideia da construção  da própria linguagem de  programação. Todavia, um
+interpretador de uma linguagem é um programa como qualquer outro.
+</p>
+
+<p>
+O quinto ponto vem  inspirado diretamente em Iverson (1980), que
+ressalta o uso da notação &#x2013; nesse caso, a linguagem de programação em
+si &#x2013; como uma ferramenta usada para raciocinar.  Um Lisp simples, com
+regras facilmente  compreensíveis, pode  ser uma  excelente ferramenta
+para  explicar   conceitos  matemáticos  envolvendo   <i>Lambda  Calculus</i>
+(CHURCH, 1936) ou os famosos <i>numerais de Church</i>, por exemplo.
+</p>
+
+<p>
+Majestic  Lisp  possui uma  sintaxe  não  muito  diferente do  que  se
+encontra  nos demais  Lisps, no  sentido de  que também  é baseada  em
+<i>s-expressions</i>. Mas ela também possui suas próprias idiossincrasias que
+a   difere   dos   demais  dialetos.    Posteriormente,   observaremos
+adequadamente esses detalhes.
+</p>
+
+<div id="outline-container-org376a746" class="outline-2">
+<h2 id="org376a746"><span class="section-number-2">1.</span> Design do Interpretador</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+O   interpretador  de   Majestic  Lisp   segue  vagamente   os  moldes
+determinados por Abelson, Sussman e Sussman (1996), que  definem o chamado <i>interpretador
+metacircular</i>.
+</p>
+
+<p>
+Definimos este tipo de interpretador para uma linguagem de programação
+como  sendo <i>circular</i>,  por apresentar  uma recursão  mútua entre  dois
+procedimentos  principais: <code>eval</code>  e  <code>apply</code>.  O uso  do  sufixo <i>meta</i>  na
+denominação  diz   respeito  à  natureza  metalinguística   do  mesmo:
+definimos o  interpretador da linguagem  em questão, usando  a própria
+linguagem  que se  quer interpretar.  Em Abelson, Sussman e Sussman (1996),  define-se o
+interpretador de  Scheme &#x2013;  um dialeto  de Lisp  &#x2013; usando  a própria
+linguagem Scheme.
+</p>
+
+
+<div id="org2fe07cb" class="figure">
+<p><img src="img/metacircular.png" alt="metacircular.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Recursão mútua em um interpretador metacircular.</p>
+</div>
+
+<p>
+Esse tipo  de abstração  é extremamente  poderosa, porque  nos permite
+observar  apenas  o  cerne  do   interpretador  de  uma  linguagem  de
+programação, sem  demais considerações.   Por exemplo,  aqui assumimos
+que a <i>expressão</i>  a ser interpretada já esteja em  um formato que possa
+ser  consumido   pelo  interpretador.   Um  programa   de  computador,
+normalmente, precisa ser digitado em  um arquivo-texto, e esse arquivo
+então  deverá  ser  processado  para   ser  consumido  pelo  cerne  do
+interpretador.
+</p>
+
+<p>
+Para  um  <i>interpretador  metacircular</i>  de um  dialeto  de  Lisp,  esse
+processo é ignorável:  pode-se tirar vantagem da  própria estrutura da
+linguagem, que já realiza essa  transformação. Assim, o programador só
+precisa preocupar-se  com as  implementações dos procedimentos  <code>eval</code> e
+<code>apply</code>, as  funções principais na  descrição de um  interpretador nesse
+modelo.
+</p>
+
+<p>
+O interpretador de Majestic Lisp aqui descrito foi construido usando a
+linguagem de programação  Rust. Sua descrição, portanto,  não possui a
+característica  de   ser  <i>metalinguística</i>,  mas  isso   não  significa
+que  abandonaremos  o  modelo  da circularidade  mútua  entre  <code>eval</code>  e
+<code>apply</code>. Ao invés disso, lidaremos com mais alguns passos extras, como a
+transormação  de  um arquivo-texto  em  uma  estrutura que  possa  ser
+interpretada.
+</p>
+
+
+<div id="org84c9f48" class="figure">
+<p><img src="img/modelo_geral.png" alt="modelo_geral.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Esquema ilustrativo do interpretador de Majestic Lisp.</p>
+</div>
+
+<p>
+A Figura <a href="#org84c9f48">2</a>  descreve um esquema geral  da arquitetura do
+interpretador de  Majestic Lisp.  Esse interpretador consiste  de três
+<i>módulos</i> principais,  além de um  <i>componente global</i> trabalhando  para a
+execução do interpretador.
+</p>
+
+<p>
+O <i>componente  global</i> de  Majestic Lisp  constitui-se, grosso  modo, de
+duas partes importantes: o <i>núcleo</i> e o <i>estado global</i>.
+</p>
+
+<p>
+O <i>núcleo</i> estipula certos <b>axiomas</b> e <b>funções primitivas</b> da linguagem, de
+forma que  esses elementos e  valores estejam disponíveis  ao ambiente
+assim que o mesmo se inicia &#x2013;  o código em si poderá ser executado de
+forma subsequente.
+</p>
+
+<p>
+O <i>estado global</i>  encerra certas coleções vitais para a  execução de um
+programa, podendo inclusive serem mutáveis. Essas coleções são:
+</p>
+
+<ul class="org-ul">
+<li><b>Tabela de Símbolos:</b>  Um programa Lisp é  composto principalmente por
+listas de símbolos, uma vez que Lisps são linguagens para computação
+simbólica.   A   tabela  de   símbolos  é  responsável   por  <i>manter
+referências</i> de símbolos, permitindo  que sejam reutilizados ao longo
+do programa.</li>
+<li><b>Contexto  Global:</b>  Em Majestic  Lisp,  trata-se  de uma  tabela  que
+associa  certos  <i>símbolos</i> a  <i>valores  específicos</i>.  Esse contexto  é
+visível em todas  as partes do programa, sendo esta  a sua principal
+diferença  com  relação  a  um  <i>contexto  léxico</i>,  que  será  melhor
+explorado em outro local.</li>
+<li><b>Tabela de  <i>Streams</i>:</b> Categoriza e  gerencia <i>streams</i> abertos,  que são
+estruturas    muito    similares    a   <i>descritores    de    arquivo</i>
+(SILBERSCHATZ, GALVIN e GAGNE, 2015, p. 445).  Em Majestic Lisp, os <i>streams</i> são
+responsáveis  por  toda  a  comunicação  de  <i>entrada</i>  (por  exemplo,
+fornecer  o código  ao  Leitor)  e <i>saída</i>  (redirecionar  o que  será
+escrito na  Tela ou em  um arquivo).  <i>Streams</i> são  estruturas opacas
+que  dependem  de   detalhes  do  sistema  em  que   o  programa  do
+interpretador é executado.</li>
 </ul>
-<p>Resta agora enumerar os módulos principais do sistema. Eles são:</p>
-<ol>
-<li><strong>Impressão:</strong> Módulo responsável por formatar expressões em texto nativo, de forma que possam ser mostradas em formato humanamente legível. Como a impressão envolve percorrer e verificar símbolos, precisa ter acesso à tabela de símbolos do estado global;</li>
-<li><strong>Leitor:</strong> Módulo responsável por tomar uma certa entrada em formato de texto nativo e transformá-lo em uma estrutura que possa ser processada pelo interpretador, normalmente conhecida como <em>árvore sintática abstrata</em> (AST). Como a leitura é um processo de transformação de símbolos em texto nativo para símbolos no ambiente Lisp, precisa ler e modificar a tabela de símbolos do estado global;</li>
-<li><strong>Interpretador:</strong> O módulo mais importante do programa, sendo responsável pelo processo de <em>interpretação</em> de uma expressão em formato de AST</li>
+
+<p>
+Resta agora enumerar os módulos principais do sistema. Eles são:
+</p>
+
+<ol class="org-ol">
+<li><b>Impressão:</b> Módulo  responsável  por formatar  expressões em  texto
+nativo, de  forma que possam  ser mostradas em  formato humanamente
+legível. Como  a impressão envolve percorrer  e verificar símbolos,
+precisa ter acesso à tabela de símbolos do estado global;</li>
+<li><b>Leitor:</b> Módulo  responsável por tomar uma certa  entrada em formato
+de  texto nativo  e transformá-lo  em uma  estrutura que  possa ser
+processada  pelo interpretador,  normalmente conhecida  como <i>árvore
+sintática  abstrata</i>  (AST).  Como  a   leitura  é  um  processo  de
+transformação de símbolos em texto nativo para símbolos no ambiente
+Lisp, precisa ler e modificar a tabela de símbolos do estado global;</li>
+<li><b>Interpretador:</b>  O  módulo   mais  importante  do  programa,  sendo
+responsável  pelo processo  de  <i>interpretação</i> de  uma expressão  em
+formato de AST</li>
 </ol>
-<p>Em um Lisp como Majestic Lisp, as <em>árvores sintáticas abstratas</em> são representadas usando <em>listas simplesmente ligadas</em>. Segundo <cormen-pt>, uma <em>lista ligada</em> é aquela cujos objetos estejam organizados linearmente, sendo esta ordem determinada por <em>ponteiros</em>, que aqui podemos compreender como referências ao ``próximo elemento''.</p>
-<p>Isso introduz dois pontos de relevância: primeiramente, como Lisps são linguagens feitas para a manipulação de <em>listas simplesmente ligadas</em>, podemos representar internamente nossos programas usando o próprio <em>framework</em> da linguagem<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>. Isso significa que não será preciso implementar uma estrutura que sirva apenas para representar uma AST.</p>
-<p>Segundo, como a AST pode ser representada diretamente em uma <em>lista</em>, isso significa que nossos programas poderiam ser <strong>manipulados através da própria linguagem</strong>. Esse é um conceito crucial de uma linguagem como Lisp, ainda que não seja exclusivo aos Lisps; a ele, damos o nome de <em>homoiconicidade</em>.</p>
-<p>Podemos tirar muito proveito desse conceito; o leitor atento já terá percebido que podemos criar listas, durante a execução de um programa, que constituam também outros programas Lisp válidos.</p>
-<h2 id="footnotes"><a class="header" href="#footnotes">Footnotes</a></h2>
-<p><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> A melhor forma para compreendermos essa ideia é lembrando-nos de que, em algum ponto, precisamos de algo como uma ``matéria-prima'' para representarmos as listas em Majestic Lisp. Se tivermos uma forma simples de representação de <em>listas simplesmente ligadas</em>, então basta que, durante o processo de conversão do programa, criemos <em>listas</em> cujos elementos sejam <em>símbolos</em> ou outras <em>sub-listas</em>. Esse processo será melhor discutido mais tarde.</p>
 
-                    </main>
+<p>
+Em um  Lisp como  Majestic Lisp, as  <i>árvores sintáticas  abstratas</i> são
+representadas    usando   <i>listas    simplesmente   ligadas</i>.    Segundo
+Cormen <i>et al</i> (2012), uma <i>lista ligada</i>  é aquela cujos objetos estejam
+organizados linearmente,  sendo esta ordem determinada  por <i>ponteiros</i>,
+que   aqui  podemos   compreender   como   referências  ao   ``próximo
+elemento''.
+</p>
 
-                    <nav class="nav-wrapper" aria-label="Page navigation">
-                        <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="01-01-o-que-e-lisp.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
-                            </a>
+<p>
+Isso introduz dois pontos de relevância: primeiramente, como Lisps são
+linguagens feitas  para a manipulação de  <i>listas simplesmente ligadas</i>,
+podemos  representar internamente  nossos programas  usando o  próprio
+<i>framework</i>  da linguagem<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>.  Isso  significa que  não será  preciso
+implementar uma estrutura que sirva apenas para representar uma AST.
+</p>
 
-                            <a rel="next" href="01-03-sobre-programacao-instruida.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
+<p>
+Segundo, como  a AST pode  ser representada diretamente em  uma <i>lista</i>,
+isso significa  que nossos programas poderiam  ser <b>manipulados através
+da própria linguagem</b>. Esse é um conceito crucial de uma linguagem como
+Lisp, ainda que não  seja exclusivo aos Lisps; a ele,  damos o nome de
+<i>homoiconicidade</i>.
+</p>
 
-                        <div style="clear: both"></div>
-                    </nav>
-                </div>
-            </div>
+<p>
+Podemos tirar muito  proveito desse conceito; o leitor  atento já terá
+percebido que podemos criar listas, durante a execução de um programa,
+que constituam também outros programas Lisp válidos.
+</p>
+</div>
+</div>
 
-            <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="01-01-o-que-e-lisp.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
-                    </a>
+<div id="outline-container-orgace7e38" class="outline-2">
+<h2 id="orgace7e38">Bibliografia</h2>
+<div class="outline-text-2" id="text-orgace7e38">
+<p>
 
-                    <a rel="next" href="01-03-sobre-programacao-instruida.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
-            </nav>
+</p>
 
-        </div>
+<p>
+Abraham Silberschatz and Peter Baer Galvin and Greg Gagne (2015). <i>Fundamentos de Sistemas Operacionais</i>, LTC.</p>
+
+<p>
+Alonzo Church (1936). <i>An Unsolvable Problem of Elementary Number Theory</i>, {American Journal of Mathematics}.</p>
+
+<p>
+Donald E. Knuth (1984). <i>Literate Programming</i>, The Computer Journal.</p>
+
+<p>
+Harold Abelson and Gerald Jay Sussman and Julie Sussman (1996). <i>Structure and Interpretation of Computer Programs</i>, MIT Press.</p>
+
+<p>
+Kenneth Eugene Iverson (1980). <i>Notation as a Tool of Thought</i>, {Communications of the ACM}.</p>
+
+<p>
+Thomas H. Cormen and Charles E. Leiserson and Ronald R. Rivest and Clifford Stein (2012). <i>Algoritmos</i>, Elsevier.</p>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1" role="doc-backlink">1</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+A melhor  forma para compreendermos essa  ideia é lembrando-nos
+de que, em algum ponto,  precisamos de algo como uma ``matéria-prima''
+para representarmos as listas em  Majestic Lisp. Se tivermos uma forma
+simples de  representação de <i>listas simplesmente  ligadas</i>, então basta
+que, durante o processo de conversão do programa, criemos <i>listas</i> cujos
+elementos  sejam <i>símbolos</i>  ou  outras <i>sub-listas</i>.  Esse processo  será
+melhor discutido mais tarde.
+</p></div></div>
 
 
-
-
-        <script type="text/javascript">
-            window.playground_copyable = true;
-        </script>
-
-
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
-
-        <!-- Custom JS scripts -->
-
-
-    </body>
+</div>
+</div></div>
+<div id="postamble" class="status">
+<p class="author">Author: Lucas S. Vieira</p>
+<p class="date">Created: 2022-10-23 dom 20:03</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
 </html>
