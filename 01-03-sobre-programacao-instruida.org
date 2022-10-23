@@ -1,14 +1,12 @@
-#+language: pt-br
-#+options: toc:nil
-#+startup: showall inlineimages
-
-* Sobre Programação Instruída
+#+setupfile: static/setupfile.org
+#+title: Sobre Programação Instruída
+#+html_link_up: 01-introducao.html
 
 #+index: literate programming
 #+index: programação instruída
 Para garantir a reproducibilidade do  projeto, optei aqui por utilizar
 o   conceito   de   /literate   programming/,   como   demonstrado   por
-citet:knuth1984,  que aqui  traduzo  livremente como  /programação
+Knuth (1984),  que aqui  traduzo  livremente como  /programação
 instruída/, dado seu  objetivo de instruir o  leitor, passo-a-passo, no
 desenvolvimento de uma aplicação.
 
@@ -28,6 +26,15 @@ posteriormente, através  de um processo conhecido  como /entrelaçamento/
 o entendimento do que está sendo  escrito venha antes do código em si,
 de forma que o leitor possa timar e analisar partes do código com base
 na prosa que as acompanha.
+
+* Bibliografia
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+[cite/n:@knuth1984]
+
+#+print_bibliography:
 
 * Footnotes
 

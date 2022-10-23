@@ -1,0 +1,14 @@
+#+setupfile: static/setupfile.org
+#+html_link_up: index.html
+#+title: Sintaxe da Linguagem
+
+Agora que sabemos o escopo do nosso projeto e a forma como vamos lidar
+com  ele,   vamos  falar  um   pouco  sobre  a  linguagem   que  vamos
+construir.  Para  isso,  teremos   agora  uma  introdução  didática  à
+linguagem Majestic Lisp.
+
+O  objetivo deste  capítulo não  é  especificar com  detalhes a  nossa
+linguagem; aliás,  a especificação da linguagem  poderá ser encontrada
+no Apêndice A.  Faremos apenas um /tour/ pela sintaxe  de Majestic Lisp,
+com seus detalhes mais importantes que a tornam uma linguagem única.
+

@@ -1,9 +1,6 @@
-#+language: pt-br
-#+options: toc:nil
-#+startup: showall inlineimages
-
-
-* O que é Lisp?
+#+setupfile: static/setupfile.org
+#+title: O que é Lisp?
+#+html_link_up: 01-introducao.html
 
 Antes  de  mais  nada,  é  essencial ressaltar  que  a  linguagem  que
 construiremos    ao   longo    desse   texto    é   um    dialeto   de
@@ -12,14 +9,14 @@ Lisp.
 #+index: Lisp
 #+index: Lisp!LISP 1.5
 LISP,  acrônimo para  /List  Processor/ (processador  de  listas), é  um
-formalismo inicialmente definido  por citet:mccarthy1960, e então
+formalismo inicialmente definido  por McCarthy (1960), e então
 polido  até  tornar-se  uma   linguagem  de  programação  propriamente
 dita. Posteriormente, essa linguagem seria lançada como LISP 1.5.
 
 Sendo LISP um /processador de listas/, há uma pretensão de que o usuário
 possa usufruir  de uma situação  inusitada: tanto /código/  quanto /dados/
 poderiam ser expressados sob a mesma estrutura, uma /lista simplesmente
-encadeada/ cite:cormen-pt.
+encadeada/ (CORMEN /et al/, 2012).
 
 #+index: Lisp!s-expressions
 Desde o  lançamento do LISP  1.5 de  McCarthy, a linguagem  acabou por
@@ -30,13 +27,11 @@ em uma  sintaxe que chamamos  de /s-expressions/. Por isso,  dialetos de
 Lisp normalmente possuem  a característica de serem  dotados de muitos
 parênteses na escrita.
 
-#+md: <center>
+#+CAPTION: Symbolics 3640 Lisp Machine.  Fonte: https://en.wikipedia.org/wiki/Lisp_machine. Acesso em 12/09/2020.
 #+attr_org: :width 200
 #+attr_latex: :height 0.5\linewidth
 [[./img/Symbolics3640.png]]
 
-#+md: <small>Symbolics 3640 Lisp Machine.  Fonte: https://en.wikipedia.org/wiki/Lisp_machine. Acesso em 12/09/2020.</small>
-#+md: </center>
 
 Muitos dialetos  de Lisp tornaram-se  populares ao longo  da história,
 inclusive em  máquinas comerciais feitas exclusivamente  para execução
@@ -47,15 +42,12 @@ sistemas incluíam programas  extras como um editor  de texto vinculado
 ao sistema, por  exemplo. Através do próprio editor  de texto, pode-se
 realizar alterações com impacto em todo o sistema operacional.
 
-#+md: <center>
 #+index: Zmacs
-#+caption: Editor de texto Zmacs, editor do TI Explorer.
+#+caption: Editor de texto Zmacs, editor do TI Explorer. Fonte: https://alchetron.com/Zmacs. Acesso em 18/09/2020.
 #+attr_org: :width 400
 #+attr_latex: :width 0.95\linewidth
 [[file:img/zmacs.png]]
 
-#+md: <small>Editor de texto Zmacs, editor do TI Explorer. Fonte: https://alchetron.com/Zmacs. Acesso em 18/09/2020.</small>
-#+md: </center>
 
 Apesar dos mais de  50 anos de idade de LISP 1.5,  os dialetos de Lisp
 não deixaram  de ter  sua popularidade, ainda  que modesta.  Há muitos
@@ -71,18 +63,18 @@ tipos,  e  também  de  um  sistema maduro  de  condições  que  permite
 recuperar-se de  erros imprevistos manualmente, enquanto  o programa é
 executado.
 
+#+caption: Exemplo de código em Common Lisp.
 #+begin_src lisp :tangle no
 (defun say-hello (name)
   (format t "Hello, ~a!~%" name))
 
 (say-hello "Fulano")
 #+end_src
-#+md: <center><small>Exemplo de código em Common Lisp.</small></center>
 
 #+index: Lisp!Scheme
 A  linguagem Scheme  é uma  linguagem simples,  com uma  especificação
 sucinta.   Sendo   o   carro-chefe    dos   exemplos   explicados   em
-citet:sicp, é  uma excelente  escolha para  iniciantes, sobretudo
+Abelson, Sussman e Sussman (1996), é  uma excelente  escolha para  iniciantes, sobretudo
 para aqueles  que querem  melhor entender  o paradigma  da /programação
 funcional/. Sua contraparte  -- a linguagem Racket,  por vezes figurada
 como um dialeto  de Scheme -- é como Scheme  com ``pilhas incluídas'',
@@ -90,6 +82,7 @@ possuindo  até mesmo  um /ambiente  integrado de  desenvolvimento/ (IDE)
 próprio,  sendo um  ambiente  propício até  mesmo  para iniciantes  na
 programação de computadores.
 
+#+caption:  Exemplo de código em Scheme.
 #+begin_src scheme :tangle no
 (define (say-hello name)
   (display "Hello, ")
@@ -98,7 +91,6 @@ programação de computadores.
 
 (say-hello "Fulano")
 #+end_src
-#+md: <center><small>Exemplo de código em Scheme.</small></center>
 
 #+index: Lisp!Clojure
 A linguagem Clojure foi criada por Rich Hickey para ser compatível com
@@ -109,13 +101,13 @@ operabilidade entre  programas em Clojure e  bibliotecas anteriormente
 escritas em  Java. Possui  uma contraparte chamada  ClojureScript, que
 pode ser usada para desenvolvimento web Frontend.
 
+#+caption: Exemplo de código em Clojure.
 #+begin_src clojure :tangle no
 (defn say-hello [name]
   (format "Hello, %s!\n" name))
 
 (say-hello "Fulano")
 #+end_src
-#+md: <center><small>Exemplo de código em Clojure.</small></center>
 
 #+index: Emacs
 O dialeto Emacs Lisp é utilizado como linguagem de /script/ no editor de
@@ -127,15 +119,22 @@ avançadas para auxílio  na codificação de programas,  até a utilização
 do próprio editor  de texto como um gerenciador de  janelas do sistema
 operacional.
 
+#+caption: Editor de texto Emacs, editando código Emacs Lisp e Rust ao mesmo tempo, enquanto também navega por notícias via feed RSS.
 #+attr_org: :width 400
 #+attr_gfm: :width 400
 #+attr_latex: :placement [H]
 #+attr_latex: :width 0.95\linewidth
 [[file:img/elisp.png]]
 
-#+md: <small>Editor de texto Emacs, editando código Emacs Lisp e Rust ao mesmo tempo, enquanto também navega por notícias via feed RSS.</small>
-
 
 A seguir,  introduziremos as  ideias principais  do dialeto  com atual
 maior relevância para você, que lê este texto: Majestic Lisp.
 
+* Bibliografia
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+[cite/n:@mccarthy1960; @cormen-pt; @sicp]
+
+#+print_bibliography:

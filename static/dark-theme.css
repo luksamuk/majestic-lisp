@@ -1,0 +1,23 @@
+html {
+    /* background-color: #0C0D12; */
+    background-color: #14171e;
+}
+
+body {
+    color:      #f0f0f0;
+    background: #0C0D125e;
+}
+
+a {
+    color: #59e;
+}
+
+a:hover {
+    color: #38b;
+}
+
+@media all and (max-width: 670px) {
+    body {
+	background: #14171e00;
+    }
+}

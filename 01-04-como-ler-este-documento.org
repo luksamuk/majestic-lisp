@@ -1,8 +1,6 @@
-#+language: pt-br
-#+options: toc:nil
-#+startup: showall inlineimages
-
-* Como ler este documento
+#+setupfile: static/setupfile.org
+#+title: Como ler este documento
+#+html_link_up: 01-introducao.html
 
 Como  citado anteriormente,  este documento  funciona de  forma dupla,
 constituindo-se  de duas  partes: primeiro,  uma prosa  com blocos  de

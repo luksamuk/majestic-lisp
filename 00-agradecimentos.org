@@ -1,8 +1,6 @@
-#+language: pt-br
-#+options: toc:nil
-#+startup: showall inlineimages
-
-* Agradecimentos
+#+setupfile: static/setupfile.org
+#+title: Agradecimentos
+#+html_link_up: index.html
 
 A linguagem construída nesse livro dá ao leitor a ideia de um software
 primariamente artesanal, o que leva à crença de que Majestic Lisp seja

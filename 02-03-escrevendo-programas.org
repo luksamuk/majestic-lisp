@@ -1,0 +1,770 @@
+#+setupfile: static/setupfile.org
+#+html_link_up: 02-sintaxe.html
+#+title: Escrevendo programas
+#+options: toc:t
+
+Agora que falamos de listas, podemos finalmente falar dos programas de
+Majestic Lisp.
+
+Programas  de  Majestic   Lisp  são  tratados  como   um  /conjunto  de
+expressões/. Essas expressões podem ser símbolos individuais, ou /listas/
+com arranjo específico.
+
+Como anteriormente citado, um símbolo individual normalmente é tratado
+como um  rótulo para um valor.  Já uma lista pode  estar relacionada à
+/aplicação de uma  função/, execução de uma /forma  especial/ ou /aplicação
+de um macro/.
+
+Por exemplo, a expressão a seguir define uma função capaz de dobrar um
+número qualquer, aqui chamada ~double~:
+
+#+begin_src majestic
+(defn double (x)
+  (* x 2))
+#+end_src
+
+#+RESULTS[bdd2d06d21a7e970c7d0948e69ed73577e80e51e]:
+: double
+
+Apesar de ser um uso específico do macro[fn:6] ~defn~, a expressão acima
+continua sendo  uma lista,  segundo o  que já foi  dito a  respeito da
+sintaxe  das  mesmas. A  diferença  crucial  está em  não  realizarmos
+/quoting/ na expressão, o que indica que ela deverá ser interpretada.
+
+Durante a  interpretação, o interpretador verifica  o primeiro símbolo
+da   lista  e   percebe   que   ~defn~  está   atrelado   a  um   macro;
+subsequentemente, realiza  os passos de interpretação  necessários que
+levam, ao final, à atribuição de uma função ao símbolo ~double~.
+
+Veremos a seguir algumas funções e  formas especiais que são padrão em
+Majestic, bem como o uso das mesmas.
+
+** Declaração de variáveis
+
+#+index: variável
+A maioria das linguagens possui uma forma de atribuir /rótulos/ a certos
+valores, e  Majestic Lisp não  é diferente nesse aspecto.  Nela, temos
+uma  forma de  definir  valores  que estarão  acessíveis  para todo  o
+programa, e  também valores que  estarão acessíveis apenas  em regiões
+específicas,  que  geralmente  chamamos  de  /escopo/.
+
+#+index: variável dinâmica
+Outra  forma  de  utilização  de  uma  variável  está  em  redefini-la
+dinamicamente de  acordo com um  contexto, porém não  abordaremos este
+método nas seções subsequentes.
+
+*** Variáveis globais
+
+#+index: variável global
+Variáveis globais  são variáveis  que, normalmente, são  acessíveis em
+qualquer região de um programa.
+
+Majestic  Lisp armazena,  em um  estado  global, uma  tabela que  liga
+certos rótulos (símbolos) a certos valores.
+
+Podemos  usar a  /forma especial/  ~def~ para  definir uma  variável.
+
+A seguir,  usamos ~def~  para /definir/  uma variável  global ~x~,  de valor
+numérico ~5~. Como resposta, o  interpretador retorna o mesmo símbolo ~x~,
+indicando que este foi definido com sucesso.
+
+#+begin_src majestic
+(def x 5)
+#+end_src
+
+#+RESULTS[a7ef9ea5f10b806d0b71a4ae6ac52f2f685e704c]:
+: x
+
+Se, logo em seguida, formos ao REPL  e digitarmos o símbolo ~x~ para que
+seja interpretado, o interpretador retornará  o valor associado a esse
+símbolo:
+
+#+begin_src majestic
+x
+#+end_src
+
+#+RESULTS[a6b25a9fd7dc9181da6c0dba94f2c7f41bece54c]:
+: 5
+
+Caso digitássemos um símbolo não-/quotado/  que não correspondesse a uma
+variável anteriormente definida, o  interpretador informaria que há um
+erro.
+
+#+index: atribuição de valor
+Podemos redefinir  o valor  de uma variável  com facilidade,  usando a
+forma  especial ~set~.  Ela nos  permite realizar  atribuições de  novos
+valores a variáveis já existentes.
+
+#+begin_src majestic
+(set x 9)
+#+end_src
+
+#+RESULTS[99c5197e909529ebf5af90cdeeb297f94081ff43]:
+: x
+
+#+begin_src majestic
+x
+#+end_src
+
+#+RESULTS[a6b25a9fd7dc9181da6c0dba94f2c7f41bece54c]:
+: 9
+
+~set~ só pode ser utilizado em uma variável global após a mesma ter sido
+atribuída, através de ~def~.
+
+*** Variáveis locais
+
+#+index: variável local
+Há uma  forma de definir  variáveis apenas temporariamente  através da
+criação de  um /escopo/. O  interpretador de Majestic Lisp  tratará essa
+variável como definida apenas dentro do mesmo; fora, a variável já não
+estará definida.
+
+#+begin_src majestic
+(let ((y 9))
+  y)
+#+end_src
+
+#+RESULTS[d9642c8dc12352ff74bf51b45eec1ec4897df7f2]:
+: 9
+
+Na  situação acima,  usamos o  /macro/ ~let~  para definir  localmente uma
+única  variável ~y~,  que  estará  definida apenas  para  o corpo  desse
+macro.
+
+O macro ~let~ tem a forma a seguir:
+
+#+begin_example
+(let (<definições>)
+  <corpo>)
+#+end_example
+
+...onde ~<definições>~ é um número arbitrário de duplas na forma ~(rótulo
+valor)~, e ~<corpo>~ é *uma única expressão*, que será interpretada levando
+em consideração as variáveis localmente definidas.
+
+O exemplo anterior  funciona como se tivéssemos definido  a variável ~y~
+globalmente usando o valor ~9~ e  pedíssemos o valor associado a ~y~. Logo
+em seguida, o interpretador "esquece"  que essa variável foi algum dia
+definida.
+
+Também podemos redefinir o valor de uma variável local, usando a forma
+especial ~set~:
+
+#+begin_src majestic
+(let ((y 9))
+  (set y 10)
+  y)
+#+end_src
+
+#+RESULTS[781bd97382f5a604c81c3583107ed9e62a1adf54]:
+: 10
+
+**** *Sombreando variáveis.*
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+#+index: sombreamento de variável
+Podemos   usar  definições   locais  para   utilizarmos  a   ideia  de
+/sombreamento/,  para  efetuar  redefinições  temporárias  de  variáveis
+globais, ou até mesmo de variáveis locais, em caso de ~let~'s aninhados.
+
+#+begin_src majestic
+(def x 5)
+#+end_src
+
+#+RESULTS[12d278be7186e21e953240059e127588b617c423]:
+: x
+
+#+begin_src majestic
+(let ((x 6))
+  x)
+#+end_src
+
+#+RESULTS[ee2f1c26d0a3a1ee39b80854b6ca2ac6606ed8dc]:
+: 6
+
+#+begin_src majestic
+x
+#+end_src
+
+#+RESULTS[5c1ca8479c30dde4d6b5a9f977503b6b7bd4b56c]:
+: 5
+
+O exemplo acima mostra uma variável global ~x~ cujo valor atribuído é ~5~;
+em seguida, criamos um escopo onde  ~x~ possui o valor ~6~, e requisitamos
+nele o valor  de ~x~.  Após a  execução desse escopo, ~x~ "volta"  a ter o
+valor associado ~5~.
+
+** Funções
+
+Até agora, vimos estruturas especiais de listas a serem interpretadas,
+mais  especificamente /formas  especiais/  e /macros/.  Mas  e quanto  aos
+outros tipos de lista?
+
+Quando  temos uma  lista  "comum", o  interpretador  de Majestic  Lisp
+espera que o  primeiro elemento da lista seja uma  /função/. Funções são
+fragmentos de código  que realizam operações específicas,  e que podem
+ser reutilizados posteriormente.
+
+Em  Majestic  Lisp, temos  dois  tipos  de  funções: /primitivas/  e  /de
+usuário/.
+
+*** Funções primitivas
+
+As funções primitivas de Majestic  Lisp são funções já definidas antes
+da   execução   do   interpretador.  Isso   significa   que   qualquer
+implementação da  linguagem precisa garantir que  essas funções possam
+ser utilizadas.
+
+Uma dessas funções é a  função ~+~, responsável principalmente por somar
+números.  Essa  função  aceita  qualquer quantidade  de  números  como
+/argumentos/ e, quando fornecidos dois ou mais argumentos, ela retorna a
+soma de todos esses números[fn:8].
+
+#+begin_src majestic
+(+ 2 3)
+#+end_src
+
+#+RESULTS[bc13b4701ca542bc4e323153cceed182e026dcf6]:
+: 5
+
+#+begin_src majestic
+(+ 5 7 1)
+#+end_src
+
+#+RESULTS[6814837a598b8e7872893de9ba0cb238b47a15d3]:
+: 13
+
+Há também outras funções primitivas de aritmética, capazes de executar
+multiplicação (~*~), divisão (~/~) e subtração (~-~). Podemos inclusive usar
+sublistas  para realizar  mais  operações com  o  resultado de  outras
+operações; nesse caso, também é  pertinente indentar nosso código para
+melhor legibilidade.
+
+#+begin_src majestic
+(+ (/ 8 2)
+   (+ 1 3)
+   (* 7 7))
+#+end_src
+
+#+RESULTS[47784cd1a88fd44fcdbe4be0208edf8f85d094fd]:
+: 57
+
+*** Aplicação de funções
+
+Outro  exemplo de  função  primitiva, muito  utilizada,  é ~cons~.  Essa
+função requer  exatamente /dois/ argumentos,  e pode ser  utilizada para
+criar uma célula /cons/. Veja o exemplo um pouco mais complexo a seguir.
+
+#+begin_src majestic
+(let ((x 2)
+      (y 3))
+  (cons x y))
+#+end_src
+
+#+RESULTS[e13b5b1016c38db15f7eb098ca899fcab3f9c6e0]:
+: (2 . 3)
+
+Aqui, temos as  variáveis locais ~x~ e  ~y~, de valores atribuídos  ~2~ e ~3~,
+respectivamente.
+
+Ao passarmos as variáveis locais ~x~ e ~y~ para ~cons~, veja que não estamos
+/quotando/ esses rótulos. Isso significa que  o que está sendo passado a
+/cons/  não são  os  nomes das  variáveis,  mas sim  os  valores a  eles
+atribuídos.
+
+Da mesma forma, ~cons~ é apenas o /rótulo/ de uma certa operação, que cria
+uma célula /cons/ a partir de dois valores.
+
+O resultado da operação  é uma célula cujo /car/ é ~2~ e  cujo /cdr/ é ~3~. Ao
+final do  escopo do  ~let~, as  variáveis ~x~ e  ~y~ deixarão  de "existir",
+permanecendo apenas a célula /cons/ retornada, contendo esses valores.
+
+Podemos constatar  os valores de /car/  e /cdr/ de uma  função através das
+funções primitivas homônimas, ~car~ e ~cdr~. A seguir, temos um exemplo um
+pouco  mais  complexo, que  toma  o  retorno do  escopo  anteriormente
+demonstrado, colocando-o em uma variável para ser consultada depois.
+
+#+begin_src majestic
+(def my-cell
+  (let ((x 2)
+        (y 3))
+    (cons x y)))
+#+end_src
+
+#+RESULTS[f9d96639da946e38db01c6a9dda05c4a2490f126]:
+: my-cell
+
+#+begin_src majestic
+my-cell
+#+end_src
+
+#+RESULTS[d114dc282580280ad7d6e7e8820b308b687293d7]:
+: (2 . 3)
+
+#+begin_src majestic
+(car my-cell)
+#+end_src
+
+#+RESULTS[099e37e4fae3dbeb64e34d02f0b2870dc48de45e]:
+: 2
+
+#+begin_src majestic
+(cdr my-cell)
+#+end_src
+
+#+RESULTS[0050c3a544d1fdc9806e8ef57cd78c455661d8a0]:
+: 3
+
+*** Funções do usuário
+
+As funções  de usuário  de Majestic Lisp  são funções  declaradas pelo
+usuário  do   sistema,  diferentemente  das  funções   primitivas  que
+já existem quando o sistema é iniciado.
+
+A sintaxe para a declaração de uma função envolve a forma especial ~fn~,
+que pode ser compreendida como:
+
+#+begin_example
+(fn <argumentos> <corpo>)
+#+end_example
+
+...onde ~<argumentos>~  é, normalmente, uma  lista de argumentos  para a
+função, e  ~<corpo>~ é  uma única  expressão a  ser executada  durante a
+invocação da função.
+
+O  exemplo  a  seguir  envolve  a   função  que  eleva  um  número  ao
+quadrado. Como  podemos observar, a  função recebe um  único argumento
+(aqui chamado ~x~), e então multiplica-o por si mesmo.
+
+O resultado  retornado é um  formato de  impressão de uma  função, que
+normalmente não pode ser reinserido no REPL.
+
+#+begin_src majestic
+(fn (x) (* x x))
+#+end_src
+
+#+RESULTS[ff053edb3d5eff40ac33e5832c54f362a65ca6fd]:
+: #<function (fn (x)) {0x565242ffe170}>
+
+Funções  são  /cidadãos  de  primeira-classe/  em  Majestic  Lisp.  Isso
+significa que  elas podem ser  rotuladas, repassadas em  aplicações de
+outras funções e  atribuídas a novos rótulos, assim  como faríamos com
+qualquer outro valor.
+
+Podemos, por exemplo, atribuir a nossa função ao símbolo ~square~:
+
+#+begin_src majestic
+(def square
+  (fn (x) (* x x)))
+#+end_src
+
+#+RESULTS[96cfbf61873e4c9ebe4c4f2fbe65ca1be252ce68]:
+: square
+
+Para  que não  precisemos  usar com  frequência a  dupla  ~def~ ...  ~fn~,
+instituiremos um  atalho sintático (um  /macro/) que faça  este trabalho
+por nós, tornando  as funções mais simples de serem  lidas. Este macro
+se chamará ~defn~, e poderá ser escrito usando a regra sintática:
+
+#+begin_example
+(defn <nome> <argumentos> <corpo>)
+#+end_example
+
+Se esse "atalho sintático" fosse  expandido, seria exatamente igual ao
+exemplo anterior,  em que usamos ~def~  e ~fn~, portanto as  regras para o
+símbolo, os argumentos e o corpo ainda se aplicam.
+
+#+begin_src majestic
+(defn square (x)
+  (* x x))
+#+end_src
+
+#+RESULTS[e8003c1a273695808c9e350efca845729616c733]:
+: square
+
+A aplicação de uma função do usuário é muito similar, se não idêntica,
+à aplicação de uma função primitiva.
+
+#+begin_src majestic
+(square 5)
+#+end_src
+
+#+RESULTS[acd4cb8ea8a6b462f0a366ba3f289670333ff34c]:
+: 25
+
+**** *Funções locais.*
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+Assim  como no  caso das  variáveis locais,  existem situações  onde é
+interessante  criar  funções de  usuário  que  só valham  para  certos
+escopos. Isso  pode ser feito  usando a  forma ~letfn~, que  atribui uma
+função a um símbolo em um escopo léxico, tal qual a forma ~let~.
+
+Similar  a ~defn~,  cada  cláusula de  ~letfn~, de  forma  análoga a  ~let~,
+define uma  função local. A sintaxe  de cada cláusula é  idêntica à de
+~defn~, excluindo-se o uso do símbolo ~defn~ em si.
+
+O exemplo a seguir define globalmente a função de usuário ~1+~, que soma
+uma unidade a um certo número. Em seguida, criamos um escopo onde ~1+~ é
+redefinido  como  uma função  que  soma  um  número  a si  mesmo;  tal
+definição desaparece ao fim desse escopo.
+
+#+begin_src majestic
+(defn 1+ (x) (+ x 1))
+#+end_src
+
+#+RESULTS[55ec371a8a543c28080a1baf5d5c6fcb6810c7bf]:
+: 1+
+
+#+begin_src majestic
+(letfn ((1+ (x)
+          (+ x x)))
+  (1+ 5))
+#+end_src
+
+#+RESULTS[d8bcbed0d183e7beea9260d04b444970cf233988]:
+: 10
+
+#+begin_src majestic
+(1+ 5)
+#+end_src
+
+#+RESULTS[3ecfd8bd6589ce3cbb11696c48ef9625b7a91309]:
+: 6
+
+**** Funções globais recursivas.
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+#+index: recursão global
+É  interessante  observarmos  como  funciona  a  recursão  em  funções
+definidas globalmente em Majestic Lisp.
+
+A  função ~foo~  a seguir  é recursiva  (pois sua  definição depende  da
+invocação de si mesma).
+
+#+begin_src majestic
+(defn foo (n)
+  (when (< n 3)
+    (print "foo #{}" (1+ n))
+    (foo (1+ n))))
+#+end_src
+
+#+RESULTS[8dc087ff8e6d0033a02a2a85b780e277f146b79e]:
+: foo
+
+#+begin_src majestic
+(foo 0)
+#+end_src
+
+#+RESULTS[7c71bfa38230b68aefebaf4e34044f7db290f1e8]:
+: foo #1
+: foo #2
+: foo #3
+: nil
+
+Durante  a  execução  de  ~foo~,   um  interpretador  de  Majestic  Lisp
+consultará a tabela local de símbolos para realizar uma nova aplicação
+da função atrelada ao símbolo  ~foo~. Isso ocorre sem maiores problemas,
+já  que  ~foo~  está  registrado  em  um  contexto  visível  em  toda  a
+aplicação.
+
+**** Funções locais recursivas.
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+#+index: recursão local
+O uso de ~letfn~ é suficiente  para a maioria das situações onde funções
+locais  são necessárias,  porém, este  exemplo falha  quando a  função
+local precisa  ser recursiva *e*  precisa ser executada em  outro escopo
+que não seja o local.
+
+Considere o  exemplo a seguir.  Temos um uso  de ~letfn~ que  define uma
+função local ~foo~, igualmente recursiva  como no exemplo de recursão em
+funções globais. Todavia, o escopo de  ~letfn~ retorna a função ligada a
+~foo~ localmente, que é então atribuída ao símbolo ~bar~ globalmente.
+
+#+begin_src majestic
+(def bar
+  (letfn ((foo (n)
+            (when (< n 3)
+              (print "foo #{}" (1+ n))
+              (foo (1+ n)))))
+    foo))
+#+end_src
+
+#+RESULTS[e5cd1f205e43d9fc3cd50e7f1cbe6628f87b4232]:
+: bar
+
+Quando ~bar~  for executada,  note que,  mesmo que  a função  tenha sido
+originalmente atribuída como  ~foo~, como este símbolo já  não existe no
+contexto local (e nem em um contexto global), ~bar~ executará apenas uma
+vez, mostrando um erro assim que ~foo~ for invocada.
+
+#+begin_src majestic
+(bar 0)
+#+end_src
+
+#+RESULTS[864f55666bfe2165e434fb52ccc4cb5bae0186f2]:
+: foo #1
+: Error: foo is unbound
+
+Isso ocorre  porque, quando definimos  uma função recursiva  local via
+~letfn~, essa função não captura o  escopo na qual foi criada; em outras
+palavras, quando a execução de ~foo~ ocorre fora do ~letfn~, ~foo~ é incapaz
+de encontrar uma referência a si mesmo[fn:9].
+
+Para tanto, podemos usar a  forma especial ~letrec~. Esta forma especial
+funciona  de forma  idêntica a  ~letfn~, porém  garante que  cada função
+local  definida tenha  acesso permanente  ao  escopo em  que todas  as
+funções de ~letrec~ foram definidas.
+
+~letrec~ pode, então, ser utilizado não apenas em contextos de definição
+local de  funções recursivas  que sairão  daquele escopo,  como também
+pode  ser  utilizado  para  definir funções  locais  que  se  utilizam
+mutuamente, onde uma ou mais delas também sairá do escopo de ~letrec~.
+
+#+begin_src majestic
+(def bar
+  (letrec ((foo (n)
+             (when (< n 3)
+               (print "foo #{}" (1+ n))
+               (foo (1+ n)))))
+    foo))
+#+end_src
+
+#+RESULTS[40a5ba4fbbd2bf52f5f97ce0c462dd21540f7b73]:
+: bar
+
+A definição de  ~bar~, dessa vez, carrega uma função  que, antes, estava
+associada ao  símbolo ~foo~; essa  função, porém, captura o  contexto de
+~letrec~, onde o símbolo ~foo~ está bem-definido como sendo uma referência
+a ela mesma.
+
+#+begin_src majestic
+(bar 0)
+#+end_src
+
+#+RESULTS[864f55666bfe2165e434fb52ccc4cb5bae0186f2]:
+: foo #1
+: foo #2
+: foo #3
+: nil
+
+** Controle de fluxo
+
+#+index: condicional
+Majestic Lisp também  provê algumas estruturas capazes  de controlar o
+fluxo  de execução  de programas.  A  linguagem segue  a estrutura  de
+outros Lisps nesse sentido,  replicando com muita similaridade algumas
+formas especiais canônicas.
+
+O primeiro tipo de condicional envolve a forma especial ~if~. Essa forma
+é escrita segundo a regra sintática:
+
+#+begin_example
+(if <condição> <consequência> <alternativa>)
+#+end_example
+
+Assim,  ~<condição>~, ~<consequência>~  e ~<alternativa>~  são expressões  a
+serem interpretadas segundo certas regras especiais.
+
+Primeiramente,   Majestic  Lisp   tentará   interpretar  a   expressão
+~<condição>~.  Caso seu  valor seja  verdadeiro (ou  seja, diferente  de
+~nil~), a expressão ~<consequência>~  será interpretada. Caso contrário, a
+expressão ~<alternativa>~ será interpretada.
+
+A função ~with-one~  a seguir verifica pela nulidade de  um objeto. Caso
+esse  objeto seja  nulo, será  retornado  um /cons/  entre ~0~  e ~1~;  caso
+contrário, será retornado um /cons/ entre o objeto em questão e ~1~.
+
+#+begin_src majestic
+(defn with-one (x)
+  (if (nilp x)
+      (cons 0 1)
+      (cons x 1)))
+#+end_src
+
+#+RESULTS[5b9ea75d231f451be77388542aa98d5d1605cd00]:
+: with-one
+
+#+begin_src majestic
+(with-one nil)
+#+end_src
+
+#+RESULTS[cbdfe847caf6c3445ab0b5de0270f1cb96b84c55]:
+: (0 . 1)
+
+#+begin_src majestic
+(with-one 5)
+#+end_src
+
+#+RESULTS[1e5a58529f03f3559f170b835f45be644ae25909]:
+: (5 . 1)
+
+Outro tipo  de condicional é a  forma ~cond~. Essa forma  é extremamente
+útil quando lidamos  com condicionais que envolvem mais  que apenas um
+predicado.
+
+Por exemplo, uma condicional como esta:
+
+#+begin_src majestic :eval no
+(if pred1
+    conseq1
+    (if pred2
+        conseq2
+        conseq3))
+#+end_src
+
+...pode ser reescrita, usando ~cond~, da seguinte forma:
+
+#+begin_src majestic :eval no
+(cond (pred1 conseq1)
+      (pred2 conseq2)
+      (t conseq3))
+#+end_src
+
+Assim, podemos  transformar o que  seria um encadeamento  sucessivo de
+~if~'s em algo sintaticamente agradável.
+
+A função ~abs~ retratada a seguir  é uma forma redundante de definir uma
+função que calcula  o valor absoluto de um número.  Caso o número seja
+igual a  ~0~, será  retornado ~0~; caso  o número seja  maior que  ~0~, este
+mesmo número será  retornado; mas, se o número for  menor que ~0~, então
+será retornado o valor aritmeticamente oposto a ele.
+
+#+begin_src majestic
+(defn abs (x)
+  (cond ((zerop x) 0)
+        ((> x 0) x)
+        (t (- x))))
+#+end_src
+
+#+RESULTS[466d724c33dc51d5979fd7a43047e67b94aaddbb]:
+: abs
+
+#+begin_src majestic
+(abs 0)
+#+end_src
+
+#+RESULTS[74e6a27662d513b983bd91a35caa7dedb3a885b3]:
+: 0
+
+#+begin_src majestic
+(abs 5)
+#+end_src
+
+#+RESULTS[8cd2e64b7c3e104c73e2e15b11e5034f6af444c2]:
+: 5
+
+#+begin_src majestic
+(abs -5)
+#+end_src
+
+#+RESULTS[f59a3b87dc94ce324115bfec970022311740834d]:
+: 5
+
+** /Quasiquoting/
+
+#+index: quasiquote
+Um  dos elementos  cruciais da  metaprogramação em  Majestic Lisp  é a
+ideia de /quasiquoting/. O conceito é  muito similar à ideia de /quoting/,
+onde toda  uma lista  /quasiquotada/ é, por  padrão, tratada  como dados
+pelo interpretador.
+
+Todavia,  empregar  o recurso  do  /quasiquote/  permite ao  programador
+estipular  alguns  dados  no  interior  de  uma  expressão  que  serão
+efetivamente /interpretados/.   Em outras palavras, alguns  elementos da
+lista serão dados  produzidos durante o processo de  retorno da mesma,
+enquanto outros permanecerão intactos.
+
+Uma lista quasiquotada é precedida pelo  acento grave (~`~), ao invés do
+apóstrofo que simboliza o /quote/ (~'~). Algumas formas dentro dessa lista
+poderão estar  precedidas pelos  símbolos especiais  de /unquote/  (~,~) e
+/unquote-splice/ (~,@~).
+
+#+begin_src majestic
+(defn hello (name)
+  `(good morning ,name and have a nice day))
+#+end_src
+
+#+RESULTS[f44685c20fd608cf4e8d4fd4f7c512f85cdbedd5]:
+: hello
+
+#+begin_src majestic
+(hello 'fulano)
+#+end_src
+
+#+RESULTS[948ee65de8fda7c31bd11499557b372ac6b66827]:
+: (good morning fulano and have a nice day)
+
+A função de usuário ~hello~  apresentada acima recebe um único argumento
+-- ~name~ --  que será inserido diretamente numa  lista, precedido pelos
+respectivos símbolos  ~good~ e  ~morning~. Veja que,  com o  /quasiquote/, é
+possível deixar  claro o  local exato  onde o  valor associado  a ~name~
+ficará, e  este valor é marcado  através do /unquote/ da  expressão ~name~
+nesta lista.
+
+Todavia,  o processo  de  /unquote/  não realiza  distinção  se o  valor
+associado a ~name~ é uma lista ou não:
+
+#+begin_src majestic
+(hello '(fulano da silva))
+#+end_src
+
+#+RESULTS[47a10037b261147fddb5a68491e1d57f7fa42cc5]:
+: (good morning (fulano da silva) and have a nice day)
+
+Em uma situação ideal, podemos  realizar essa distinção reescrevendo a
+função  ~hello~ de  forma que,  quando o  valor recebido  na chamada  da
+função  for  uma  /lista/,  *apenas   seu  conteúdo  seja  adicionado  ao
+resultado*. A este processo, damos o nome de /unquote-splice/.
+
+#+begin_src majestic
+(defn hello (name)
+  (if (consp name)
+      `(good morning ,@name and have a nice day)
+      `(good morning ,name and have a nice day)))
+#+end_src
+
+#+RESULTS[39148ae4c1e524604201938ff7ef941b92904a65]:
+: hello
+
+#+begin_src majestic
+(hello '(fulano da silva))
+#+end_src
+
+#+RESULTS[47a10037b261147fddb5a68491e1d57f7fa42cc5]:
+: (good morning fulano da silva and have a nice day)
+
+#+begin_src majestic
+(hello 'fulano)
+#+end_src
+
+#+RESULTS[948ee65de8fda7c31bd11499557b372ac6b66827]:
+: (good morning fulano and have a nice day)
+
+Veja que, como previsto, apenas o conteúdo da lista /quotada/ ~(fulano da
+silva)~  foi adicionado  diretamente à  lista, como  se seus  elementos
+tivessem sido "desempacotados" na lista de nível superior.
+
+* Footnotes
+
+[fn:9] Isso ocorre  por intermédio de escopo dinâmico em  ~letfn~, o que
+pode inclusive não ser desejável.
+
+[fn:8] É interessante  notar que, em Majestic Lisp, a  função ~+~ também
+pode operar  sobre um  único número, calculando  seu /conjugado/  -- uma
+operação que funciona com números  complexos. Caso o número não possua
+esse subtipo, ~+~ apenas retorna o número sem modificações.
+
+[fn:6] Macros  auxiliam o  programador, possibilitando a  definição de
+nova sintaxe que, em tempo de execução, se transforma em sintaxe menos
+intuitiva. Veremos como isso funciona posteriormente.

@@ -1,8 +1,6 @@
-#+language: pt-br
-#+options: toc:nil
-#+startup: showall inlineimages
-
-* Introdução
+#+setupfile: static/setupfile.org
+#+title: Introdução
+#+html_link_up: index.html
 
 Programação   pode  ser   considerada  um   trabalho  majoritariamente
 artesanal.   Mas uma  consideração como  essa não  é adotada  de forma
@@ -21,7 +19,7 @@ apresenta a disciplina de /Engenharia  de Software/, por exemplo), ainda
 acredito  na  programação de  computadores  como  uma /arte/,  algo  que
 envolve muito mais que apenas seguir práticas consolidadas.
 
-citet:&verna2018 (p.  4)   endossa  o  aspecto   artístico  na
+Verna (2018, p.  4)   endossa  o  aspecto   artístico  na
 programação  --  que,  por  alguns, é  considerado  mera  luxúria  --,
 inclusive  citando  antigos  apoiadores  dessas  ideias  (como  Knuth,
 Dijkstra  e   Ershov).  Esses  pensadores  ilustres   também  buscavam
@@ -98,3 +96,11 @@ linguagens.   Por isso,  trabalho  sob alguns  pressupostos, que  mais
 tarde enumerarei,  e que  segui como regras  informais de  estilo para
 esse processo de desenvolvimento.
 
+* Bibliografia
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+[cite/n:@verna2018]
+
+#+print_bibliography:

@@ -1,0 +1,716 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+<head>
+<!-- 2022-10-23 dom 20:03 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Listas</title>
+<meta name="author" content="Lucas S. Vieira" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="./main.css" />
+<link rel="stylesheet" type="text/css" href="./syntax.css" />
+<link id="theme-css" rel="stylesheet" type="text/css" href="./dark-theme.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="../img/cat-i-mage.jpg">
+<meta name="theme-color" content="#14171e">
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="02-sintaxe.html"> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Listas</h1>
+<p>
+Como  mencionado anteriormente,  o uso  de células  <i>cons</i> tem  um papel
+importante na linguagem, por ser  uma combinação de elementos. Através
+do encadeamento  de <i>cons</i> através de  seus respectivos <i>cdr</i> &#x2013;  ou seja,
+<i>cons</i> que também possuem um <i>cons</i> em seu <i>cdr</i>, recursivamente &#x2013;, podemos
+gerar uma estrutura de dados conhecida como <i>lista simplesmente ligada</i>,
+<i>lista encadeada</i> ou <i>lista ligada</i>.
+</p>
+
+<p>
+Majestic, assim como outros Lisps,  lida com listas encadeadas de duas
+formas: usando <i>listas  pontuadas</i> ou <i>listas apropriadas</i>.  A maioria dos
+programas  em   Majestic  utilizam  listas  apropriadas,   mas  listas
+pontuadas também aparecem em situações específicas.
+</p>
+
+<div id="outline-container-orgbb1981c" class="outline-2">
+<h2 id="orgbb1981c"><span class="section-number-2">1.</span> Listas pontuadas</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Sintaticamente, quando um <i>cons</i> possui outro <i>cons</i> em seu <i>cdr</i>:
+</p>
+
+<ul class="org-ul">
+<li>Removemos o ponto que separa os dois elementos no primeiro <i>cons</i>;</li>
+<li>Removemos os parênteses ao redor do segundo <i>cons</i>.</li>
+</ul>
+
+<p>
+Majestic Lisp  é capaz de seguir  essas regras de impressão.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">'<span style="color: #ffd700;">(</span>a . <span style="color: #da70d6;">(</span>b . c<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+(a b . c)
+</pre>
+
+
+<p>
+A esse encadeamento limitado envolvendo células <i>cons</i>, terminado com um
+elemento separado por ponto, damos o nome de <i>lista pontuada</i>.
+</p>
+
+<p>
+Essa situação  pode se  repetir recursivamente, toda  vez que  um novo
+<i>cons</i> aparecer no <i>cdr</i> de um <i>cons</i> anterior.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">'<span style="color: #ffd700;">(</span>a . <span style="color: #da70d6;">(</span>b . <span style="color: #87cefa;">(</span>c . d<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+(a b c . d)
+</pre>
+
+
+<p>
+Uma forma de  pensarmos em encadeamentos de células <i>cons</i>  é através de
+uma notação conhecida como <i>notação de caixas</i><sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>. Nela, cada caixa é
+simbolizada como  uma caixa com  duas partes  (<i>car</i> e <i>cdr</i>),  que acabam
+tornando-se ponteiros para outros valores.
+</p>
+
+<p>
+O exemplo  a seguir mostra  uma renderização puramente textual  de uma
+notação em caixas para a expressão <code>(a b c . d)</code>.
+</p>
+
+<pre class="example" id="orgde5639e">
+[*|*]---&gt;[*|*]---&gt;[*|*]---&gt; d
+ |        |        |
+ v        v        v
+ a        b        c
+</pre>
+
+<p>
+Veja que, se  tomarmos o <i>cdr</i> da  primeira célula, o que  resta é outro
+encadeamento de células; isso deixa bem  claro que, no fim das contas,
+estamos falando de uma célula <i>cons</i> no formato <code>(a . ...)</code>, onde <code>...</code> nada
+mais é que a próxima célula <i>cons</i>, com seus próprios detalhes.
+</p>
+
+<p>
+Podemos usar a notação de  caixas para situações ainda mais complexas;
+veja o exemplo a seguir, que  mistura células <i>cons</i> tanto em <i>car</i> quanto
+em <i>cdr</i>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">'<span style="color: #ffd700;">(</span>a . <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span>b . c<span style="color: #87cefa;">)</span> . <span style="color: #87cefa;">(</span>d . e<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+(a (b . c) d . e)
+</pre>
+
+
+<p>
+Representando com a notação em caixas, temos:
+</p>
+
+<pre class="example" id="org54dedb8">
+[*|*]---&gt;[*|*]-------&gt;[*|*]---&gt; e
+ |        |            |
+ v        v            v
+ a       [*|*]---&gt; c   d
+          |
+          v
+          b
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org5a4678a" class="outline-2">
+<h2 id="org5a4678a"><span class="section-number-2">2.</span> Listas adequadas</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Há  um caso  particular  de listas  pontuadas,  que é  particularmente
+interessante em dialetos  de Lisp.  Trata-se de  listas cuja estrutura
+torna-as mais adequadas para processamento.
+</p>
+
+<p>
+Quando, no  encadeamento de  células <i>cons</i> para  formação de  uma lista
+pontuada, o <i>cdr</i> da última célula <i>cons</i> for o símbolo <code>nil</code>, então teremos
+o que chamamos de <i>lista adequada</i>, ou simplesmente <i>lista</i>.
+</p>
+
+<p>
+Para esse caso, podemos adicionar mais uma regra de sintaxe:
+</p>
+
+<ul class="org-ul">
+<li>Quando o <i>cdr</i> de um <i>cons</i>  corresponder ao símbolo <code>nil</code>, pode-se omitir
+o símbolo <code>nil</code> e o ponto que o precede.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-majestic">'<span style="color: #ffd700;">(</span>a . <span style="color: #da70d6;">(</span>b . <span style="color: #87cefa;">(</span>c . nil<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+(a b c)
+</pre>
+
+
+<p>
+Se observarmos a impressão da lista  anterior com a notação em caixas,
+veremos que trata-se exatamente da  mesma coisa que foi escrita usando
+<i>quoting</i>.
+</p>
+
+<pre class="example" id="org26f1784">
+[*|*]---&gt;[*|*]---&gt;[*|*]---&gt; nil
+ |        |        |
+ v        v        v
+ a        b        c
+</pre>
+
+<p>
+Se  <i>listas   pontuadas</i>  poderiam   representar  a  ideia   das  <i>listas
+encadeadas</i>  como   explicadas  por  <a href="cormen-pt">cormen-pt</a>,   as  <i>listas
+adequadas</i> são uma representação ainda mais fiel, pois determinam o uso
+de um único marcador  &#x2013; o símbolo <code>nil</code> &#x2013; para  representar o final de
+uma lista.
+</p>
+
+<p>
+Podemos  representar  listas   (pontuadas  ou  adequadas)  diretamente
+através do processo de <i>quoting</i>, sem parênteses ou pontos adicionais. O
+exemplo a seguir mostra uma lista <i>adequada</i> com números de um a quatro.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">'<span style="color: #ffd700;">(</span>1 2 3 4<span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+(1 2 3 4)
+</pre>
+
+
+<p>
+Sua representação na notação em caixas deixa claro que trata-se de uma
+lista adequada, como esperado.
+</p>
+
+<pre class="example" id="org4b38ad6">
+[*|*]---&gt;[*|*]---&gt;[*|*]---&gt;[*|*]---&gt; nil
+ |        |        |        |
+ v        v        v        v
+ 1        2        3        4
+</pre>
+</div>
+
+<div id="outline-container-orge482860" class="outline-3">
+<h3 id="orge482860"><b>Listas como elementos de listas.</b></h3>
+<div class="outline-text-3" id="text-orge482860">
+<p>
+As listas  "herdam" de seu  componente principal,  o <i>cons</i>, a  ideia de
+poderem ser populadas  com absolutamente qualquer valor,  o que inclui
+células <i>cons</i>.
+</p>
+
+<p>
+Com  isso, fica  fácil deduzir  que  haverá situações  onde uma  lista
+poderá conter <i>outra lista</i> como um de seus elementos.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">'<span style="color: #ffd700;">(</span>1 2 <span style="color: #da70d6;">(</span>3 4<span style="color: #da70d6;">)</span> 5<span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+(1 2 (3 4) 5)
+</pre>
+
+
+<p>
+No exemplo  acima, podemos ver que  um dos elementos da  lista &#x2013; mais
+especificamente,  o  terceiro  elemento  &#x2013;  nada  mais  é  que  outra
+lista.  Isso significa  que essa  <i>sub-lista</i>  está no  <i>car</i> da  terceira
+célula <i>cons</i> da lista ao qual é filiada.
+</p>
+
+<p>
+A representação em caixas deixa isso bem claro, como podemos ver.
+</p>
+
+<pre class="example" id="org8b36a26">
+[*|*]---&gt;[*|*]---&gt;[*|*]------------------&gt;[*|*]---&gt; nil
+ |        |        |                       |
+ v        v        v                       v
+ 1        2       [*|*]---&gt;[*|*]---&gt; nil   5
+                   |        |
+                   v        v
+                   3        4
+</pre>
+
+<p>
+Esse tipo  de representação  acaba tornando nossas  listas rapidamente
+similares a <i>árvores  binárias</i>. Por exemplo, a  expressão abaixo mostra
+claramente     a     construção      de     uma     <i>árvore     binária</i>
+<a href="cormen-pt">s. B.5.3</a> onde  os <i>nós-folha</i> correspondem aos
+elementos que não são células <i>cons</i>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">'<span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span>a . b<span style="color: #da70d6;">)</span> . <span style="color: #da70d6;">(</span>c . d<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+((a . b) c . d)
+</pre>
+
+
+<p>
+Podemos  comparar  essa  notação  com   a  notação  em  caixas  e  uma
+representação visual dessa árvore.
+</p>
+
+<pre class="example" id="org78448ca">
+[*|*]-------&gt;[*|*]---&gt; d
+ |            |
+ v            v
+[*|*]---&gt; b   c
+ |
+ v
+ a
+</pre>
+
+
+<div id="org94864ff" class="figure">
+<p><img src="img/tree-example.png" alt="tree-example.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>Representação gráfica da expressão <code>((a . b) c . d)</code>. Cada caixa representa uma célula <i>cons</i>, onde o lado esquerdo simboliza seu <i>car</i>, e o direito simboliza seu <i>cdr</i>.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org867486d" class="outline-2">
+<h2 id="org867486d"><span class="section-number-2">3.</span> Lista vazia</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Podemos representar uma <i>lista adequada</i>, sem elementos, através de dois
+símbolos distintos: <code>'()</code>, que corresponde  à sintaxe de uma lista vazia
+<i>quotada</i>, e <code>nil</code>, que simboliza o fim de uma lista.
+</p>
+
+<p>
+Dessa forma, podemos  observar que toda lista  adequada encerra-se com
+uma <i>lista vazia</i>.
+</p>
+
+<p>
+Do ponto  de vista de  Majestic Lisp, todo uso  de <code>'()</code> em  código será
+transformado no símbolo <code>nil</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">'<span style="color: #ffd700;">()</span>
+</pre>
+</div>
+
+<pre class="example">
+nil
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org611076c" class="outline-2">
+<h2 id="org611076c"><span class="section-number-2">4.</span> Vetores</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Uma forma alternativa de armazenamento  de dados em Majestic Lisp pode
+ser feita  usando vetores.  Um vetor  nada mais  é que  certos valores
+armazenados de forma  sequencial, para maior facilidade  de acesso. Em
+Majestic,  vetores possuem  subtipos que  indicam a  natureza de  seus
+elementos,  algo  especialmente  importante quando  os  elementos  são
+homogêneos, como veremos em breve.
+</p>
+
+<p>
+Um  vetor pode  ser construído  a partir  da função  <code>vector</code>, e  também
+usando  a   notação  abreviada   com  colchetes;   de  fato,   para  o
+interpretador de Majestic, o uso dos colchetes é equivalente ao uso da
+função  <code>vector</code>.  Os   dois  exemplos  a  seguir   realizam,  de  forma
+equivalente, a construção de dois vetores.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">vector</span> 'a 'b 'c 'd<span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+[a b c d]
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-majestic">['d 'c 'b 'a]
+</pre>
+</div>
+
+<pre class="example">
+[d c b a]
+</pre>
+
+
+<p>
+Como  dito anteriormente,  vetores  de Majestic  possuem <i>subtipos</i>,  de
+forma similar (porém não igual) aos números. Geralmente, um vetor que
+tenha sido construído a partir de valores com o mesmo tipo terá o tipo
+dos vetores  (isto valerá para  números inteiros, pontos  flutuantes e
+caracteres).   Para  outros  tipos  de valores  e  vetores  com  tipos
+mesclados, o vetor possuirá um subtipo <i>any</i>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">vec-type</span> ['a 'b 'c]<span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+any
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">vec-type</span> [1 2 3]<span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+integer
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">vec-type</span> [#\H #\e #\l #\l #\o]<span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+char
+</pre>
+
+
+<p>
+Um vetor  com um subtipo  só suporta  substituição ou adição  de novos
+valores daquele mesmo  subtipo, por questões de  otimização. Caso seja
+necessário inserir  valores de tipos diferentes,  pode-se realizar uma
+coerção do  vetor para um  subtipo <i>any</i>, ou  para outro tipo  de vetor,
+caso seja aplicável.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">vec-type</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">vec-coerce</span> 'any [1 2 3]<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+any
+</pre>
+
+
+<p>
+A diferença  principal entre as listas  e os vetores está  no acesso à
+informação. Enquanto acessar  o n-ésimo valor de uma  lista precisa ser
+feito atravessando-a elemento a elemento,  o acesso ao n-ésimo elemento
+de um vetor pode ser feito em tempo constante.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">vec-at</span> 2 ['a 'b 'c 'd 'e]<span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+c
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #ffd700;">(</span>nth 2 '<span style="color: #da70d6;">(</span>a b c d e<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example">
+c
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org33031a2" class="outline-2">
+<h2 id="org33031a2"><span class="section-number-2">5.</span> Strings</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Strings,  em Majestic  Lisp,  são vetores  que possuem,  estritamente,
+caracteres;  em  outras  palavras,  todo vetor  com  subtipo  <code>char</code>  é,
+necessariamente, uma string.
+</p>
+
+<p>
+Podemos construir strings  a partir de aspas  duplas, como normalmente
+se faz  na maioria  das linguagens, e  também construí-las  através da
+escrita de um vetor que contenha apenas caracteres.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic">[#\a #\b #\c #\d]
+</pre>
+</div>
+
+<pre class="example">
+"abcd"
+</pre>
+
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #ce9178;">"abcd"</span>
+</pre>
+</div>
+
+<pre class="example">
+"abcd"
+</pre>
+
+
+<p>
+Strings são úteis para armazenar informações textuais, e são usadas em
+várias operações como  impressão de texto no console,  em arquivos, ou
+mesmo ao levantarmos erros em nossas aplicações.
+</p>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1" role="doc-backlink">1</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+Livremente traduzido do Inglês: <i>Box notation</i>. 
+</p></div></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<p class="author">Author: Lucas S. Vieira</p>
+<p class="date">Created: 2022-10-23 dom 20:03</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

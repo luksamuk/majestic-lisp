@@ -1,0 +1,391 @@
+#+setupfile: static/setupfile.org
+#+html_link_up: 02-sintaxe.html
+#+title: Listas
+
+#+index: lista ligada
+#+index: lista encadeada
+Como  mencionado anteriormente,  o uso  de células  /cons/ tem  um papel
+importante na linguagem, por ser  uma combinação de elementos. Através
+do encadeamento  de /cons/ através de  seus respectivos /cdr/ --  ou seja,
+/cons/ que também possuem um /cons/ em seu /cdr/, recursivamente --, podemos
+gerar uma estrutura de dados conhecida como /lista simplesmente ligada/,
+/lista encadeada/ ou /lista ligada/.
+
+Majestic, assim como outros Lisps,  lida com listas encadeadas de duas
+formas: usando /listas  pontuadas/ ou /listas apropriadas/.  A maioria dos
+programas  em   Majestic  utilizam  listas  apropriadas,   mas  listas
+pontuadas também aparecem em situações específicas.
+
+** Listas pontuadas
+#+index: lista pontuada
+
+Sintaticamente, quando um /cons/ possui outro /cons/ em seu /cdr/:
+
+- Removemos o ponto que separa os dois elementos no primeiro /cons/;
+- Removemos os parênteses ao redor do segundo /cons/.
+
+Majestic Lisp  é capaz de seguir  essas regras de impressão.
+
+#+begin_src majestic
+'(a . (b . c))
+#+end_src
+
+#+RESULTS[45ae61fdb6c833f8e9410c9a22584f79e8582f3a]:
+: (a b . c)
+
+A esse encadeamento limitado envolvendo células /cons/, terminado com um
+elemento separado por ponto, damos o nome de /lista pontuada/.
+
+Essa situação  pode se  repetir recursivamente, toda  vez que  um novo
+/cons/ aparecer no /cdr/ de um /cons/ anterior.
+
+#+begin_src majestic
+'(a . (b . (c . d)))
+#+end_src
+
+#+RESULTS[385f26f29aefd6642fc8112afa0828df4df627d5]:
+: (a b c . d)
+
+Uma forma de  pensarmos em encadeamentos de células /cons/  é através de
+uma notação conhecida como /notação de caixas/[fn:5]. Nela, cada caixa é
+simbolizada como  uma caixa com  duas partes  (/car/ e /cdr/),  que acabam
+tornando-se ponteiros para outros valores.
+
+O exemplo  a seguir mostra  uma renderização puramente textual  de uma
+notação em caixas para a expressão ~(a b c . d)~.
+
+#+begin_example
+[*|*]--->[*|*]--->[*|*]---> d
+ |        |        |
+ v        v        v
+ a        b        c
+#+end_example
+
+Veja que, se  tomarmos o /cdr/ da  primeira célula, o que  resta é outro
+encadeamento de células; isso deixa bem  claro que, no fim das contas,
+estamos falando de uma célula /cons/ no formato ~(a . ...)~, onde ~...~ nada
+mais é que a próxima célula /cons/, com seus próprios detalhes.
+
+Podemos usar a notação de  caixas para situações ainda mais complexas;
+veja o exemplo a seguir, que  mistura células /cons/ tanto em /car/ quanto
+em /cdr/.
+
+#+begin_src majestic
+'(a . ((b . c) . (d . e)))
+#+end_src
+
+#+RESULTS[97548b8c6b34263d82dd694e98563a8a363d4e11]:
+: (a (b . c) d . e)
+
+Representando com a notação em caixas, temos:
+
+#+begin_example
+[*|*]--->[*|*]------->[*|*]---> e
+ |        |            |
+ v        v            v
+ a       [*|*]---> c   d
+          |
+          v
+          b
+#+end_example
+
+** Listas adequadas
+
+Há  um caso  particular  de listas  pontuadas,  que é  particularmente
+interessante em dialetos  de Lisp.  Trata-se de  listas cuja estrutura
+torna-as mais adequadas para processamento.
+
+Quando, no  encadeamento de  células /cons/ para  formação de  uma lista
+pontuada, o /cdr/ da última célula /cons/ for o símbolo ~nil~, então teremos
+o que chamamos de /lista adequada/, ou simplesmente /lista/.
+
+Para esse caso, podemos adicionar mais uma regra de sintaxe:
+
+- Quando o /cdr/ de um /cons/  corresponder ao símbolo ~nil~, pode-se omitir
+  o símbolo ~nil~ e o ponto que o precede.
+
+#+begin_src majestic
+'(a . (b . (c . nil)))
+#+end_src
+
+#+RESULTS[1afe51433f592ac4cf55f23a47fdd87ffee93a97]:
+: (a b c)
+
+Se observarmos a impressão da lista  anterior com a notação em caixas,
+veremos que trata-se exatamente da  mesma coisa que foi escrita usando
+/quoting/.
+
+#+begin_example
+[*|*]--->[*|*]--->[*|*]---> nil
+ |        |        |
+ v        v        v
+ a        b        c
+#+end_example
+
+Se  /listas   pontuadas/  poderiam   representar  a  ideia   das  /listas
+encadeadas/  como   explicadas  por  citet:cormen-pt,   as  /listas
+adequadas/ são uma representação ainda mais fiel, pois determinam o uso
+de um único marcador  -- o símbolo ~nil~ -- para  representar o final de
+uma lista.
+
+Podemos  representar  listas   (pontuadas  ou  adequadas)  diretamente
+através do processo de /quoting/, sem parênteses ou pontos adicionais. O
+exemplo a seguir mostra uma lista /adequada/ com números de um a quatro.
+
+#+begin_src majestic
+'(1 2 3 4)
+#+end_src
+
+#+RESULTS[b3fd8de4de25ab510918b867942265ea1c43a134]:
+: (1 2 3 4)
+
+Sua representação na notação em caixas deixa claro que trata-se de uma
+lista adequada, como esperado.
+
+#+begin_example
+[*|*]--->[*|*]--->[*|*]--->[*|*]---> nil
+ |        |        |        |
+ v        v        v        v
+ 1        2        3        4
+#+end_example
+
+*** *Listas como elementos de listas.*
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+As listas  "herdam" de seu  componente principal,  o /cons/, a  ideia de
+poderem ser populadas  com absolutamente qualquer valor,  o que inclui
+células /cons/.
+
+Com  isso, fica  fácil deduzir  que  haverá situações  onde uma  lista
+poderá conter /outra lista/ como um de seus elementos.
+
+#+begin_src majestic
+'(1 2 (3 4) 5)
+#+end_src
+
+#+RESULTS[bc535894fff1e9c0469a112c96e1a5c9c515ff00]:
+: (1 2 (3 4) 5)
+
+No exemplo  acima, podemos ver que  um dos elementos da  lista -- mais
+especificamente,  o  terceiro  elemento  --  nada  mais  é  que  outra
+lista.  Isso significa  que essa  /sub-lista/  está no  /car/ da  terceira
+célula /cons/ da lista ao qual é filiada.
+
+A representação em caixas deixa isso bem claro, como podemos ver.
+
+#+begin_example
+[*|*]--->[*|*]--->[*|*]------------------>[*|*]---> nil
+ |        |        |                       |
+ v        v        v                       v
+ 1        2       [*|*]--->[*|*]---> nil   5
+                   |        |
+                   v        v
+                   3        4
+#+end_example
+
+#+index: árvore binária
+Esse tipo  de representação  acaba tornando nossas  listas rapidamente
+similares a /árvores  binárias/. Por exemplo, a  expressão abaixo mostra
+claramente     a     construção      de     uma     /árvore     binária/
+[[citet:cormen-pt][s. B.5.3]] onde  os /nós-folha/ correspondem aos
+elementos que não são células /cons/.
+
+#+begin_src majestic
+'((a . b) . (c . d))
+#+end_src
+
+#+RESULTS[b4b29b83ed0596e0431a1f68c747c4e1e97cb555]:
+: ((a . b) c . d)
+
+Podemos  comparar  essa  notação  com   a  notação  em  caixas  e  uma
+representação visual dessa árvore.
+
+#+begin_example
+[*|*]------->[*|*]---> d
+ |            |
+ v            v
+[*|*]---> b   c
+ |
+ v
+ a
+#+end_example
+
+#+begin_src dot :file img/tree-example.png :cache yes :cmdline -Kdot -Tpng
+digraph G {
+	bgcolor="#00000000";
+      graph [pad="0.23",
+             nodesep="0",
+             ranksep="0.5",
+             fontsize=10,
+             dpi=300];
+	     node [shape=Mrecord];
+	     edge [headclip=false, tailclip=false];
+
+	     cons0[label="<a> | <d> "];
+	     cons1[label="<a> | <d> "];
+	     cons2[label="<a> | <d> "];
+	     a [shape=none];
+	     b [shape=none];
+	     c [shape=none];
+	     d [shape=none];
+
+	     cons0:a:c -> cons1:n;
+	     cons0:d:c -> cons2:n;
+	     cons1:a:c -> a:n;
+	     cons1:d:c -> b:n;
+	     cons2:a:c -> c:n;
+	     cons2:d:c -> d:n;
+}
+#+end_src
+
+#+attr_org: :width 500
+#+attr_latex: :width 0.5\linewidth
+#+attr_latex: :float nil
+#+caption: Representação gráfica da expressão ~((a . b) c . d)~. Cada caixa representa uma célula /cons/, onde o lado esquerdo simboliza seu /car/, e o direito simboliza seu /cdr/.
+#+RESULTS[5290696b21d3602732bd18ede5700e8985e10987]:
+[[file:img/tree-example.png]]
+
+** Lista vazia
+
+Podemos representar uma /lista adequada/, sem elementos, através de dois
+símbolos distintos: ~'()~, que corresponde  à sintaxe de uma lista vazia
+/quotada/, e ~nil~, que simboliza o fim de uma lista.
+
+Dessa forma, podemos  observar que toda lista  adequada encerra-se com
+uma /lista vazia/.
+
+Do ponto  de vista de  Majestic Lisp, todo uso  de ~'()~ em  código será
+transformado no símbolo ~nil~.
+
+#+begin_src majestic
+'()
+#+end_src
+
+#+RESULTS[7d221406b2ccfeee62ce0cf6ab08d1fdb75990e0]:
+: nil
+
+** Vetores
+
+#+index: vetor
+Uma forma alternativa de armazenamento  de dados em Majestic Lisp pode
+ser feita  usando vetores.  Um vetor  nada mais  é que  certos valores
+armazenados de forma  sequencial, para maior facilidade  de acesso. Em
+Majestic,  vetores possuem  subtipos que  indicam a  natureza de  seus
+elementos,  algo  especialmente  importante quando  os  elementos  são
+homogêneos, como veremos em breve.
+
+Um  vetor pode  ser construído  a partir  da função  ~vector~, e  também
+usando  a   notação  abreviada   com  colchetes;   de  fato,   para  o
+interpretador de Majestic, o uso dos colchetes é equivalente ao uso da
+função  ~vector~.  Os   dois  exemplos  a  seguir   realizam,  de  forma
+equivalente, a construção de dois vetores.
+
+#+begin_src majestic
+(vector 'a 'b 'c 'd)
+#+end_src
+
+#+RESULTS[4967281e69b38daf5b1a1e81bff15df7a8940483]:
+: [a b c d]
+
+#+begin_src majestic
+['d 'c 'b 'a]
+#+end_src
+
+#+RESULTS[bda3fdf5281c8da431172ee124ab83e7f12216c1]:
+: [d c b a]
+
+Como  dito anteriormente,  vetores  de Majestic  possuem /subtipos/,  de
+forma similar (porém não igual) aos números. Geralmente, um vetor que
+tenha sido construído a partir de valores com o mesmo tipo terá o tipo
+dos vetores  (isto valerá para  números inteiros, pontos  flutuantes e
+caracteres).   Para  outros  tipos  de valores  e  vetores  com  tipos
+mesclados, o vetor possuirá um subtipo /any/.
+
+#+begin_src majestic
+(vec-type ['a 'b 'c])
+#+end_src
+
+#+RESULTS[009735111beecea426c9244058c01213e70116f6]:
+: any
+
+#+begin_src majestic
+(vec-type [1 2 3])
+#+end_src
+
+#+RESULTS[8acec138e5b117b28b74c6859f3cb30eed308a55]:
+: integer
+
+#+begin_src majestic
+(vec-type [#\H #\e #\l #\l #\o])
+#+end_src
+
+#+RESULTS[3554cbea04d667d0a13c607ba35453f817862fda]:
+: char
+
+Um vetor  com um subtipo  só suporta  substituição ou adição  de novos
+valores daquele mesmo  subtipo, por questões de  otimização. Caso seja
+necessário inserir  valores de tipos diferentes,  pode-se realizar uma
+coerção do  vetor para um  subtipo /any/, ou  para outro tipo  de vetor,
+caso seja aplicável.
+
+#+begin_src majestic
+(vec-type (vec-coerce 'any [1 2 3]))
+#+end_src
+
+#+RESULTS[1ce412e32f7ae8b477ff81050d9721864180e387]:
+: any
+
+A diferença  principal entre as listas  e os vetores está  no acesso à
+informação. Enquanto acessar  o n-ésimo valor de uma  lista precisa ser
+feito atravessando-a elemento a elemento,  o acesso ao n-ésimo elemento
+de um vetor pode ser feito em tempo constante.
+
+#+begin_src majestic
+(vec-at 2 ['a 'b 'c 'd 'e])
+#+end_src
+
+#+RESULTS[da2f4b296d4deb881b62955ebb4767acc84d3e9c]:
+: c
+
+#+begin_src majestic
+(nth 2 '(a b c d e))
+#+end_src
+
+#+RESULTS[1ffdf7cb91410617b49d1d244770d88d0391bf81]:
+: c
+
+** Strings
+
+#+index: string
+Strings,  em Majestic  Lisp,  são vetores  que possuem,  estritamente,
+caracteres;  em  outras  palavras,  todo vetor  com  subtipo  ~char~  é,
+necessariamente, uma string.
+
+Podemos construir strings  a partir de aspas  duplas, como normalmente
+se faz  na maioria  das linguagens, e  também construí-las  através da
+escrita de um vetor que contenha apenas caracteres.
+
+#+begin_src majestic
+[#\a #\b #\c #\d]
+#+end_src
+
+#+RESULTS[1d93e18aa0e704c2ba95fbe669bcdf1fc5639aeb]:
+: "abcd"
+
+#+begin_src majestic
+"abcd"
+#+end_src
+
+#+RESULTS[bdb401ef55e01a6a25ca0e83b9306b9ec8c7fcf3]:
+: "abcd"
+
+Strings são úteis para armazenar informações textuais, e são usadas em
+várias operações como  impressão de texto no console,  em arquivos, ou
+mesmo ao levantarmos erros em nossas aplicações.
+
+* Footnotes
+
+[fn:5] Livremente traduzido do Inglês: /Box notation/. 
+

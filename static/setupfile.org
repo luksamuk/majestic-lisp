@@ -1,0 +1,16 @@
+#+author: Lucas S. Vieira
+#+email: lucasvieira@protonmail.com
+#+language: pt-br
+#+options: toc:nil
+#+startup: showall inlineimages latexpreview
+#+bibliography: ~/Dropbox/bibliografias/references.bib
+#+property: header-args:majestic :exports both :eval no
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./main.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./syntax.css" />
+#+HTML_HEAD: <link id="theme-css" rel="stylesheet" type="text/css" href="./dark-theme.css" />
+#+HTML_HEAD: <meta name="viewport" content="width=device-width, initial-scale=1.0">
+#+HTML_HEAD: <meta property="og:image" content="../img/cat-i-mage.jpg">
+#+HTML_HEAD: <meta name="theme-color" content="#14171e">
+
+#+html_link_home: index.html

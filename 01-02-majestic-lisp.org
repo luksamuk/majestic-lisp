@@ -1,8 +1,6 @@
-#+language: pt-br
-#+options: toc:nil
-#+startup: showall inlineimages
-
-* Majestic Lisp
+#+setupfile: static/setupfile.org
+#+title: Majestic Lisp
+#+html_link_up: 01-introducao.html
 
 Majestic  Lisp  é  o  dialeto  de Lisp  implementado  nesse  livro.  A
 implementação dele é  baseada em cinco pontos  principais, que definem
@@ -17,7 +15,7 @@ as decisões de design da linguagem e da implementação:
    que o interpretador tenha uma  performance a nível de uma linguagem
    usada para trabalhos profissionais;
 2. A implementação busca ser didática  ao máximo, e por isso foi feita
-   utilizando /literate programming/ cite:knuth1984 que aqui é traduzido
+   utilizando /literate programming/ (KNUTH, 1984) que aqui é traduzido
    livremente como  /programação instruída/. Esse paradigma  é discutido
    mais adiante;
 3. A linguagem  em si deve ser algo simples,  em especial para aqueles
@@ -47,12 +45,12 @@ ideia da construção  da própria linguagem de  programação. Todavia, um
 interpretador de uma linguagem é um programa como qualquer outro.
 
 #+index: lambda calculus
-O quinto ponto vem  inspirado diretamente em citet:iverson80, que
+O quinto ponto vem  inspirado diretamente em Iverson (1980), que
 ressalta o uso da notação -- nesse caso, a linguagem de programação em
 si -- como uma ferramenta usada para raciocinar.  Um Lisp simples, com
 regras facilmente  compreensíveis, pode  ser uma  excelente ferramenta
 para  explicar   conceitos  matemáticos  envolvendo   /Lambda  Calculus/
-cite:church36a ou os famosos /numerais de Church/, por exemplo.
+(CHURCH, 1936) ou os famosos /numerais de Church/, por exemplo.
 
 #+index: Lisp!s-expressions
 Majestic  Lisp  possui uma  sintaxe  não  muito  diferente do  que  se
@@ -65,7 +63,7 @@ adequadamente esses detalhes.
 
 #+index: interpretador metacircular
 O   interpretador  de   Majestic  Lisp   segue  vagamente   os  moldes
-determinados por citet:sicp, que  definem o chamado /interpretador
+determinados por Abelson, Sussman e Sussman (1996), que  definem o chamado /interpretador
 metacircular/.
 
 #+index: eval
@@ -76,7 +74,7 @@ como  sendo /circular/,  por apresentar  uma recursão  mútua entre  dois
 procedimentos  principais: ~eval~  e  ~apply~.  O uso  do  sufixo /meta/  na
 denominação  diz   respeito  à  natureza  metalinguística   do  mesmo:
 definimos o  interpretador da linguagem  em questão, usando  a própria
-linguagem  que se  quer interpretar.  Em citet:sicp,  define-se o
+linguagem  que se  quer interpretar.  Em Abelson, Sussman e Sussman (1996),  define-se o
 interpretador de  Scheme --  um dialeto  de Lisp  -- usando  a própria
 linguagem Scheme.
 
@@ -238,7 +236,7 @@ programa, podendo inclusive serem mutáveis. Essas coleções são:
   explorado em outro local.
 - *Tabela de  /Streams/:* Categoriza e  gerencia /streams/ abertos,  que são
   estruturas    muito    similares    a   /descritores    de    arquivo/
-  [[cite:silberschatz2015][p. 445]].  Em Majestic Lisp, os /streams/ são
+  (SILBERSCHATZ, GALVIN e GAGNE, 2015, p. 445).  Em Majestic Lisp, os /streams/ são
   responsáveis  por  toda  a  comunicação  de  /entrada/  (por  exemplo,
   fornecer  o código  ao  Leitor)  e /saída/  (redirecionar  o que  será
   escrito na  Tela ou em  um arquivo).  /Streams/ são  estruturas opacas
@@ -265,7 +263,7 @@ Resta agora enumerar os módulos principais do sistema. Eles são:
 #+index: lista ligada
 Em um  Lisp como  Majestic Lisp, as  /árvores sintáticas  abstratas/ são
 representadas    usando   /listas    simplesmente   ligadas/.    Segundo
-citet:cormen-pt, uma /lista ligada/  é aquela cujos objetos estejam
+Cormen /et al/ (2012), uma /lista ligada/  é aquela cujos objetos estejam
 organizados linearmente,  sendo esta ordem determinada  por /ponteiros/,
 que   aqui  podemos   compreender   como   referências  ao   ``próximo
 elemento''.
@@ -297,3 +295,13 @@ simples de  representação de /listas simplesmente  ligadas/, então basta
 que, durante o processo de conversão do programa, criemos /listas/ cujos
 elementos  sejam /símbolos/  ou  outras /sub-listas/.  Esse processo  será
 melhor discutido mais tarde.
+
+
+* Bibliografia
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+[cite/n:@knuth1984; @iverson80; @church36a; @sicp; @silberschatz2015; @cormen-pt]
+
+#+print_bibliography:

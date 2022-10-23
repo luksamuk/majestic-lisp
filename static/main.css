@@ -1,0 +1,199 @@
+html {
+    background-image: url("../img/weird_motif.png");
+    background-repeat: repeat;
+}
+
+body {
+    margin-left:    auto;
+    margin-right:   auto;
+    /* width:        90%; */
+    width:          60%;
+    text-align:     justify;
+    font-family:    serif;
+    font-size:      16px;
+    padding-left:   5em;
+    padding-right:  5em;
+    padding-bottom: 2em;
+    padding-top:    1em;
+    margin-top:     0;
+    margin-bottom:  0;
+}
+
+.abstract {
+    margin-left:  5%;
+    margin-right: 5%;
+    font-style:   italic;
+    text-align:   center;
+}
+
+#theme-selector {
+    background:   white;
+    width:        30px;
+    height:       auto;
+    position:     fixed;
+    top:          20px;
+    left:         0;
+    border:       1px solid black;
+}
+
+pre[class^="src src-"]:before {
+    visibility: hidden;
+}
+
+pre {
+    background-color: transparent;
+}
+
+pre.src,
+pre.example,
+.timestamp,
+code {
+    font-family: monospace;
+    font-weight: normal;
+    font-style:  normal;
+}
+
+pre.example {
+    border: none;
+    font-size: 12px;
+    margin-left: 25px;
+    margin-top: 0px;
+}
+
+.org-src-container {
+    font-size:   14px;
+    margin-bottom: 0px;
+}
+
+pre.src {
+    margin-bottom: 5px;
+}
+
+
+header {
+    height:     50px;
+    background: #F0F0F0;
+    border:     1px solid #CCC;
+    width:      960px;
+    margin:     0px auto;
+}
+
+#title,
+footer {
+    text-align: center !important;
+}
+
+footer {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+footer .p {
+    text-align: center;
+}
+
+#index {
+    width: 50%;
+}
+
+menu, ul {
+    text-align: left;
+}
+
+a {
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+
+.column {
+    float:      left;
+    text-align: justify;
+    width:      48%;
+    margin:     1%;
+}
+
+.column3 {
+    float:      left;
+    text-align: justify;
+    width:      31%;
+    margin:     1%;
+}
+
+.column4 {
+    float:      left;
+    text-align: justify;
+    width:      23%;
+    margin:     1%;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear:   both;
+    width:   100%;
+}
+
+.center {
+    display: block;
+    margin:  auto;
+}
+
+div.notes {
+    padding-top:   0.5%;
+    padding-bottom:0.5%;
+    padding-left:  1.5%;
+    padding-right: 1.5%;
+    font-style:    italic;
+}
+
+h2.footnotes {
+    padding-top: 80px;
+    font-size:   18px;
+    font-style:  italic;
+}
+
+#table-of-contents {
+    padding-bottom: 80px;
+}
+
+table {
+    width: 80%;
+    margin: 10%;
+}
+
+
+@media all and (max-width: 670px) {
+    body {
+        margin-left:  2% !important;
+        margin-right: 2% !important;
+        width:       96% !important;
+	padding-left:   0;
+	padding-right:  0;
+	padding-bottom: 2em;
+	padding-top:    1em;
+	margin-top:     0;
+	margin-bottom:  0;
+    }
+
+    .abstract {
+	margin-left:  2% !important;
+	margin-right: 2% !important;
+    }
+
+    .column,
+    .column3,
+    .column4 {
+	width:      100% !important;
+    }
+
+    table {
+	width:        100% !important;
+	margin-left:  0    !important;
+	margin-right: 0    !important;
+    }
+}

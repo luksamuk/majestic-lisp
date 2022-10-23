@@ -1,0 +1,404 @@
+#+setupfile: static/setupfile.org
+#+html_link_up: 02-sintaxe.html
+#+title: Expressões primitivas
+
+Majestic Lisp é uma linguagem cuja construção se inicia por seus tipos
+mais básicos  de dados. Por  isso, é pertinente que  comecemos falando
+dos tipos como elementos mais básicos da linguagem.
+
+#+index: expressões primitivas
+As expressões analisadas a seguir  são /expressões primitivas/, ou seja,
+os  tipos  mais  básicos  de  expressões que  podem  ser  escritas  na
+linguagem.
+
+** Números
+
+Expressões  numéricas   representam  /símbolos/  especiais,   que  serão
+tratados como sendo  do tipo básico dos /números/.  Por exemplo, podemos
+representar  números  inteiros  (matematicamente,  parte  do  conjunto
+$\mathbb{Z}$) diretamente, com ou sem um sinal negativo em sua frente.
+
+#+begin_src majestic
+-1
+#+end_src
+
+#+RESULTS[8ccad19d075d556a4979604c589b03fc55895f45]:
+: -1
+
+#+begin_src majestic
+23
+#+end_src
+
+#+RESULTS[0f8144d3698f400852c398bc548a08919a2175cc]:
+: 23
+
+Apesar  de os  /números/ comporem  um  único grande  tipo, temos  alguns
+desdobramentos   de    subtipos   nos   mesmos,   por    questões   de
+praticidade.    O   exemplo    acima   demonstra    números   /inteiros/
+(~integer~). Abaixo,  podemos ver  um exemplo de  números do  tipo /ponto
+flutuante/  (~float~). Esse  subtipo  numérico é  capaz  de armazenar  um
+número  onde  casas  decimais   possam  ser  discriminadas,  sendo  um
+simulacro de números pertencentes ao conjunto dos números reais ($\mathbb{R}$).
+
+#+begin_src majestic
+0.5
+#+end_src
+
+#+RESULTS[d0be86fb510711843c02d08e1e7f94067bfde081]:
+: 0.5
+
+#+begin_src majestic
+1.0
+#+end_src
+
+#+RESULTS[c075c855dd23d14faf81f97654a1bdcfcd260192]:
+: 1.0
+
+#+begin_src majestic
+.125
+#+end_src
+
+#+RESULTS[83d89ef7c66ed56a611ee791473a09573fae60c5]:
+: 0.125
+
+#+begin_src majestic
+2.
+#+end_src
+
+#+RESULTS[256426af955a9eac100a823c89defe06574d5de6]:
+: 2.0
+
+Um  ~float~ sempre  será escrito  com um  único /ponto/  em alguma  parte,
+geralmente  dividindo a  parte  inteira  e a  parte  decimal do  ponto
+flutuante. Caso o  ponto esteja no início, Majestic Lisp  assume que a
+/parte inteira/ do número seja nula; caso esteja no final, assume-se que
+a /parte decimal/ do número seja nula.
+
+Quando a exatidão no cálculo  com um número decimal for imprescindível
+para um cálculo, pode-se usar esse número na forma de /fração/.
+
+As /frações/ de Majestic Lisp são  também um simulacro de outro conjunto
+da Matemática,  o conjunto dos números  racionais ($\mathbb{Q}$). Esse
+conjunto é  normalmente definido  como qualquer  número que  possa ser
+escrito com  um /numerador/  e um /denominador/  que sejam  inteiros ($\in
+\mathbb{Z}$). Para completar, o /denominador/ não pode valer zero:
+
+\begin{equation*}
+        \mathbb{Q} = \left\{\frac{p}{q}\, \mid \, p \in \mathbb{Z}, q \in \mathbb{Z}^{*} \right\}
+\end{equation*}
+
+Isso  é muito  importante  para a  sintaxe de  Majestic  Lisp, já  que
+nos faz  entender que não  é possível construir partes  individuais de
+uma fração com um subtipo numérico que não seja ~integer~.
+
+Frações em Majestic  Lisp são representadas usando um  caractere ~/~ que
+divide  o  /numerador/ e  o  /denominador/,  respectivamente. Nenhuma  das
+partes pode ser omitida, mesmo quando o numerador for nulo.
+
+Quando   uma    fração   não    estiver   descrita   em    sua   forma
+simplificada[fn:1],  Majestic tratará  essa situação  e realizará  tal
+conversão de valor equivalente quando for possível.
+
+#+begin_src majestic
+1/2
+#+end_src
+
+#+RESULTS[98f7b8e74ea61d3216578ff324137931bc9292ea]:
+: 1/2
+
+#+begin_src majestic
+4/6
+#+end_src
+
+#+RESULTS[694e667edff4abafc1927c85e1035af07db7f7d9]:
+: 2/3
+
+O último subtipo  de um número é o /número  complexo/. Números complexos
+são quaisquer números que  possam ser escritos na forma $z  = a + bi$,
+onde $a$ é chamado de parte /real/,  e $b$ é chamado de parte /imaginária/
+do número[fn:2].
+
+\begin{equation*}
+        \mathbb{C} = \left\{ z = a + bi \mid a, b \in \mathbb{R} \right\}
+\end{equation*}
+
+Como podemos  ver, $a$ e  $b$ podem ser números  reais ($\mathbb{R}$),
+mas  também   podem  pertencer   a  quaisquer  de   seus  subconjuntos
+($\mathbb{N}$, $\mathbb{Z}$ e até mesmo $\mathbb{Q}$).
+
+Essa observação  é importante  para os números  do subtipo  ~complex~ de
+Majestic Lisp.  Nela, um  número complexo  pode ser  escrito com  um ~J~
+separando duas partes do  número[fn:3], que devem obrigatoriamente ser
+descritas. Do lado esquerdo, teremos a  parte /real/ do número; do outro
+lado, teremos a parte /imaginária/.
+
+Por se  tratar de um  número com  potenciais subtipos, o  ~complex~ pode
+possuir qualquer  número que se  enquadre nos subtipos  anteriores, em
+suas partes /real/ ou /imaginária/. Mas essas partes precisam ser escritas
+mesmo quando forem nulas.
+
+#+begin_src majestic
+2J5
+#+end_src
+
+#+RESULTS[9099d19d21f6102c7e710cfe993af4e3dc85b6eb]:
+: 2J5
+
+#+begin_src majestic
+-3J6/4
+#+end_src
+
+#+RESULTS[c79f77daefbe5134ab53c3d24b28a450a317b32e]:
+: -3J3/2
+
+#+begin_src majestic
+0J1
+#+end_src
+
+#+RESULTS[c07f02f4594da31e9eacb999898c96b45b05e515]:
+: 0J1
+
+Os  exemplos acima  descrevem, respectivamente,  os números  complexos
+$2+5i$, $-3+{}^{3}/_{2}\,i$ e $0+1i$, tal  que este último poderia ser
+escrito simplesmente como $i$.
+
+** Caracteres
+
+Outro  tipo  básico  de   Majestic  Lisp  envolve  /caracteres/,  também
+conhecidos como ~char~.  Um ~char~ pode ser  informado diretamente através
+de sua escrita, precedida pelos caracteres ~#\~, que indicam o uso de um
+caractere.
+
+#+begin_src majestic
+#\a
+#+end_src
+
+#+RESULTS[08eeaff1041094b3de786912f72dc5c5e06fda4c]:
+: #\a
+
+#+begin_src majestic
+#\C
+#+end_src
+
+#+RESULTS[94fbbd350e1298b3ec9249d04aeb34a3a5f4ea3a]:
+: #\C
+
+Certos caracteres não possuem representação textual, e portanto, podem
+ser  escritos  diretamente  através  de   uma  forma  textual  que  os
+lembre. Por exemplo, o caractere  de /campainha/ (/bell/) pode ser escrito
+como ~#\bel~.
+
+** Símbolos e /Quoting/
+
+Antes de falarmos do tipo  mais fundamental (e talvez mais importante)
+não apenas de Majestic Lisp, mas  talvez de todos os Lisps, precisamos
+falar do processo de /quoting/.
+
+#+index: quoting
+/Quoting/, palavra em  Inglês também conhecida como /citação/,  é o nome
+que damos ao ato de fornecer certas expressões para o interpretador de
+Majestic Lisp,  *sem que o interpretador  efetivamente interprete essas
+expressões*.   Em outras  palavras,  é como  fornecer  um valor  "entre
+aspas".
+
+O interpretador  de um  dialeto de  Lisp tem a  missão de  receber uma
+expressão,  interpretá-la  e assim  retornar  ao  usuário o  valor  da
+mesma. Assim, escrever uma expressão como  ~-5~ passa por um processo de
+interpretação, em que identifica-se que aquilo  é um número, e o valor
+de tal número é retornado ao usuário.
+
+#+begin_src majestic
+-5
+#+end_src
+
+#+RESULTS[1a58f45f3a40455fc35b1ff694b83135832b7b61]:
+: -5
+
+#+index: símbolo
+Quando a  expressão em questão  não é um  /número/ ou um  /caractere/, ela
+pode ser um  /símbolo/. E normalmente, símbolos  funcionam como /rótulos/:
+eles estarão  associados a um /valor/  em algum tipo de  /tabela/ que, por
+enquanto, não é muito relevante conhecermos.
+
+#+begin_src majestic
+eq
+#+end_src
+
+#+RESULTS[a3ec4a94da7adca6225147ba6e264bc27737cc8e]:
+: #<function (prim eq (arity (required 2)))>
+
+Quando um /símbolo/ (como ~eq~) é fornecido ao interpretador, este tentará
+buscar o valor *associado* a esse  símbolo (nesse caso, uma função, algo
+que  conheceremos mais  adiante).  Se o  nosso  objetivo fosse  tratar
+apenas do próprio símbolo  ~eq~, então precisaríamos /quotá-lo/, colocando
+um apóstrofo antes de escrevê-lo:
+
+#+begin_src majestic
+'eq
+#+end_src
+
+#+RESULTS[67212dae88a29d266ec89c8f41802ba3d7bc7fc5]:
+: eq
+
+Ao  /quotarmos/ um  certo  símbolo  ou um  outro  tipo  de expressão,  o
+interpretador  entenderá que  não  deve processar  o conteúdo  daquela
+expressão,  mas  sim retorná-la  da  forma  como  está escrita.  Se  a
+expressão  quotada  for  um  /símbolo/, portanto,  aquele  símbolo  será
+retornado.
+
+*** Símbolos comuns
+
+Símbolos, como já foi dito antes,  operam como /rótulos/ para valores na
+linguagem, mas  eles em si  são também um  tipo especial de  valor. Um
+símbolo   é  representado,   textualmente,   como   uma  palavra   sem
+espaços.
+
+Tratar  símbolos   diretamente  com  valores   frequentemente  exigirá
+/quotá-los/, com algumas raras exceções, que veremos em breve.
+
+#+begin_src majestic
+'foo
+#+end_src
+
+#+RESULTS[453dc97480a4fb78a6b9da7fe45f53595170718d]:
+: foo
+
+#+begin_src majestic
+'bar
+#+end_src
+
+#+RESULTS[3158b70f0c651ce0c184000470d6cb5e519c8e90]:
+: bar
+
+Normalmente separamos as "palavras" de  um símbolo com hífens ~-~, sendo
+esta uma convenção de quase todos os dialetos de Lisp, algo que também
+adotaremos aqui.
+
+#+begin_src majestic
+'fulano-de-tal
+#+end_src
+
+#+RESULTS[3ec5ec2e22d5ee10e02b61d6a51d43058688b5ce]:
+: fulano-de-tal
+
+*** Símbolos autointerpretáveis
+
+Alguns  poucos símbolos  são  /autointerpretáveis/, isto  é, não  exigem
+nenhum tipo  de /quoting/, pois  o único valor  associado a eles  é eles
+mesmos.
+
+Esses  símbolos (como  ~t~ e  ~nil~) normalmente  possuem uso  especial, e
+podem ser considerados como /axiomas/[fn:4] da linguagem.
+
+#+begin_src majestic
+t
+#+end_src
+
+#+RESULTS[7d796008487e0b7d240e64c204f974fefa95d779]:
+: t
+
+#+begin_src majestic
+nil
+#+end_src
+
+#+RESULTS[ae458b5a22db7b35d65740a69e76aca15fb154c7]:
+: nil
+
+~nil~ é o  símbolo geral para denotar  /falsidade/ ou o fim  de uma /lista/,
+que veremos em uma  situação mais adiante. Já o símbolo  ~t~ é o símbolo
+específico para denotar a ideia de /verdade/ em Majestic Lisp -- mas, de
+maneira geral, tudo que não for ~nil~ é tratado como /verdade/.
+
+Números,  apesar de  pertencerem  ao seu  próprio  tipo, poderiam  ser
+pensados sintaticamente como símbolos autointerpretáveis que designam,
+axiomaticamente, seu próprio valor.
+
+** Cons
+
+O /cons/ (ou  célula /cons/)[fn:7] é um /par de  valores/.  Essa definição é
+propositalmente vaga:  os componentes  de um  /cons/ podem  ser qualquer
+outro tipo  de valor, inclusive  outros /cons/. Dessa forma,  fica claro
+que este tipo tem a função de /combinar/ valores em Majestic Lisp.
+
+Há várias  formas de  criar um  /cons/. Uma delas  é através  do próprio
+processo de /quoting/. Por exemplo, para criarmos um par com os símbolos
+~a~ e ~b~,  podemos usar uma notação em que  colocamos estes dois símbolos
+entre parênteses, separados por um ponto.
+
+#+begin_src majestic
+'(a . b)
+#+end_src
+
+#+RESULTS[1ebe55b43fc9ddf24df49a2edf253ca361051b9f]:
+: (a . b)
+
+Um /cons/  sempre estará  estaticamente escrito  como uma  combinação de
+dois elementos separados por ponto, e unidos entre parênteses.
+
+Aqui podemos  também ver  uma propriedade do  processo de  /quoting/: ao
+/quotarmos/ um /cons/,  os elementos que o compõem  também serão quotados,
+recursivamente.
+
+Podemos, por exemplo, construir um  /cons/ onde o primeiro elemento seja
+outro /cons/, e o segundo, seja o símbolo ~c~.
+
+#+begin_src majestic
+'((a . b) . c)
+#+end_src
+
+#+RESULTS[3aac76d9512ead6e5f8e33e4a84400f0cb1914b5]:
+: ((a . b) . c)
+
+Os componentes  de um /cons/  possuem nomes, por influência  da história
+dos dialetos  de Lisp. Ao primeiro  elemento, damos o nome  /car/ (lê-se
+/cár/); ao segundo  elemento, damos o nome /cdr/  (lê-se /coul-der/). Assim,
+em ~(a . b)~, ~a~  é o /car/, e ~b~ é o /cdr/. Podemos  dar outros nomes a essas
+partes, mas isso será melhor compreendido posteriormente.
+
+** Streams
+
+/Streams/ são objetos  abstratos de Majestic Lisp,  usados para designar
+fluxos por onde informações passam.  Esses fluxos podem ser de /entrada/
+ou  /saída/, e  podem designar  /arquivos/ no  sistema, o  fluxo por  onde
+recebe-se a informação digitada pelo usuário, ou até mesmo o fluxo por
+onde imprime-se a informação, de modo que ela seja mostrada na tela.
+
+Estes dois /streams/  são conhecidos como variáveis  na linguagem, sendo
+eles respectivamente ~*stdin*~ e ~*stdout*~.
+
+/Streams/ não possuem uma representação sintática e só podem ser abertos
+ou fechados por intermédio de funções.
+
+#+begin_src majestic :eval no
+(def stream (open-stream 'out "/home/alchemist/testando.txt"))
+(write-string "Teste" stream)
+(close-stream stream)
+#+end_src
+
+#+RESULTS[1485b9e1a8e450099621dc9ccc41a47415858e9d]:
+: t
+
+* Footnotes
+
+[fn:7] O nome "cons" advém de "construção", ou /construct/ em Inglês.
+
+[fn:4]  Matematicamente,  um  /axioma/   é  uma  regra  autoevidente  ou
+universalmente aceita,  ou uma regra/princípio/lei estabelecido  em um
+sistema.   Aqui, o  comportamento  desses símbolos  é  como uma  regra
+estabelecida e universal de Majestic Lisp.
+
+[fn:3] Essa notação foi diretamente importada de dialetos da linguagem
+APL, mais especificamente  GNU APL (https://www.gnu.org/software/apl/)
+e Dyalog APL (https://www.dyalog.com/).
+
+[fn:2] Ao contrário do que sua péssima escolha de nome sugere, números
+imaginários são  tão "reais" quanto  números reais. Esses  números são
+utilizados    em     circuitos    elétricos,     eletromagnetismo    e
+aerodinâmica.  Mas  há  outras aplicações,  sobretudo  relacionadas  a
+trigonometria e situações que envolvam pares de números, por exemplo.
+
+[fn:1]  Uma  fração pode  ser  entendida  como  estando em  sua  /forma
+simplificada/ quando  numerador e denominador  são /primos entre  si/, ou
+seja, quando não há número que  realize sua divisão inteira, a não ser
+o  número 1.  Para chegar  a essa  forma, basta  dividir continuamente
+ambos os números pelo /máximo divisor comum/ de ambos.

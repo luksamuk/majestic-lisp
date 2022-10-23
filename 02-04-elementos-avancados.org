@@ -1,0 +1,242 @@
+#+setupfile: static/setupfile.org
+#+html_link_up: 02-sintaxe.html
+#+title: Elementos avançados
+
+Os elementos a seguir  descrevem funcionalidades avançadas de Majestic
+Lisp. Algumas delas continuam sendo  comuns a outros dialetos de Lisp,
+com suas próprias características de acordo com o /design/ da linguagem.
+
+Estes  elementos podem  requerer maior  aprofundamento, por  isso, não
+serão exaustivamente explorados.
+
+** Macros
+
+/Macros/  são elementos  muito  importantes em  dialetos  de Lisp,  pois
+conferem  flexibilidade  sintática  extra quando  programas  tornam-se
+muito  repetitivos.  Diferente  de  outras  linguagens  (como  C,  por
+exemplo), o  uso de macros  em Lisp  é muito mais  fácil, e é  uma das
+marcas registradas da linguagem, desde que não abusemos dos mesmos.
+
+Um  /macro/  de  Majestic  Lisp  funciona como  uma  função  de  usuário
+qualquer.  Todavia,   os  dados   passados  como  parâmetro   não  são
+interpretados; antes  disso, o macro  /reescreve/ a expressão  passada a
+ele, e então interpreta-a no escopo onde foi invocado.
+
+O exemplo a seguir mostra a definição  do macro ~when~. Este macro é uma
+especialização da forma especial ~if~,  quando o consequente possui mais
+de uma expressão,  e a alternativa pode ser substituída  pelo valor de
+retorno ~nil~.
+
+#+begin_src majestic
+(defmac when (pred . body)
+  `(if ,pred (do ,@body) nil))
+#+end_src
+
+#+RESULTS[d8bb068289271353e94193e87625edb10876c3e7]:
+: when
+
+#+begin_src majestic
+(when (zerop 5)
+  'zero)
+#+end_src
+
+#+RESULTS[d756f09afa86dbd2b3c5bf01fc5c8cecb8428bc8]:
+: nil
+
+#+begin_src majestic
+(when (zerop 0)
+  'zero)
+#+end_src
+
+#+RESULTS[3580ec6df2c0674704f647cabc228540a8f553df]:
+: zero
+
+** Aplicação parcial
+
+#+index: aplicação parcial
+#+index: currying
+Majestic também implementa  algumas ideias que não  estão presentes na
+maioria dos Lisps, sendo uma dessas a aplicação parcial de funções.
+
+Dada uma função qualquer, é  possível repassar menos argumentos do que
+o esperado  para a mesma. Nesse  caso, a expressão retornará  *uma nova
+função*  que  espera, como  parâmetros,  os  argumentos que  não  foram
+passados.
+
+A função primitiva  ~eq~ compara dois símbolos. Por isso,  ~eq~ espera por
+exatamente dois argumentos:
+
+#+begin_src majestic
+(eq 'a 'b)
+#+end_src
+
+#+RESULTS[73e2e9acd4709276fb44cb11b24240cdd9bab195]:
+: nil
+
+Poderíamos criar uma função de usuário que compara se um certo símbolo
+é ~eq~ ao símbolo ~a~. Isso pode ser definido explicitamente:
+
+#+begin_src majestic
+(defn is-a (sym)
+  (eq 'a sym))
+#+end_src
+
+#+RESULTS[c048b73aa8a2453ead436e4b9e52f982463319c3]:
+: is-a
+
+#+begin_src majestic
+(is-a 'b)
+#+end_src
+
+#+RESULTS[d0b3785ea31f287d850e8306fc40369bb1a7615a]:
+: nil
+
+#+begin_src majestic
+(is-a 'a)
+#+end_src
+
+#+RESULTS[492342214e96f9c5e66ea82de3c04d8c4c016503]:
+: t
+
+Usando aplicação parcial, podemos fazer isso de outra forma. Note que,
+como ~eq~ espera por dois  argumentos, se passarmos apenas um argumento,
+será retornada uma função que espera por apenas um argumento[fn:10]:
+
+#+begin_src majestic
+(eq 'a)
+#+end_src
+
+#+RESULTS[66fb8c75c6ad52ade5f5893c6f8bf9f264f1934f]:
+: #<function (fn (:G191)) {0x562697ac4ab0}>
+
+Se dermos um nome à função retornada, note que teremos nada mais, nada
+menos que a exata mesma definição de ~is-a~, como anteriormente feita:
+
+#+begin_src majestic
+(def is-a (eq 'a))
+#+end_src
+
+#+RESULTS[dd77c8d12b31b43ab0b824dd2a70a8c0da647471]:
+: is-a
+
+#+begin_src majestic
+(is-a 'b)
+#+end_src
+
+#+RESULTS[d0b3785ea31f287d850e8306fc40369bb1a7615a]:
+: nil
+
+#+begin_src majestic
+(is-a 'a)
+#+end_src
+
+#+RESULTS[492342214e96f9c5e66ea82de3c04d8c4c016503]:
+: t
+
+** Desestruturação de argumentos
+
+#+index: desestruturação de argumento
+Outro recurso  de Majestic Lisp  é a desestruturação de  argumentos de
+funções. Ao  declararmos uma  função, podemos  tomar um  argumento que
+espera-se que  seja uma lista  e o  desestruturarmos de acordo  com os
+elementos esperados,  economizando espaço  na digitação do  programa e
+desmembramento da mesma.
+
+Considere a função  ~map~, que percorre uma lista de  elementos e aplica
+uma função a cada  um deles. O retorno de cada  aplicação de função é,
+finalmente, acumulado em uma nova lista e retornado.
+
+#+begin_src majestic
+(defn map (f l)
+  (unless (nilp l)
+    (cons (f (car l))
+          (map f (cdr l)))))
+#+end_src
+
+#+RESULTS[2665835bc3b6e138dff69f5531a7e9be969fa0ae]:
+: map
+
+#+begin_src majestic
+(map (fn (x) (* x x))
+     '(1 2 3 4 5))
+#+end_src
+
+#+RESULTS[456154e07e7c991e4691f16be9b4b69b61e49b0b]:
+: (1 4 9 16 25)
+
+Como o uso de  ~car~ e ~cdr~ não é muito  didático, um programador poderia
+considerar  desmembrar a  lista ~l~  usando ~let~,  antes da  aplicação do
+corpo da função:
+
+#+begin_src majestic
+(defn map (f l)
+  (let ((x  (car l))
+        (xs (cdr l)))
+    (unless (nilp x)
+      (cons (f x)
+            (map f xs)))))
+#+end_src
+
+#+RESULTS[7aa546c79cfb543ef7d0541c96cabdbed80c7ed6]:
+: map
+
+Mesmo que essa definição esclareça o corpo do ~let~, ela acaba não sendo
+muito compacta.
+
+Como  a lista  ~l~  só  possui o  intuito  de  ser desmembrada,  podemos
+declarar diretamente  nos argumentos  da função  como ela  deverá ser
+desmembrada. Em especial, queremos que o primeiro elemento se chame ~x~,
+e que a lista restante, independente de ser ou não vazia, chame-se ~xs~:
+
+#+begin_src majestic
+(defn map (f (x . xs))
+  (unless (nilp x)
+    (cons (f x)
+          (map f xs))))
+#+end_src
+
+Dessa forma,  ~l~ passa a  não estar declarado  no escopo de  ~map~, dando
+lugar apenas a sua desestruturação em ~x~ e ~xs~.
+
+*** Desestruturação /ad-hoc/.
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+A  definição do  macro ~let~,  em Majestic  Lisp, faz  uso da  aplicação
+instantânea de  funções anônimas.  Isso significa que  todo ~let~  é, na
+verdade, uma  aplicação de  função. Isso é  algo pertinente  porque dá
+margem para um recurso incidental: é possível realizar desestruturação
+de variáveis localmente,  através do uso de ~let~. Isso  significa que é
+possível declarar duas  ou mais variáveis a  partir da desestruturação
+de uma lista.
+
+O  exemplo a  seguir mostra  a desestruturação  de uma  lista em  três
+variáveis conhecidas  (~a~, ~b~ e ~c~),  e os demais elementos  da lista são
+colocados em uma quarta variável, ~xs~.
+
+#+begin_src majestic
+(let (( (a b c . xs) '(1 2 3 4 5) ))
+  (print "a  = {}\nb  = {}\nc  = {}\nxs = {}"
+         a b c xs))
+#+end_src
+
+#+RESULTS[b20b7e7b4cd65bafc649111acafe495a16a75653]:
+: a  = 1
+: b  = 2
+: c  = 3
+: xs = (4 5)
+: nil
+
+
+* Footnotes
+
+[fn:10]  Como  ~eq~  é  uma  função primitiva,  o  argumento da  função
+retornada é um símbolo gerado aleatoriamente pelo sistema.
+
+[fn:8] É interessante  notar que, em Majestic Lisp, a  função ~+~ também
+pode operar  sobre um  único número, calculando  seu /conjugado/  -- uma
+operação que funciona com números  complexos. Caso o número não possua
+esse subtipo, ~+~ apenas retorna o número sem modificações.
+
+
