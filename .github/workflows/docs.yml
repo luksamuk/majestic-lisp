@@ -7,9 +7,12 @@ on:
 jobs:
   build-docs:
     runs-on: ubuntu-latest
-    container:
-      image: fedora:36
+    # container:
+    #   image: fedora:36
     steps:
+      - name: Install dependencies
+        run: sudo apt install git rsync
+        
       # - name: Adjust locale and dependencies
       #   continue-on-error: true
       #   run: |
