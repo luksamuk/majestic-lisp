@@ -1,0 +1,28 @@
+(defmac deftable (tblname . pairs)
+  `(def ,tblname (quote ,pairs)))
+
+(deftable *table*
+  (a foo)
+  (b bar)
+  (c baz)
+  (d quux))
+
+(defn lookup (key (table-pair . table-rest) if-found if-not-found)
+  (let (((table-first table-second) table-pair))
+    (cond ((nilp table-pair)
+           (if-not-found))
+          ((equal key table-first)
+           (if-found table-second))
+          (t (lookup key table-rest if-found if-not-found)))))
+
+(defn perform-lookup (key)
+  (lookup key *table*
+    (fn (answer)
+      (print "{} => {}" key answer))
+    (fn ()
+      (print "Key {} not found" key))))
+
+(defn test-cps ()
+  (perform-lookup 'a)
+  (perform-lookup 'b)
+  (perform-lookup 'e))

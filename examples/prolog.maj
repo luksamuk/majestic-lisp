@@ -1,0 +1,268 @@
+;; -*- mode: lisp; mode: majestic; -*-
+
+(def link list)
+(def link-l first)
+(def link-g second)
+(def link-r third)
+(def link-e fourth)
+(def link-n (fn (x) (car (cddr (cddr x)))))
+
+(defn back5 (l g r e n)
+  (if (and (consp g)
+           (consp r))
+      (prove5 l g (rest r) e n)
+      (prove5 (link-l l)
+              (link-g l)
+              (rest (link-r l))
+              (link-e l)
+              (link-n l))))
+
+(defn prove5 (l g r e n)
+  (cond ((nilp g)
+         (print-frame e)
+         (back5 l g r e n))
+        ((nilp r)
+         (if (nilp l)
+             t
+             (back5 l g r e n)))
+        (t (let* ((a  (copy. (first r) n))
+                  (e* (unify (first a)
+                             (first g)
+                             e)))
+             (if e*
+                 (prove5
+                  (link l g r e n)
+                  (append (rest a) (rest g))
+                  db
+                  e*
+                  (1+ n))
+                 (back5 l g r e n))))))
+
+;; =====
+
+(def link-c (fn (x) (cadr (cddr (cddr x)))))
+
+(defn clear-r (x)
+  (set-car (cddr x) '(())))
+
+(defn back6 (l g r e n c)
+  (cond ((and (consp g)
+              (consp r))
+         (prove6 l g (rest r) e n c))
+        ((consp l)
+         (prove6 (link-l l)
+                 (link-g l)
+                 (rest (link-r l))
+                 (link-e l)
+                 (link-n l)
+                 (link-c l)))
+        (t nil)))
+
+(defn prove6 (l g r e n c)
+  (cond ((nilp g)
+         (print-frame e)
+         (back6 l g r e n c))
+        ((eq '! (first g))
+         (clear-r c)
+         (prove6 c (rest g) r e n c))
+        ((eq 'r! (first g))
+         (prove6 l (rest-of-rest g) r e n
+                 (second g)))
+        ((nilp r)
+         (if (nilp l)
+             t
+             (back6 l g r e n c)))
+        (t
+         (let* ((a  (copy. (first r) n))
+                (e* (unify (first a)
+                           (first g)
+                           e)))
+           (if e*
+               (prove6
+                (link l g r e n c)
+                (append (rest a)
+                        `(r! ,l)
+                        (rest g))
+                db
+                e*
+                (1+ n)
+                l)
+               (back6 l g r e n c))))))
+
+;; =====
+
+(def empty '((bottom)))
+(def var '?)
+(def name second)
+(def time rest-of-rest)
+
+(defn eqv (x y)
+  (or (eq x y)
+      (and (numberp x)
+           (numberp y)
+           (= x y))))
+
+(defn varp (x)
+  (and (consp x)
+       (eq var (first x))))
+
+(defn lookup (v e)
+  (let ((ident (name v))
+        (tm    (time v)))
+    (letrec
+        ((loop (e)
+             (cond ((not (consp (first-of-first e)))
+                    nil)
+                   ((and
+                     (eq  ident (name (first-of-first e)))
+                     (eqv tm    (time (first-of-first e))))
+                    (first e))
+                   (t (loop (rest e))))))
+      (loop e))))
+
+(defn value (x e)
+  (if (varp x)
+      (let ((v (lookup x e)))
+        (if v
+            (value (second v) e)
+            x))
+      x))
+
+(defn copy. (x n)
+  (cond ((not (consp x)) x)
+        ((varp x) (append x n))
+        (t (cons (copy. (first x) n)
+                 (copy. (rest x) n)))))
+
+(defn bind (x y e)
+  (cons (list x y) e))
+
+(defn unify (x y e)
+  (let ((x (value x e))
+        (y (value y e)))
+    (cond ((eq x y) e)
+          ((varp x) (bind x y e))
+          ((varp y) (bind y x e))
+          ((or (not (consp x))
+               (not (consp y)))
+           nil)
+          (t (let ((e* (unify (first x)
+                              (first y)
+                              e)))
+               (and e*
+                    (unify (rest x)
+                           (rest y)
+                           e*)))))))
+
+(defn resolve (x e)
+  (cond ((not (consp x)) x)
+        ((varp x)
+         (let ((v (value x e)))
+           (if (varp v)
+               v
+               (resolve v e))))
+        (t (cons
+            (resolve (first x) e)
+            (resolve (rest x) e)))))
+
+(defn print-frame (e)
+  (letrec
+      ((loop ((first-ee . rest-ee))
+          (when (consp rest-ee)
+            (when (nilp (time (first first-ee)))
+              (print "{} = {}"
+                     (second (first first-ee))
+                     (resolve (first first-ee) e)))
+            (loop rest-ee))))
+    (loop e)
+    (terpri)))
+
+;; =============
+
+(def db nil)
+(def goals nil)
+
+(defn prove5-example ()
+  (let ((db
+         '(((edge a b))
+           ((edge a f))
+           ((edge a g))
+           ((edge b c))
+           ((edge b d))
+           ((edge c d))
+           ((edge c e))
+           ((edge g h))
+           ((edge d h))
+           ((edge h e))
+           ((edge h f))
+           
+           ((path (? A) (? B)
+             ((? A) (? B)))
+            (edge (? A) (? B)))
+           
+           ((path (? A) (? B)
+             ((? A) . (? CB)))
+            (edge (? A) (? C))
+            (path (? C) (? B) (? CB)))
+           
+           ((tasty bananas))
+           ((tasty bread))
+           ((tasty chocolate))
+           ((healthy bananas))
+           ((healthy porridge))
+           ((healthy bread))
+           
+           ((likes john (? X))
+            (healthy (? X))
+            (tasty (? X)))))
+        (goals '(((likes john (? X)))
+                 ((path a f (? P))))))
+    (print "==> prove5 examples")
+    (print "Database:")
+    (pretty-display db)
+    (terpri)
+    (mapc
+     (fn (goal)
+         (print "Goal: {}" goal)
+         (print "Ans:  {}\n====="
+                (prove5 '() goal db empty 1)))
+     goals)))
+
+;; ==================
+
+(defn prove6-example ()
+  (let ((db
+         '(((exists foo)) ; exists(foo).
+           ((exists bar)) ; exists(bar).
+           ((exists baz)) ; exists(baz).
+           ;; eq(X, X).
+           ((eq (? X) (? X)))
+           ;; neq(X, Y) :- eq(X, Y), !, fail.
+           ((neq (? X) (? Y))
+            (eq (? X) (? Y)) ! fail)
+           ;; neq(X,Y).
+           ((neq (? X) (? Y)))))
+        (goals
+         '(;; exists(X), exists(Y), neq(X, Y).
+           ((exists (? X))
+            (exists (? Y))
+            (neq (? X) (? Y)))
+           ;; bagof(X, exists(X), Bag).
+           ((exists (? X))))))
+    (print "==> prove6 examples")
+    (print "Database:")
+    (pretty-display db)
+    (terpri)
+    (mapc
+     (fn (goal)
+         (print "Goal: {}" goal)
+         (print "Ans:  {}\n====="
+                (prove6 '() goal db empty 1 '())))
+     goals)))
+
+;; ======
+
+(defn run-examples ()
+  (prove6-example)
+  (prove5-example))
+

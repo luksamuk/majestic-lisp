@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+<head>
+<!-- 2022-10-23 dom 20:49 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Exemplos de Majestic Lisp</title>
+<meta name="author" content="Lucas S. Vieira" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="./main.css" />
+<link rel="stylesheet" type="text/css" href="./syntax.css" />
+<link id="theme-css" rel="stylesheet" type="text/css" href="./dark-theme.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="../img/cat-i-mage.jpg">
+<meta name="theme-color" content="#14171e">
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="02-sintaxe.html"> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Exemplos de Majestic Lisp</h1>
+<p>
+A seguir, demonstraremos  alguns exemplos de código  feito em Majestic
+Lisp.    Os  exemplos   visam   abranger   conceitos  recorrentes   na
+programação. Estes programas também podem ser utilizados para testar a
+programação de um interpretador de Majestic, que será criado ao longo
+desse livro.
+</p>
+
+<p>
+Os exemplos a seguir foram selecionados por serem mais compactos. Para
+exemplos mais extensos de código, veja o Apêndice B.
+</p>
+
+
+<div id="outline-container-org63cc7a7" class="outline-2">
+<h2 id="org63cc7a7"><span class="section-number-2">1.</span> Numerais de Church</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Numerais  de  Church são  ferramentas  interessantes  para falarmos  a
+respeito  de   computabilidade.   Em  suma,  usando   <i>lambda  calculus</i>
+(CHURCH, 1936),  é  possível   criarmos  representações  para  números
+naturais usando  nada mais que  a ideia  de descrição e  aplicações de
+funções.
+</p>
+
+<p>
+Majestic,  Lisps  em geral  e  o  paradigma de  programação  funcional
+relacionam-se  intimamente  com  as  ideias de  Alonzo  Church.  Nesse
+sentido, uma das possibilidades de  Majestic é a implementação de tais
+numerais, bem  como algumas  funções auxiliares  (<code>succ</code>, que  calcula o
+sucessor de um número; <code>add</code>, que calcula a soma de dois números).
+</p>
+
+<p>
+A implementação  das funções auxiliares  é um tópico de  atenção extra
+para este exemplo, pois seu uso  demonstra como a aplicação parcial de
+uma função pode ajudar nessas declarações.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #6a9955;">;; </span><span style="color: #6a9955;">-*- mode: lisp; mode: majestic; -*-</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> zero  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>f x<span style="color: #87cefa;">)</span> x<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> one   <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>f x<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span>f x<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> two   <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>f x<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span>f <span style="color: #ffd700;">(</span>f x<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> three <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>f x<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span>f <span style="color: #ffd700;">(</span>f <span style="color: #da70d6;">(</span>f x<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> four  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>f x<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span>f <span style="color: #ffd700;">(</span>f <span style="color: #da70d6;">(</span>f <span style="color: #87cefa;">(</span>f x<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> five  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>f x<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span>f <span style="color: #ffd700;">(</span>f <span style="color: #da70d6;">(</span>f <span style="color: #87cefa;">(</span>f <span style="color: #ffd700;">(</span>f x<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> succ <span style="color: #da70d6;">(</span>n f x<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>f <span style="color: #87cefa;">(</span>n f x<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> add <span style="color: #da70d6;">(</span>m n f x<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>m f <span style="color: #87cefa;">(</span>n f x<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> numeral-&gt;number <span style="color: #da70d6;">(</span>num<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>num <span style="color: #87cefa;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #ffd700;">(</span>n<span style="color: #ffd700;">)</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">+</span> 1 n<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+       0<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">2 + 3 = 5</span>
+<span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">"2 + 3 = {}"</span> <span style="color: #da70d6;">(</span>numeral-&gt;number <span style="color: #87cefa;">(</span>add two three<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9634ab3" class="outline-2">
+<h2 id="org9634ab3"><span class="section-number-2">2.</span> Continuation-passing style</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+O estilo  de passagem de continuações  é uma forma de  programação que
+envolve modificar  o controle de  fluxo da  aplicação, de forma  que a
+interpretação de certos predicados (como  ocorre em <code>if</code> e <code>cond</code>) estejam
+relacionados à  execução de  certas funções, ao  invés da  execução de
+meras expressões como consequência.
+</p>
+
+<p>
+Esse estilo  de programação é  particularmente útil em  situações onde
+operações são executadas de forma concorrente.
+</p>
+
+<p>
+O  exemplo  a seguir  não  trabalha  com operações  concorrentes,  mas
+realiza uma demonstração do estilo de passagem de continuações.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> deftable <span style="color: #da70d6;">(</span>tblname . pairs<span style="color: #da70d6;">)</span>
+  `<span style="color: #da70d6;">(</span><span style="color: #569cd6;">def</span> ,tblname <span style="color: #87cefa;">(</span><span style="color: #569cd6;">quote</span> ,pairs<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span>deftable *table*
+  <span style="color: #da70d6;">(</span>a foo<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>b bar<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>c baz<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>d quux<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> lookup <span style="color: #da70d6;">(</span>key <span style="color: #87cefa;">(</span>table-pair . table-rest<span style="color: #87cefa;">)</span> if-found if-not-found<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">let</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span>table-first table-second<span style="color: #da70d6;">)</span> table-pair<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> table-pair<span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span>if-not-found<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span>equal key table-first<span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span>if-found table-second<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span>t <span style="color: #da70d6;">(</span>lookup key table-rest if-found if-not-found<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> perform-lookup <span style="color: #da70d6;">(</span>key<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>lookup key *table*
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #ffd700;">(</span>answer<span style="color: #ffd700;">)</span>
+      <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">"{} =&gt; {}"</span> key answer<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #ffd700;">()</span>
+      <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">"Key {} not found"</span> key<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> test-cps <span style="color: #da70d6;">()</span>
+  <span style="color: #da70d6;">(</span>perform-lookup 'a<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>perform-lookup 'b<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>perform-lookup 'e<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc7601e9" class="outline-2">
+<h2 id="orgc7601e9"><span class="section-number-2">3.</span> Esquemas de equações de palavras para o algoritmo de Makhanin</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+O algoritmo a seguir é uma implementação do algoritmo para verificação
+de  esquemas  de  equações  de   palavras  do  algoritmo  de  Makhanin
+(ABDULRAB, 1992). Trata-se de um  algoritmo particularmente útil para
+testes de performance do interpretador.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #6a9955;">;; </span><span style="color: #6a9955;">-*- mode: lisp; mode: majestic; -*-</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> schemes <span style="color: #da70d6;">(</span>l1 l2<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>product '<span style="color: #dcdcaa;">=</span> <span style="color: #87cefa;">(</span>S l1 l2<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> product <span style="color: #da70d6;">(</span>x l<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">map</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cons</span> x<span style="color: #87cefa;">)</span> l<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> S <span style="color: #da70d6;">(</span>l1 l2<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">when</span> <span style="color: #87cefa;">(</span><span style="color: #569cd6;">and</span> l1 l2<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">if</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">not</span> <span style="color: #da70d6;">(</span><span style="color: #569cd6;">or</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cdr</span> l1<span style="color: #87cefa;">)</span>
+                 <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cdr</span> l2<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+        '<span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">=</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+        <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">append</span> <span style="color: #da70d6;">(</span>product '<span style="color: #dcdcaa;">=</span> <span style="color: #87cefa;">(</span>S <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cdr</span> l1<span style="color: #ffd700;">)</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cdr</span> l2<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+                <span style="color: #da70d6;">(</span>product '<span style="color: #dcdcaa;">&lt;</span> <span style="color: #87cefa;">(</span>S <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cdr</span> l1<span style="color: #ffd700;">)</span> l2<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+                <span style="color: #da70d6;">(</span>product '<span style="color: #dcdcaa;">&gt;</span> <span style="color: #87cefa;">(</span>S l1 <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cdr</span> l2<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span>schemes '<span style="color: #da70d6;">(</span>A x B<span style="color: #da70d6;">)</span> '<span style="color: #da70d6;">(</span>z x z<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgd026c24" class="outline-2">
+<h2 id="orgd026c24">Bibliografia</h2>
+<div class="outline-text-2" id="text-orgd026c24">
+<p>
+
+</p>
+
+<p>
+Alonzo Church (1936). <i>An Unsolvable Problem of Elementary Number Theory</i>, {American Journal of Mathematics}.</p>
+
+<p>
+Habib Abdulrab (1992). <i>Implementation of {Makanin}'s Algorithm</i>, Springer Berlin Heidelberg.</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Lucas S. Vieira</p>
+<p class="date">Created: 2022-10-23 dom 20:49</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

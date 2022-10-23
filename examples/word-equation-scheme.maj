@@ -1,0 +1,19 @@
+;; -*- mode: lisp; mode: majestic; -*-
+
+(defn schemes (l1 l2)
+  (product '= (S l1 l2)))
+
+(defn product (x l)
+  (map (cons x) l))
+
+(defn S (l1 l2)
+  (when (and l1 l2)
+    (if (not (or (cdr l1)
+                 (cdr l2)))
+        '((=))
+        (append (product '= (S (cdr l1) (cdr l2)))
+                (product '< (S (cdr l1) l2))
+                (product '> (S l1 (cdr l2)))))))
+
+(schemes '(A x B) '(z x z))
+

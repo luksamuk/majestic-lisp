@@ -1,0 +1,219 @@
+;; -*- mode: lisp; mode: majestic; -*-
+
+;; defmac macro
+(def defmac
+  (mac (label lambda-list . body)
+       `(def ,label
+            (mac ,lambda-list ,@body))))
+
+;; defn macro
+(defmac defn (label lambda-list . body)
+  `(def ,label (fn ,lambda-list ,@body)))
+
+;; when macro
+(defmac when (pred . body)
+  `(if ,pred (do ,@body) nil))
+
+;; unless macro
+(defmac unless (pred . body)
+  `(if (not ,pred) (do ,@body) nil))
+
+;; until macro
+(defmac until (pred . body)
+  `(while (not ,pred) ,@body))
+
+;; cond macro
+(defmac cond clauses
+  (if (nilp clauses)
+      nil
+      `(if ,(caar clauses)
+           (do ,@(cdar clauses))
+           ,(if (nilp (cdr clauses))
+                nil
+                (cons 'cond (cdr clauses))))))
+
+;; let macro
+(defmac let (args . body)
+  ((fn (sepfn)
+     ((fn ((syms vals))
+        `((fn ,syms ,@body)
+          ,@vals))
+      (sepfn args nil nil sepfn)))
+   (fn (pairs syms vals recur)
+       (if (nilp pairs)
+           (list syms vals)
+           (recur (cdr pairs)
+                  (cons (caar pairs) syms)
+                  (cons (car (cdar pairs)) vals)
+                  recur)))))
+
+;; let* macro
+(defmac let* (clauses . body)
+  (if (nilp clauses)
+      (cons 'do body)
+      `(let (,(car clauses))
+         ,(if (nilp (cdr clauses))
+              (cons 'do body)
+              `(let* ,(cdr clauses)
+                 ,@body)))))
+
+;; letfn macro
+(defmac letfn (defs . body)
+  ((fn (sepfn)
+     ((fn ((syms vals))
+        `((fn ,syms ,@body)
+          ,@vals))
+      (sepfn defs nil nil sepfn)))
+   (fn (pairs syms vals recur)
+       (if (nilp pairs)
+           (list syms vals)
+           (recur (cdr pairs)
+                  (cons (caar pairs) syms)
+                  (cons (cons 'fn (cdar pairs)) vals)
+                  recur)))))
+
+;; letfn* macro
+(defmac letfn* (clauses . body)
+  (if (nilp clauses)
+      (cons 'do body)
+      `(letfn (,(car clauses))
+         ,(if (nilp (cdr clauses))
+              (cons 'do body)
+              `(letfn* ,(cdr clauses)
+                 ,@body)))))
+
+;; map function
+(defn map (f (x . xs))
+  (unless (nilp x)
+    (cons (f x)
+          (map f xs))))
+
+;; mapc function
+(defn mapc (f (x . xs))
+  (unless (nilp x)
+    (f x)
+    (mapc f xs)))
+
+;; assp function
+(defn assp (proc (x . xs))
+  (unless (nilp x)
+    (let (((key . rest) x))
+      (or (and (proc key) x)
+          (assp proc xs)))))
+
+;; assoc function
+(defn assoc (sym alist)
+  (assp (equal sym) alist))
+
+;; functionp function
+(defn functionp (f)
+  (or (primitivep f)
+      (closurep f)))
+
+;; with-open-stream macro
+(defmac with-open-stream ((sym dir file) . body)
+  `(let ((,sym (open-stream ,dir ,file)))
+     (unwind-protect (do ,@body)
+       (close-stream ,sym))))
+
+;; repeat macro
+(defmac repeat (n . body)
+  (let ((it (gensym))
+        (res (gensym)))
+    `(let ((,it   ,n)
+           (,res nil))
+       (while (> ,it 0)
+         (set ,res (do ,@body))
+         (set ,it (1- ,it)))
+       ,res)))
+
+;; member function
+(defn member (elt lst)
+  (unless (nilp lst)
+    (let (((x . rest) lst))
+      (or (and (equal elt x)
+               lst)
+          (member elt rest)))))
+
+;; vector= function
+(defn vector= (va vb)
+  (when (eq (vec-type va) (vec-type vb))
+    (let* ((len (vec-length va))
+           (i 0)
+           (continue t))
+      (when (= len (vec-length vb))
+        (while (and (< i len) continue)
+          (unless (equal (vec-at i va)
+                         (vec-at i vb))
+            (set continue nil))
+          (set i (1+ i)))
+        continue))))
+
+;; equal function
+(defn equal (x y)
+  (cond ((and (numberp x) (numberp y))
+         (= x y))
+        ((and (vectorp x) (vectorp y))
+         (vector= x y))
+        ((and (symbolp x) (symbolp y))
+         (eq x y))
+        ((and (consp x) (consp y))
+         (when (equal (car x) (car y))
+           (equal (cdr x) (cdr y))))
+        ((and (atomp x) (atomp y))
+         (id x y))
+        (t nil)))
+
+;; functionp function
+(defn functionp (f)
+  (or (primitivep f)
+      (closurep f)))
+
+;; length function (optional)
+(defn length (l)
+  (letrec ((iter (acc (x . xs))
+             (cond ((consp xs)
+                    (iter (1+ acc) xs))
+                   (t acc))))
+    (or (and (atomp l) 0)
+        (iter 0 l))))
+
+;; TODO: max/min functions
+
+;; depth function (optional)
+(defn depth (l)
+  (letrec ((iter (l)
+             (cond ((not (consp l)) 0)
+                   (t (1+ (max (depth (car l))
+                               (depth (cdr l))))))))
+    (cond ((nilp l) 0)
+          ((atomp l)
+           (err "{} is an atom" l))
+          (t (iter l)))))
+
+;; TODO: append function
+
+;; TODO: last function
+
+;; identity function
+(defn identity (x) x)
+
+;; constantly function
+(defn constantly (value)
+  (fn () value))
+
+;; TODO: mod function
+
+;; evenp function (independent of mod)
+;; this is not optimal. mod missing...
+(defn evenp (x)
+  (= (* (number-coerce 'integer (/ x 2)) 2)
+     (number-coerce 'float x)))
+
+;; assert macro
+(defmac assert (expr value)
+  (let ((value-sym (gensym)))
+    `(let ((,value-sym ,value))
+       (if (equal ,expr ,value-sym)
+           (print ";; Passed: {} => {}" (quote ,expr) ,value-sym)
+           (err "Assertion failed: equal {} {}" (quote ,expr) ,value-sym)))))

@@ -1,0 +1,40 @@
+;; -*- mode: lisp; mode: majestic; -*-
+
+;;; Sum of squared pairs
+(defn square (x)
+  (* x x))
+
+(defn sum-of-squares (x y)
+  (+ (square x)
+     (square y)))
+
+(defn gen-pairs elements
+  (letrec ((gen-itr (lst)
+             (unless (or (nilp lst)
+                         (nilp (second lst)))
+               (cons (list (first lst) (second lst))
+                     (gen-itr (rest-of-rest lst))))))
+    (gen-itr elements)))
+
+(defmac squared-pair-sum elements
+  `(map (fn (x) (apply sum-of-squares x))
+        (gen-pairs ,@elements)))
+
+(print "{}" (squared-pair-sum 1 2 3 4 5 6 7 8 9))
+
+;;; Fibonacci
+(defn fibonacci (n)
+  (letrec ((fib-itr (acc curr n)
+             (if (= n 0)
+                 acc
+                 (fib-itr curr
+                          (+ acc curr)
+                          (1- n)))))
+    (cond ((< n 0)
+           (err "Cannot calculate {}th number" n))
+          ((or (zerop n)
+               (= n 1))  1)
+          (t (fib-itr 1 1 n)))))
+
+(print "Fibonacci: {}"
+       (map fibonacci (iota 10)))

@@ -13,3 +13,4 @@
   - [[./02-02-listas.org][Listas]]
   - [[./02-03-escrevendo-programas.org][Escrevendo programas]]
   - [[./02-04-elementos-avancados.org][Elementos avançados]]
+  - [[./02-05-exemplos.org][Exemplos de Majestic Lisp]]

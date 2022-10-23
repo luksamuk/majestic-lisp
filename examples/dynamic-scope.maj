@@ -1,0 +1,58 @@
+;; -*- mode: lisp; mode: majestic; -*-
+
+(print "Special variable test #1")
+
+(def *x* nil)
+
+(defn foo (n)
+  (when (< n 3)
+    (print-env 'lexical)
+    (print "x = {}" *x*)
+    (let ((*x* (1+ *x*)))
+      (foo (1+ *x*)))))
+
+(let ((*x* 5))
+  (foo 0))
+
+;; ==================================
+
+(print "Special variable test #2")
+
+(def *number* 10)
+
+(defn test (v)
+  (print "30 or 40? {}" (+ v *number*)))
+
+(let ((*number* 20))
+  (test *number*))
+
+;; ==================================
+
+(defn bar ()
+  (print "Called bar from global scope"))
+
+;; Calls to `foo` involve dynamic calls to `bar`
+(def *test1*
+     (letfn ((foo ()
+               (bar))
+             (bar ()
+               (print "Called bar from letfn")))
+       (foo)
+       foo))
+
+;; Calls `bar` from global scope
+(*test1*)
+
+
+;; Calls to `foo` involve static calls to `bar`
+(def *test2*
+     (letrec ((foo ()
+                (bar))
+              (bar ()
+                (print "Called bar from letrec")))
+       (foo)
+       foo))
+
+;; Calls `bar` referred by captured context
+(*test2*)
+

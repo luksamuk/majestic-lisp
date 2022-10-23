@@ -1,0 +1,57 @@
+;; Inspired on Joe Marshall's lightweight table
+;; source: http://funcall.blogspot.com/2021/05/lightweight-table.html
+
+(defn table/empty ()
+  (fn (key if-found if-not-found)
+    (if-not-found)))
+
+(defn table/extend (table key* value
+                    key if-found if-not-found)
+  (if (equal key key*)
+      (if-found value)
+    (table key if-found if-not-found)))
+
+(defn table/redact (table redacted
+                    key if-found if-not-found)
+  (if (equal key redacted)
+      (if-not-found)
+    (table key if-found if-not-found)))
+
+(defn table/bind-predicate (table predicate value
+                            key if-found if-not-found)
+  (if (predicate key)
+      (if-found value)
+    (table key if-found if-not-found)))
+
+(defn table/add-default (table default-value
+                         key if-found if-not-found)
+  (table key if-found
+         (fn () (if-found default-value))))
+
+(def *table1*
+     (table/extend
+      (table/extend
+       (table/empty)
+       'foo 42)
+      'bar 69))
+
+;; Example 1
+(assert (*table1* 'foo identity (constantly 'not-found)) 42)
+(assert (*table1* 'quux identity (constantly 'not-found)) 'not-found)
+
+;; Example 2
+(def *table2* (table/redact *table1* 'foo))
+(assert (*table2* 'foo identity (constantly 'not-found)) 'not-found)
+
+;; Example 3: Bind all even numbers to symbol EVEN
+(def *table3*
+     (table/bind-predicate *table2*
+                           (fn (n) (and (numberp n) (evenp n)))
+                           'even))
+(assert (*table3* 6 identity (constantly 'not-found)) 'even)
+
+;; Example 4
+(def *table4* (table/add-default *table3* 'default))
+(assert (*table4* 'bar identity (constantly 'not-found)) 69)
+(assert (*table4* 'xyzzy identity (constantly 'not-found)) 'default)
+

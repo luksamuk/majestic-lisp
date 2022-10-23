@@ -1,0 +1,28 @@
+;; -*- mode: lisp; mode: majestic; -*-
+
+(defn cat (file)
+  (and (not (zerop (sys "bat" "-l" "lisp" "--paging=never" file)))
+       (err "Error printing file {} to console" file)))
+
+(defn catload (file)
+  (cat file)
+  (load file))
+
+(defn show-examples ()
+  (sys "ls" "examples/"))
+
+(defn example-name (example)
+  (format "examples/{}.maj" example))
+
+(defn load-example (example)
+  (load (example-name example)))
+
+(defn catload-example (example)
+  (catload (example-name example)))
+
+(print "Possible commands:
+- (cat file)
+- (catload file)
+- (show-examples)
+- (load-example example)
+- (catload-example example)")

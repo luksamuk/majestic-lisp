@@ -1,0 +1,71 @@
+;; -*- mode: lisp; mode: majestic; -*-
+
+;; Identity
+(defn identity (x) x)
+(def ≡ identity)
+
+;; Compose
+(defn compose functions
+  (if (= (length functions) 1)
+      (car functions)
+      (fn args
+          ((first functions)
+           (apply (apply compose (rest functions))
+                  args)))))
+(def ○ compose)
+
+;; powfn
+(defn powfn (f n)
+  (cond ((= n 0) ≡)
+        ((= n 1) f)
+        (t (○ f (powfn f (1- n))))))
+(def ⍣ powfn)
+
+;; powfn-limit
+(defn powfn-limit (f x)
+  (let ((result (f x)))
+    (if (= x result)
+        result
+        (powfn-limit f result))))
+(def ⍣≡ powfn-limit)
+
+;; Square root by fixed point approach (Abelson et al., 1996)
+(def *fixpoint-tolerance* 0.00001)
+
+(defn abs (x)
+  (if (< x 0) (- x) x))
+
+;; fixed-point
+(defn ⍟ (f first-guess)
+  (letrec ((close-enough-p (v1 v2)
+             (< (abs (- v1 v2)) *fixpoint-tolerance*))
+           (try (guess)
+             (let ((next (f guess)))
+               (if (close-enough-p guess next)
+                   next
+                   (try next)))))
+    (try first-guess)))
+
+(defn average (a b)
+  (/ (+ a b) 2))
+
+;; average-damp
+(defn ⌿ (f x)
+  (average x (f x)))
+
+(defn sqrt-1 (x)
+  (⍟ (⌿ (fn (y) (/ x y)))
+     1.0))
+
+(defn nthrt (n x)
+  (⍟ ((⍣ ⌿ (1+ (div n 4)))
+      (fn (y) (/ x (expt y (1- n)))))
+     1.0))
+
+
+;; extra
+(defn square (x)
+  (* x x))
+
+(def triple-square (⍣ square 3))
+(triple-square 5)

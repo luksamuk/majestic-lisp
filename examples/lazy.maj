@@ -1,0 +1,124 @@
+;; =======================
+;; Memoization
+;; =======================
+
+(defn memo-proc (proc)
+  (let ((*already-run* nil)
+        (*result*      nil))
+    (fn ()
+      (if (not *already-run*)
+          (do (set *result* (proc))
+              (set *already-run* t)
+              *result*)
+          *result*))))
+
+;; =======================
+;; Macros for creating streams
+;; =======================
+
+(defmac delay body
+  `(memo-proc (fn () ,@body)))
+
+(defmac force (procedure)
+  `(,procedure))
+
+(defmac lazy-cons (a b)
+  `(cons ,a (delay ,b)))
+
+;; =======================
+;; Stream accessors
+;; =======================
+
+(defn lazy-car (stream)
+  (car stream))
+
+(defn lazy-cdr (stream)
+  (force (cdr stream)))
+
+;; =======================
+;; Stream operations
+;; =======================
+
+(def *empty-lazy* nil)
+
+(def lazy-nil-p nilp)
+
+(defn lazy-filter (pred stream)
+  (cond ((lazy-nil-p stream)
+         *empty-lazy*)
+        ((pred (lazy-car stream))
+         (lazy-cons (lazy-car stream)
+                    (lazy-filter
+                     pred
+                     (lazy-cdr stream))))
+        (t (lazy-filter pred (lazy-cdr stream)))))
+
+;; Warning: This may cause a stack overflow
+(defn lazy-take (stream n)
+  (when (> n 0)
+    (cons (lazy-car stream)
+          (lazy-take
+           (lazy-cdr stream)
+           (1- n)))))
+
+;; (defn map-stream (stream f)
+;;   (cons-stream (f (stream-car stream))
+;;                (map-stream
+;;                 (stream-cdr stream)
+;;                 f)))
+
+(defn lazy-print (stream n)
+  (when (> n 0)
+    (print "{}" (lazy-car stream))
+    (set n (1- n))
+    (set stream (lazy-cdr stream))
+    (lazy-print stream n)))
+
+;; =======================
+;; Sequence of integer numbers
+;; =======================
+
+(defn integers-from (n)
+  (lazy-cons n (integers-from (1+ n))))
+
+(def *integers-seq* (integers-from 1))
+
+
+;; =======================
+;; Sequence of Fibonacci and Lucas numbers
+;; =======================
+
+(letrec ((fib-gen (a b)
+           (lazy-cons a (fib-gen b (+ a b)))))
+  (def *fibonacci-seq* (fib-gen 1 1))
+  (def *lucas-seq*     (fib-gen 2 1)))
+
+;; =======================
+;; Sequence of primes using "sieve" of Erathostenes
+;; =======================
+
+(defn integer-division (a b)
+  (number-coerce
+   (/ (number-coerce a 'integer)
+      (number-coerce b 'integer))
+   'integer))
+
+(defn remainder (a b)
+  (let* ((div (integer-division a b))
+         (intdiv (- a (* div b))))
+    intdiv))
+
+(defn divisiblep (x y)
+  (zerop (remainder x y)))
+
+(letrec ((sieve (stream)
+           (lazy-cons
+            (lazy-car stream)
+            (sieve (lazy-filter
+                    (fn (x)
+                      (not (divisiblep x
+                             (lazy-car stream))))
+                    (lazy-cdr stream))))))
+  (def *primes-seq* (sieve (integers-from 2))))
+
+

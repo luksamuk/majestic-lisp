@@ -1,0 +1,76 @@
+#+setupfile: static/setupfile.org
+#+html_link_up: 02-sintaxe.html
+#+title: Exemplos de Majestic Lisp
+
+A seguir, demonstraremos  alguns exemplos de código  feito em Majestic
+Lisp.    Os  exemplos   visam   abranger   conceitos  recorrentes   na
+programação. Estes programas também podem ser utilizados para testar a
+programação de um interpretador de Majestic, que será criado ao longo
+desse livro.
+
+Os exemplos a seguir foram selecionados por serem mais compactos. Para
+exemplos mais extensos de código, veja o Apêndice B.
+
+
+* Numerais de Church
+#+index: numeral de Church
+#+index: cálculo lambda
+
+Numerais  de  Church são  ferramentas  interessantes  para falarmos  a
+respeito  de   computabilidade.   Em  suma,  usando   /lambda  calculus/
+(CHURCH, 1936),  é  possível   criarmos  representações  para  números
+naturais usando  nada mais que  a ideia  de descrição e  aplicações de
+funções.
+
+Majestic,  Lisps  em geral  e  o  paradigma de  programação  funcional
+relacionam-se  intimamente  com  as  ideias de  Alonzo  Church.  Nesse
+sentido, uma das possibilidades de  Majestic é a implementação de tais
+numerais, bem  como algumas  funções auxiliares  (~succ~, que  calcula o
+sucessor de um número; ~add~, que calcula a soma de dois números).
+
+A implementação  das funções auxiliares  é um tópico de  atenção extra
+para este exemplo, pois seu uso  demonstra como a aplicação parcial de
+uma função pode ajudar nessas declarações.
+
+#+INCLUDE: "examples/church.maj" src majestic
+
+* Unicode :noexport:
+
+# Talvez possa ficar aqui
+
+#+INCLUDE: "examples/unicode.maj" src majestic
+
+* Continuation-passing style
+
+O estilo  de passagem de continuações  é uma forma de  programação que
+envolve modificar  o controle de  fluxo da  aplicação, de forma  que a
+interpretação de certos predicados (como  ocorre em ~if~ e ~cond~) estejam
+relacionados à  execução de  certas funções, ao  invés da  execução de
+meras expressões como consequência.
+
+Esse estilo  de programação é  particularmente útil em  situações onde
+operações são executadas de forma concorrente.
+
+O  exemplo  a seguir  não  trabalha  com operações  concorrentes,  mas
+realiza uma demonstração do estilo de passagem de continuações.
+
+#+INCLUDE: "examples/cps.maj" src majestic
+
+* Esquemas de equações de palavras para o algoritmo de Makhanin
+
+O algoritmo a seguir é uma implementação do algoritmo para verificação
+de  esquemas  de  equações  de   palavras  do  algoritmo  de  Makhanin
+(ABDULRAB, 1992). Trata-se de um  algoritmo particularmente útil para
+testes de performance do interpretador.
+
+#+INCLUDE: "examples/word-equation-scheme.maj" src majestic
+
+
+* Bibliografia
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+[cite/n:@abdulrab1992; @church36a]
+
+#+print_bibliography:
