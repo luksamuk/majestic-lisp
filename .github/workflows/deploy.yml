@@ -59,7 +59,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: build-linux
+          name: builds
           path: ./target/majestic-lisp-x86_64.tar.gz
 
   deploy-win64:
@@ -98,10 +98,10 @@ jobs:
           cp target/x86_64-pc-windows-gnu/release/majestic-lisp.exe target/zip/
           cp "man/majestic(1).pdf" target/zip/
           cd target/zip \
-          && 7z a ../../majestic-lisp-win64.zip .
+          && 7z a ../majestic-lisp-win64.zip .
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: build-windows
+          name: builds
           path: ./target/majestic-lisp-win64.zip
     
