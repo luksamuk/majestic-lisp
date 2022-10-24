@@ -105,3 +105,40 @@ jobs:
           name: builds
           path: ./target/majestic-lisp-win64.zip
     
+  deploy-wasi:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+        with:
+          profile: minimal
+          toolchain: nightly
+      - name: Install Cargo WASI
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cargo-wasi
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: wasi
+          args: build --release
+      - name: Create tarball
+        run: |
+          mkdir -p target/tarball/wasm32-wasi
+          cp target/wasm32-wasi/release/majestic-lisp.wasm target/tarball/wasm32-wasi/
+          cp man/man1/majestic.1 target/tarball/wasm32-wasi/
+          cd target/tarball/wasm32-wasi \
+          && tar -czvf ../../majestic-lisp-wasm32-wasi.tar.gz .
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: builds
+          path: ./target/majestic-lisp-wasm32-wasi.tar.gz
