@@ -1,5 +1,5 @@
 #+setupfile: static/setupfile.org
-#+html_link_up: index.html
+#+html_link_up: 09-ponto-de-entrada.html
 #+title: Script de compilação
 #+startup: content
 
