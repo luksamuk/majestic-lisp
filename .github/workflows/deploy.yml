@@ -3,6 +3,8 @@ name: Deploy
 on:
   push:
     branches: [master]
+    tags:
+      - "v*"
 
 jobs:
   test:
@@ -26,7 +28,7 @@ jobs:
         with:
           command: test
 
-  deploy-linux-x86_64:
+  deploy-linux:
     runs-on: ubuntu-latest
     needs: [test]
     steps:
@@ -62,7 +64,7 @@ jobs:
           name: builds
           path: ./target/majestic-lisp-x86_64.tar.gz
 
-  deploy-win64:
+  deploy-windows:
     runs-on: ubuntu-latest
     needs: [test]
     steps:
@@ -142,3 +144,19 @@ jobs:
         with:
           name: builds
           path: ./target/majestic-lisp-wasm32-wasi.tar.gz
+
+  release:
+    # Run only for tags
+    if: ${{ github.event_name == 'push' && contains(github.ref, 'refs/tags/') }}
+    runs-on: ubuntu-latest
+    needs: [deploy-linux, deploy-windows, deploy-wasi]
+    steps:
+      - name: Recover artifacts
+        uses: actions/download-artifact@v2
+      - name: Create a release
+        id: release_step
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "builds/majestic-lisp-x86_64.tar.gz,builds/majestic-lisp-win64.zip,builds/majestic-lisp-wasm32-wasi.tar.gz"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
