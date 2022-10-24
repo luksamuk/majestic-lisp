@@ -1,0 +1,105 @@
+name: Deploy
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # TODO: Install Emacs
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+        with:
+          profile: minimal
+          toolchain: nightly
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      # TODO: Tangle .org files using Emacs        
+      - name: Run unit tests
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+
+  deploy-linux-x86_64:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      # TODO: Install Emacs
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+        with:
+          profile: minimal
+          toolchain: nightly
+          override: true
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      # TODO: Tangle .org files using Emacs        
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+      - name: Create tarball
+        run: |
+          mkdir -p target/tarball/x86_64
+          cp target/release/majestic-lisp target/tarball/x86_64/
+          cp man/man1/majestic.1 target/tarball/x86_64/
+          cd target/tarball/x86_64 \
+          && tar -czvf ../../majestic-lisp-x86_64.tar.gz .
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-linux
+          path: ./majestic-lisp-x86_64.tar.gz
+
+  deploy-win64:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      # TODO: Install Emacs
+      - name: Install dependencies
+        run: sudo apt install p7zip-full
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+        with:
+          profile: minimal
+          toolchain: nightly
+          target: x86_64-pc-windows-gnu
+          override: true
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      # TODO: Tangle .org files using Emacs        
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --release --target x86_64-pc-windows-gnu
+      - name: Create zip
+        run: |
+          man -M man -Tpdf 1 majestic >"man/majestic(1).pdf"
+          mkdir -p target/zip
+          cp target/x86_64-pc-windows-gnu/release/majestic-lisp.exe target/zip/
+          cp "man/majestic(1).pdf" target/zip/
+          cd target/zip \
+          && 7z a ../../majestic-lisp-win64.zip .
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-windows
+          path: ./majestic-lisp-win64.zip
+    
