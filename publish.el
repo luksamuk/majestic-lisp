@@ -27,5 +27,11 @@
          :base-extension "org"
          :exclude "setupfile.org"
          :publishing-function org-html-publish-to-html)
+        ("tangle"
+         :base-directory ,default-directory
+         :publishing-directory ,default-directory
+         :recursive t
+         :exclude "static/\\|setupfile.org"
+         :publishing-function org-babel-tangle-publish)
         ("majestic"
          :components ("static-images" "static-files" "html"))))
