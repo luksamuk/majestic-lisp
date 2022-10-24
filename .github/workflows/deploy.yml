@@ -90,7 +90,7 @@ jobs:
         with:
           use-cross: true
           command: build
-          args: --release --target x86_64-pc-windows-gnu
+          args: --target x86_64-pc-windows-gnu --release --features dumb_terminal
       - name: Create zip
         run: |
           man -M man -Tpdf 1 majestic >"man/majestic(1).pdf"
