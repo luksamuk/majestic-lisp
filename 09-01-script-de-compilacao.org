@@ -3,9 +3,9 @@
 #+title: Script de compilação
 #+startup: content
 
-#+property: header-args:rust :tangle src/build.rs
+#+property: header-args:rust :tangle build.rs
 
-Arquivo: ~build.rs~
+Arquivo: ~build.rs~ (na raiz do projeto).
 
 #+begin_src rust
 use std::{

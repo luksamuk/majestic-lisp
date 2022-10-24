@@ -310,6 +310,66 @@ impl Maj {
     }
 }
 
+#[derive(Debug, Trace, Finalize, Clone)]
+pub enum MajVector {
+    Integer(GcCell<Vec<i64>>),
+    Float(GcCell<Vec<f64>>),
+    Char(GcCell<String>),
+    Any(GcCell<Vec<Gc<Maj>>>)
+}
+
+#[derive(Debug, PartialEq)]
+pub enum MajVectorType {
+    Integer,
+    Float,
+    Char,
+    Any
+}
+
+impl Maj {
+    pub fn vector(vtype: MajVectorType) -> Gc<Maj> {
+        Gc::new(Maj::Vector(
+            match vtype {
+                MajVectorType::Integer => {
+                    MajVector::Integer(
+                        GcCell::new(Vec::new()))
+                },
+                MajVectorType::Float => {
+                    MajVector::Float(
+                        GcCell::new(Vec::new()))
+                },
+                MajVectorType::Char => {
+                    MajVector::Char(
+                        GcCell::new(String::new()))
+                },
+                MajVectorType::Any => {
+                    MajVector::Any(
+                        GcCell::new(Vec::new()))
+                },
+            }))
+    }
+}
+
+impl Maj {
+    pub fn vector_integer(vec: Vec<i64>) -> Gc<Maj> {
+        Gc::new(Maj::Vector(
+            MajVector::Integer(
+                GcCell::new(vec.clone()))))
+    }
+    
+    pub fn vector_float(vec: Vec<f64>) -> Gc<Maj> {
+        Gc::new(Maj::Vector(
+            MajVector::Float(
+                GcCell::new(vec.clone()))))
+    }
+
+    pub fn vector_any(vec: Vec<Gc<Maj>>) -> Gc<Maj> {
+        Gc::new(Maj::Vector(
+            MajVector::Any(
+                GcCell::new(vec.clone()))))
+    }
+}
+
 use std::fmt;
 
 impl fmt::Display for Maj {
