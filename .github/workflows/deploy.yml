@@ -60,7 +60,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-linux
-          path: ./majestic-lisp-x86_64.tar.gz
+          path: ./target/majestic-lisp-x86_64.tar.gz
 
   deploy-win64:
     runs-on: ubuntu-latest
@@ -68,7 +68,9 @@ jobs:
     steps:
       # TODO: Install Emacs
       - name: Install dependencies
-        run: sudo apt install p7zip-full
+        run: |
+          sudo apt update
+          sudo apt install p7zip-full groff
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2
       - name: Install Rust toolchain
@@ -101,5 +103,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build-windows
-          path: ./majestic-lisp-win64.zip
+          path: ./target/majestic-lisp-win64.zip
     
