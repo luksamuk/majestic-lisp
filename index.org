@@ -1,6 +1,12 @@
 #+setupfile: static/setupfile.org
 #+title: Majestic Lisp
 
+#+html: <center>
+
+Criado e desenvolvido por [[https://luksamuk.codes][Lucas S. Vieira]] <lucasvieira at protonmail dot com>.
+
+#+html: </center>
+
 Seja bem-vindo(a)  a Majestic Lisp,  um dialeto  de Lisp cujo  interpretador foi
 construído  usando  a  linguagem  Rust,  através de  um  método  conhecido  como
 /literate programming/ (aqui traduzido livremente como /programação instruída/.
@@ -21,10 +27,16 @@ certifique-se de que *editar apenas os  arquivos .org*; nenhum arquivo de códig
 deverá ser editado diretamente.
 
 * Licenciamento
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 
-Este projeto utiliza a licença MIT.
+Este projeto utiliza a licença MIT. Veja o repositório para mais detalhes.
 
 * Conteúdo
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 
 [[./00-agradecimentos.org][Agradecimentos]]
 1. [[./01-introducao.org][Introdução]]
@@ -61,6 +73,9 @@ Este projeto utiliza a licença MIT.
 10. [[./10-testes.org][Testes]]
 
 * Apêndices
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 
 - [[./A-especificacao.org][A: Especificação]]
 - [[./B-mais-exemplos.org][B: Mais exemplos de Majestic Lisp]]

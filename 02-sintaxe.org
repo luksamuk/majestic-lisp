@@ -9,6 +9,6 @@ linguagem Majestic Lisp.
 
 O  objetivo deste  capítulo não  é  especificar com  detalhes a  nossa
 linguagem; aliás,  a especificação da linguagem  poderá ser encontrada
-no Apêndice A.  Faremos apenas um /tour/ pela sintaxe  de Majestic Lisp,
+no [[./A-especificacao.org][Apêndice A]].  Faremos apenas um /tour/ pela sintaxe  de Majestic Lisp,
 com seus detalhes mais importantes que a tornam uma linguagem única.
 

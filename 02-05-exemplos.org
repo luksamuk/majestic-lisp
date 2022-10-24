@@ -9,7 +9,7 @@ programação de um interpretador de Majestic, que será criado ao longo
 desse livro.
 
 Os exemplos a seguir foram selecionados por serem mais compactos. Para
-exemplos mais extensos de código, veja o Apêndice B.
+exemplos mais extensos de código, veja o [[./B-mais-exemplos.org][Apêndice B]].
 
 
 * Numerais de Church
