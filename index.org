@@ -1,6 +1,28 @@
 #+setupfile: static/setupfile.org
 #+title: Majestic Lisp
 
+Seja bem-vindo(a)  a Majestic Lisp,  um dialeto  de Lisp cujo  interpretador foi
+construído  usando  a  linguagem  Rust,  através de  um  método  conhecido  como
+/literate programming/ (aqui traduzido livremente como /programação instruída/.
+
+O objetivo  desse projeto é a  construção de um  livro que exponha, em  forma de
+prosa,  a implementação  da aplicação,  com blocos  de código  fazendo papel  de
+acompanhamento.
+
+Isso inverte a ideia de comentar código que é escrito: em vez disso, codificamos
+as ideias que são comentadas.
+
+Veja que  *este projeto ainda  está no início*, o  que significa que  você ainda
+verá   inconsistências  e,   por   vezes,  blocos   de   código  sem   descrição
+apropriada. Ainda assim, sinta-se em casa para explorar o projeto.
+
+Você poderá encontrar o código  separado [[https://github.com/luksamuk/majestic-lisp][no repositório]]. Caso queira contribuir,
+certifique-se de que *editar apenas os  arquivos .org*; nenhum arquivo de código
+deverá ser editado diretamente.
+
+* Licenciamento
+
+Este projeto utiliza a licença MIT.
 
 * Conteúdo
 
@@ -21,7 +43,14 @@
    - [[./04-01-estado-global.org][Estado global]]
    - [[./04-02-tipos-de-dados-fundamentais.org][Tipos de dados fundamentais]]
    - [[./04-03-contextos.org][Contextos]]
-5. Axiomas
+5. [[./05-axiomas.org][Axiomas]]
+   - Assinatura para funções primitivas
+   - Símbolos constantes
+   - Predicados
+   - Funções primitivas
+   - /Boostrapping/
+   - Exportação de axiomas (no módulo)
+   - Utilitários
 6. Impressão
 7. Leitor de expressões
 8. Interpretador

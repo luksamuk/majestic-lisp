@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
 <head>
-<!-- 2022-10-23 dom 22:46 -->
+<!-- 2022-10-23 dom 23:06 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Majestic Lisp</title>
@@ -207,11 +207,47 @@
  <a accesskey="H" href="index.html"> HOME </a>
 </div><div id="content" class="content">
 <h1 class="title">Majestic Lisp</h1>
+<p>
+Seja bem-vindo(a)  a Majestic Lisp,  um dialeto  de Lisp cujo  interpretador foi
+construído  usando  a  linguagem  Rust,  através de  um  método  conhecido  como
+<i>literate programming</i> (aqui traduzido livremente como <i>programação instruída</i>.
+</p>
 
+<p>
+O objetivo  desse projeto é a  construção de um  livro que exponha, em  forma de
+prosa,  a implementação  da aplicação,  com blocos  de código  fazendo papel  de
+acompanhamento.
+</p>
+
+<p>
+Isso inverte a ideia de comentar código que é escrito: em vez disso, codificamos
+as ideias que são comentadas.
+</p>
+
+<p>
+Veja que  <b>este projeto ainda  está no início</b>, o  que significa que  você ainda
+verá   inconsistências  e,   por   vezes,  blocos   de   código  sem   descrição
+apropriada. Ainda assim, sinta-se em casa para explorar o projeto.
+</p>
+
+<p>
+Você poderá encontrar o código  separado <a href="https://github.com/luksamuk/majestic-lisp">no repositório</a>. Caso queira contribuir,
+certifique-se de que <b>editar apenas os  arquivos .org</b>; nenhum arquivo de código
+deverá ser editado diretamente.
+</p>
+
+<div id="outline-container-orgda628e7" class="outline-2">
+<h2 id="orgda628e7"><span class="section-number-2">1.</span> Licenciamento</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Este projeto utiliza a licença MIT.
+</p>
+</div>
+</div>
 
 <div id="outline-container-org1fbb2c0" class="outline-2">
-<h2 id="org1fbb2c0"><span class="section-number-2">1.</span> Conteúdo</h2>
-<div class="outline-text-2" id="text-1">
+<h2 id="org1fbb2c0"><span class="section-number-2">2.</span> Conteúdo</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 <a href="./00-agradecimentos.html">Agradecimentos</a>
 </p>
@@ -238,7 +274,16 @@
 <li><a href="./04-02-tipos-de-dados-fundamentais.html">Tipos de dados fundamentais</a></li>
 <li><a href="./04-03-contextos.html">Contextos</a></li>
 </ul></li>
-<li>Axiomas</li>
+<li><a href="./05-axiomas.html">Axiomas</a>
+<ul class="org-ul">
+<li>Assinatura para funções primitivas</li>
+<li>Símbolos constantes</li>
+<li>Predicados</li>
+<li>Funções primitivas</li>
+<li><i>Boostrapping</i></li>
+<li>Exportação de axiomas (no módulo)</li>
+<li>Utilitários</li>
+</ul></li>
 <li>Impressão</li>
 <li>Leitor de expressões</li>
 <li>Interpretador</li>
@@ -249,8 +294,8 @@
 </div>
 
 <div id="outline-container-org2603458" class="outline-2">
-<h2 id="org2603458"><span class="section-number-2">2.</span> Apêndices</h2>
-<div class="outline-text-2" id="text-2">
+<h2 id="org2603458"><span class="section-number-2">3.</span> Apêndices</h2>
+<div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>A: Especificação</li>
 <li>B: Mais exemplos de Majestic Lisp</li>
@@ -261,7 +306,7 @@
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Lucas S. Vieira</p>
-<p class="date">Created: 2022-10-23 dom 22:46</p>
+<p class="date">Created: 2022-10-23 dom 23:06</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
