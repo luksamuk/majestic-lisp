@@ -1,0 +1,53 @@
+use crate::core::MajState;
+use crate::core::Maj;
+use num_derive::FromPrimitive;
+
+#[derive(Debug, FromPrimitive)]
+pub enum MajRawSym {
+    Nil            = 0,
+    T              = 1,
+    Prim           = 2,
+    Lit            = 3,
+    Closure        = 4,
+    Error          = 5,
+    Fn             = 6,
+    Ampersand      = 7,
+    Apply          = 8,
+    Macro          = 9,
+    Mac            = 10,
+    Quote          = 11,
+    Unquote        = 12,
+    UnquoteSplice  = 13,
+    Quasiquote     = 14,
+    Do             = 15,
+    Integer        = 16,
+    Float          = 17,
+    Fraction       = 18,
+    Complex        = 19,
+    Vector         = 20,
+}
+
+pub fn maj_gen_symbols(mut state: &mut MajState) {
+    // Order matters here
+    let _ = Maj::symbol(&mut state, "nil");            // 0
+    let _ = Maj::symbol(&mut state, "t");              // 1
+    let _ = Maj::symbol(&mut state, "prim");           // 2
+    let _ = Maj::symbol(&mut state, "lit");            // 3
+    let _ = Maj::symbol(&mut state, "closure");        // 4
+    let _ = Maj::symbol(&mut state, "error");          // 5
+    let _ = Maj::symbol(&mut state, "fn");             // 6
+    let _ = Maj::symbol(&mut state, "&");              // 7
+    let _ = Maj::symbol(&mut state, "apply");          // 8
+    let _ = Maj::symbol(&mut state, "macro");          // 9
+    let _ = Maj::symbol(&mut state, "mac");            // 10
+    let _ = Maj::symbol(&mut state, "quote");          // 11
+    let _ = Maj::symbol(&mut state, "unquote");        // 12
+    let _ = Maj::symbol(&mut state, "unquote-splice"); // 13
+    let _ = Maj::symbol(&mut state, "quasiquote");     // 14
+    let _ = Maj::symbol(&mut state, "do");             // 15
+    let _ = Maj::symbol(&mut state, "integer");        // 16    
+    let _ = Maj::symbol(&mut state, "float");          // 17
+    let _ = Maj::symbol(&mut state, "fraction");       // 18
+    let _ = Maj::symbol(&mut state, "complex");        // 19
+    let _ = Maj::symbol(&mut state, "vector");         // 20
+}

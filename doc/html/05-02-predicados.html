@@ -1,0 +1,898 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+<head>
+<!-- 2022-10-23 dom 23:28 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Predicados</title>
+<meta name="author" content="Lucas S. Vieira" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="./main.css" />
+<link rel="stylesheet" type="text/css" href="./syntax.css" />
+<link id="theme-css" rel="stylesheet" type="text/css" href="./dark-theme.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="../img/cat-i-mage.jpg">
+<meta name="theme-color" content="#14171e">
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="05-axiomas.html"> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Predicados</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org00e923e">1. <code>symbolp</code>: Teste de símbolo</a></li>
+<li><a href="#orgb948367">2. <code>eq</code>: Teste de identidade simbólica</a></li>
+<li><a href="#orgdfe444d">3. <code>nilp</code>: Teste de nulidade</a></li>
+<li><a href="#org7fcb34f">4. <code>consp</code>: Teste de célula cons</a></li>
+<li><a href="#orgbdb2b51">5. <code>atomp</code>: Teste de atomicidade</a></li>
+<li><a href="#org09db9c0">6. <code>charp</code>: Teste de caractere</a></li>
+<li><a href="#orgdc784e7">7. <code>char=</code>: Comparação de caracteres</a></li>
+<li><a href="#org95ebfde">8. <code>streamp</code>: Teste de stream</a></li>
+<li><a href="#orgb31bec6">9. <code>numberp</code>: Teste de número</a>
+<ul>
+<li><a href="#org7b6d6c4">9.1. <code>integerp</code>: Teste de número inteiro</a></li>
+<li><a href="#orgb426582">9.2. <code>floatp</code>: Teste de ponto flutuante</a></li>
+<li><a href="#org2b85a7b">9.3. <code>fractionp</code>: Teste de fração</a></li>
+<li><a href="#orgb566dc2">9.4. <code>complexp</code>: Teste de número complexo</a></li>
+</ul>
+</li>
+<li><a href="#orgb90ee48">10. <code>vectorp</code>: Teste de vetor</a></li>
+<li><a href="#orgdec07be">11. <code>id</code>: Teste de identidade</a></li>
+<li><a href="#orgae9a683">12. <code>proper-list-p</code>: Teste de lista adequada</a></li>
+<li><a href="#orgb0c893c">13. <code>stringp</code>: Teste de String</a></li>
+<li><a href="#org75917b1">14. <code>literalp</code>: Teste de literal</a></li>
+<li><a href="#org2b56a71">15. <code>primitivep</code>: Teste de primitivas</a></li>
+<li><a href="#org93afb99">16. <code>closurep</code>: Teste de clausura</a></li>
+<li><a href="#org08cc45a">17. <code>functionp</code>: Teste de função</a></li>
+<li><a href="#org312793b">18. <code>macrop</code>: Teste de macro</a></li>
+<li><a href="#org59c2d5f">19. <code>errorp</code>: Teste de erro</a></li>
+<li><a href="#org2dd294e">20. <code>zerop</code>: Teste de nulidade numérica</a></li>
+<li><a href="#org6ecefde">21. Registro em contexto global</a></li>
+</ul>
+</div>
+</div>
+<p>
+Arquivo: <code>axioms/predicates.rs</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">use</span> <span style="color: #569cd6;">gc</span>::<span style="color: #4ec9b0;">Gc</span>;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::maj_list;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #4ec9b0;">Maj</span>;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #4ec9b0;">MajState</span>;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">super</span>::<span style="color: #569cd6;">primitives</span>::{
+    maj_car,
+    maj_cdr,
+    maj_err
+};
+</pre>
+</div>
+
+<div id="outline-container-org00e923e" class="outline-2">
+<h2 id="org00e923e"><span class="section-number-2">1.</span> <code>symbolp</code>: Teste de símbolo</h2>
+<div class="outline-text-2" id="text-1">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_symbolp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(_) = *x {
+        <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb948367" class="outline-2">
+<h2 id="orgb948367"><span class="section-number-2">2.</span> <code>eq</code>: Teste de identidade simbólica</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_eq</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;, <span style="color: #9cdcfe;">y</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(idx) = *x {
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(idy) = *y {
+            <span style="color: #569cd6;">if</span> idx == idy {
+                <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+            }
+        }
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdfe444d" class="outline-2">
+<h2 id="orgdfe444d"><span class="section-number-2">3.</span> <code>nilp</code>: Teste de nulidade</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_nilp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    maj_eq(x, <span style="color: #4ec9b0;">Maj</span>::nil())
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7fcb34f" class="outline-2">
+<h2 id="org7fcb34f"><span class="section-number-2">4.</span> <code>consp</code>: Teste de célula cons</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_consp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Cons</span> { <span style="color: #9cdcfe;">car</span>: _, <span style="color: #9cdcfe;">cdr</span>: _ } = *x {
+        <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbdb2b51" class="outline-2">
+<h2 id="orgbdb2b51"><span class="section-number-2">5.</span> <code>atomp</code>: Teste de atomicidade</h2>
+<div class="outline-text-2" id="text-5">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_atomp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Cons</span> { <span style="color: #9cdcfe;">car</span>: _, <span style="color: #9cdcfe;">cdr</span>: _ } = *x {
+        <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::nil()
+    }
+    <span style="color: #4ec9b0;">Maj</span>::t()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org09db9c0" class="outline-2">
+<h2 id="org09db9c0"><span class="section-number-2">6.</span> <code>charp</code>: Teste de caractere</h2>
+<div class="outline-text-2" id="text-6">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_charp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Char</span>(_) = *x {
+        <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdc784e7" class="outline-2">
+<h2 id="orgdc784e7"><span class="section-number-2">7.</span> <code>char=</code>: Comparação de caracteres</h2>
+<div class="outline-text-2" id="text-7">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_char_equals</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;, <span style="color: #9cdcfe;">y</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Char</span>(xc) = *x.clone() {
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Char</span>(yc) = *y.clone() {
+            <span style="color: #569cd6;">if</span> xc == yc {
+                <span style="color: #4ec9b0;">Maj</span>::t()
+            } <span style="color: #569cd6;">else</span> {
+                <span style="color: #4ec9b0;">Maj</span>::nil()
+            }
+        } <span style="color: #569cd6;">else</span> {
+            maj_err(<span style="color: #4ec9b0;">Maj</span>::string(<span style="color: #ce9178;">"{} is not a character"</span>),
+                    <span style="color: #c586c0;">maj_list!</span>(y))
+        }
+    } <span style="color: #569cd6;">else</span> {
+        maj_err(<span style="color: #4ec9b0;">Maj</span>::string(<span style="color: #ce9178;">"{} is not a character"</span>),
+                <span style="color: #c586c0;">maj_list!</span>(x))
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org95ebfde" class="outline-2">
+<h2 id="org95ebfde"><span class="section-number-2">8.</span> <code>streamp</code>: Teste de stream</h2>
+<div class="outline-text-2" id="text-8">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_streamp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Stream</span>(_) = *x {
+        <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb31bec6" class="outline-2">
+<h2 id="orgb31bec6"><span class="section-number-2">9.</span> <code>numberp</code>: Teste de número</h2>
+<div class="outline-text-2" id="text-9">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_numberp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Number</span>(_) = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*x {
+        <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org7b6d6c4" class="outline-3">
+<h3 id="org7b6d6c4"><span class="section-number-3">9.1.</span> <code>integerp</code>: Teste de número inteiro</h3>
+<div class="outline-text-3" id="text-9-1">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_integerp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #569cd6;">types</span>::<span style="color: #4ec9b0;">MajNumber</span>;
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Number</span>(num) = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*x {
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Integer</span>(_) = num {
+            <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+        }
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb426582" class="outline-3">
+<h3 id="orgb426582"><span class="section-number-3">9.2.</span> <code>floatp</code>: Teste de ponto flutuante</h3>
+<div class="outline-text-3" id="text-9-2">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_floatp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #569cd6;">types</span>::<span style="color: #4ec9b0;">MajNumber</span>;
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Number</span>(num) = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*x {
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Float</span>(_) = num {
+            <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+        }
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2b85a7b" class="outline-3">
+<h3 id="org2b85a7b"><span class="section-number-3">9.3.</span> <code>fractionp</code>: Teste de fração</h3>
+<div class="outline-text-3" id="text-9-3">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_fractionp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #569cd6;">types</span>::<span style="color: #4ec9b0;">MajNumber</span>;
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Number</span>(num) = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*x {
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Fraction</span>(_, _) = num {
+            <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+        }
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb566dc2" class="outline-3">
+<h3 id="orgb566dc2"><span class="section-number-3">9.4.</span> <code>complexp</code>: Teste de número complexo</h3>
+<div class="outline-text-3" id="text-9-4">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_complexp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #569cd6;">types</span>::<span style="color: #4ec9b0;">MajNumber</span>;
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Number</span>(num) = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*x {
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Complex</span> {
+            <span style="color: #9cdcfe;">real</span>: _,
+            <span style="color: #9cdcfe;">imag</span>: _
+        } = num {
+            <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+        }
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb90ee48" class="outline-2">
+<h2 id="orgb90ee48"><span class="section-number-2">10.</span> <code>vectorp</code>: Teste de vetor</h2>
+<div class="outline-text-2" id="text-10">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_vectorp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(_) = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*x {
+        <span style="color: #4ec9b0;">Maj</span>::t()
+    } <span style="color: #569cd6;">else</span> {
+        <span style="color: #4ec9b0;">Maj</span>::nil()
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdec07be" class="outline-2">
+<h2 id="orgdec07be"><span class="section-number-2">11.</span> <code>id</code>: Teste de identidade</h2>
+<div class="outline-text-2" id="text-11">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_id</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;, <span style="color: #9cdcfe;">y</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">match</span> *x {
+        <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(_) =&gt; {
+            <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(_) = *y {
+                <span style="color: #569cd6;">return</span> maj_eq(x, y);
+            }
+        },
+        <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Char</span>(chrx) =&gt; {
+            <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Char</span>(chry) = *y {
+                <span style="color: #569cd6;">if</span> chrx == chry {
+                    <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+                }
+            }
+        },
+        _ =&gt; {
+            <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">x_ptr</span> = <span style="color: #4ec9b0;">Gc</span>::into_raw(x);
+            <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">y_ptr</span> = <span style="color: #4ec9b0;">Gc</span>::into_raw(y);
+            <span style="color: #569cd6;">if</span> x_ptr == y_ptr {
+                <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+            }
+        }
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgae9a683" class="outline-2">
+<h2 id="orgae9a683"><span class="section-number-2">12.</span> <code>proper-list-p</code>: Teste de lista adequada</h2>
+<div class="outline-text-2" id="text-12">
+<p>
+Uma lista adequada  é qualquer lista que termina com  um símbolo <code>nil</code>
+apropriado. Então,  por exemplo, <code>(1 2 3)</code> é uma lista  adequada, mas
+<code>(1 2 3 . 4)</code> não é. Isto fica evidente quando comparamos a impressão de
+ambas as respectivas listas com notação de pontos:
+</p>
+
+<ul class="org-ul">
+<li><code>(1 . (2 . (3 . nil)))</code></li>
+<li><code>(1 . (2 . (3 . 4)))</code></li>
+</ul>
+
+<p>
+Uma lista vazia (ou seja, o  próprio símbolo <code>nil</code>) também é considerada
+uma lista adequada.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_proper_list_p</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">is_cons</span> = maj_consp(x.clone()).to_bool();
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">is_nil</span>  = maj_nilp(x.clone()).to_bool();
+
+    <span style="color: #569cd6;">if</span> !is_cons &amp;&amp; !is_nil {
+        <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::nil();
+    }
+
+    <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">itr</span> = x.clone();
+    <span style="color: #569cd6;">while</span> !maj_nilp(itr.clone()).to_bool()  {
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Cons</span> { <span style="color: #9cdcfe;">car</span>: _, cdr } = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*itr.clone() {
+            itr = cdr.clone();
+        } <span style="color: #569cd6;">else</span> {
+            <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::nil();
+        }
+    }
+    <span style="color: #4ec9b0;">Maj</span>::t()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb0c893c" class="outline-2">
+<h2 id="orgb0c893c"><span class="section-number-2">13.</span> <code>stringp</code>: Teste de String</h2>
+<div class="outline-text-2" id="text-13">
+<p>
+Uma  string é  um vetor  de caracteres.  Portanto, qualquer  vetor que
+tenha <code>char</code> como seu tipo será uma string.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_stringp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #569cd6;">types</span>::<span style="color: #4ec9b0;">MajVector</span>;
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(v) = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*x {
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Char</span>(_) = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>v {
+            <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+        }
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org75917b1" class="outline-2">
+<h2 id="org75917b1"><span class="section-number-2">14.</span> <code>literalp</code>: Teste de literal</h2>
+<div class="outline-text-2" id="text-14">
+<p>
+Um  <i>literal</i> é  toda lista  adequada que  seja iniciada  com o  símbolo
+<code>lit</code>. Para  tanto, basta  que utilizemos  <code>car</code>, das  funções primitivas,
+para  identificar  tal  símbolo,  dado  que  a  lista  fornecida  seja
+adequada.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_literalp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> maj_proper_list_p(x.clone()).to_bool() &amp;&amp;
+        maj_eq(maj_car(x.clone()), <span style="color: #4ec9b0;">Maj</span>::lit()).to_bool() {
+            <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+        }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2b56a71" class="outline-2">
+<h2 id="org2b56a71"><span class="section-number-2">15.</span> <code>primitivep</code>: Teste de primitivas</h2>
+<div class="outline-text-2" id="text-15">
+<p>
+Uma <i>primitiva</i> não possui  representação realmente. Todavia, utilizamos
+literais para  representá-la no sistema; essas  literais servirão para
+invocarmos  tais  primitivas, como  se  fossem  clausuras, onde  forem
+necessárias.
+</p>
+
+<p>
+A representação literal de uma primitiva tem, como segundo elemento, o
+símbolo <code>prim</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_primitivep</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> maj_literalp(x.clone()).to_bool() {
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">sym</span> = maj_car(maj_cdr(x));
+        <span style="color: #569cd6;">if</span> maj_eq(sym, <span style="color: #4ec9b0;">Maj</span>::prim()).to_bool() {
+            <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+        }
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org93afb99" class="outline-2">
+<h2 id="org93afb99"><span class="section-number-2">16.</span> <code>closurep</code>: Teste de clausura</h2>
+<div class="outline-text-2" id="text-16">
+<p>
+Uma <i>clausura</i> é definida como uma <i>literal</i>, tal que seu segundo elemento
+seja exatamente  o símbolo  <code>closure</code>. Podemos utilizar  <code>car</code> e  <code>cdr</code> para
+realizar essa comparação.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_closurep</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> maj_literalp(x.clone()).to_bool() {
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">sym</span> = maj_car(maj_cdr(x));
+        <span style="color: #569cd6;">if</span> maj_eq(sym, <span style="color: #4ec9b0;">Maj</span>::closure()).to_bool() {
+            <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+        }
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org08cc45a" class="outline-2">
+<h2 id="org08cc45a"><span class="section-number-2">17.</span> <code>functionp</code>: Teste de função</h2>
+<div class="outline-text-2" id="text-17">
+<p>
+Uma  função é  um  termo  genérico que  designa  uma  clausura ou  uma
+primitiva. Sendo assim, qualquer desses dois será uma função.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_functionp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> maj_primitivep(x.clone()).to_bool()
+        || maj_closurep(x).to_bool()
+    {
+        <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org312793b" class="outline-2">
+<h2 id="org312793b"><span class="section-number-2">18.</span> <code>macrop</code>: Teste de macro</h2>
+<div class="outline-text-2" id="text-18">
+<p>
+Um  <i>macro</i> também  é  definido como  um <i>literal</i>,  tal  que seu  segundo
+elemento seja exatamente o símbolo <i>macro</i>, e seu terceiro elemento seja
+uma <i>clausura</i>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_macrop</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> maj_literalp(x.clone()).to_bool() {
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">sym</span> = maj_car(maj_cdr(x));
+        <span style="color: #569cd6;">if</span> maj_eq(sym, <span style="color: #4ec9b0;">Maj</span>::macro_sym()).to_bool() {
+            <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+        }
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org59c2d5f" class="outline-2">
+<h2 id="org59c2d5f"><span class="section-number-2">19.</span> <code>errorp</code>: Teste de erro</h2>
+<div class="outline-text-2" id="text-19">
+<p>
+Pela mesma lógica de <code>closurep</code> e <code>primitivep</code>, erros também são literais,
+onde o segundo elemento precisa  ser o símbolo <code>error</code>. Demais elementos
+serão a string de formato, e  então demais objetos que ajudem a compor
+esse formato.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_errorp</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> maj_proper_list_p(x.clone()).to_bool() {
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">sym</span> = maj_car(maj_cdr(x));
+        <span style="color: #569cd6;">if</span> maj_eq(sym, <span style="color: #4ec9b0;">Maj</span>::error()).to_bool() {
+            <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::t();
+        }
+    }
+    <span style="color: #4ec9b0;">Maj</span>::nil()
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2dd294e" class="outline-2">
+<h2 id="org2dd294e"><span class="section-number-2">20.</span> <code>zerop</code>: Teste de nulidade numérica</h2>
+<div class="outline-text-2" id="text-20">
+<p>
+(v. comparação numérica)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_zerop</span>(
+    <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #4ec9b0;">MajState</span>,
+    <span style="color: #9cdcfe;">env</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+    <span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;
+) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">primitives</span>::maj_arithm_eq;
+    maj_arithm_eq(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, env,
+                  <span style="color: #4ec9b0;">Maj</span>::integer(0), x, <span style="color: #4ec9b0;">Maj</span>::nil())
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6ecefde" class="outline-2">
+<h2 id="org6ecefde"><span class="section-number-2">21.</span> Registro em contexto global</h2>
+<div class="outline-text-2" id="text-21">
+<p>
+De volta a <code>axioms/predicates.rs</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_gen_predicates</span>(<span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #4ec9b0;">MajState</span>) {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::{ <span style="color: #4ec9b0;">MajPrimFn</span>, <span style="color: #4ec9b0;">MajPrimArgs</span> };
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::maj_destructure_args;
+
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">predicates</span>: <span style="color: #4ec9b0;">Vec</span>&lt;(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">str</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>, <span style="color: #4ec9b0;">MajPrimFn</span>)&gt; = <span style="color: #c586c0;">vec!</span>[
+        (<span style="color: #ce9178;">"symbolp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_symbolp(first)
+        }),
+        (<span style="color: #ce9178;">"eq"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(2), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first, rest, second);
+            maj_eq(first, second)
+        }),
+        (<span style="color: #ce9178;">"nilp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_nilp(first)
+        }),
+        (<span style="color: #ce9178;">"consp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_consp(first)
+        }),
+        (<span style="color: #ce9178;">"atomp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_atomp(first)
+        }),
+        (<span style="color: #ce9178;">"charp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_charp(first)
+        }),
+        (<span style="color: #ce9178;">"char="</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(2), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first, rest, second);
+            maj_char_equals(first, second)
+        }),
+        (<span style="color: #ce9178;">"streamp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_streamp(first)
+        }),
+        (<span style="color: #ce9178;">"numberp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_numberp(first)
+        }),
+        (<span style="color: #ce9178;">"integerp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_integerp(first)
+        }),
+        (<span style="color: #ce9178;">"floatp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_floatp(first)
+        }),
+        (<span style="color: #ce9178;">"fractionp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_fractionp(first)
+        }),
+        (<span style="color: #ce9178;">"complexp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_complexp(first)
+        }),
+        (<span style="color: #ce9178;">"vectorp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_vectorp(first)
+        }),
+        (<span style="color: #ce9178;">"id"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(2), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first, rest, second);
+            maj_id(first, second)
+        }),
+        (<span style="color: #ce9178;">"proper-list-p"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_proper_list_p(first)
+        }),
+        (<span style="color: #ce9178;">"stringp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_stringp(first)
+        }),
+        (<span style="color: #ce9178;">"literalp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_literalp(first)
+        }),
+        (<span style="color: #ce9178;">"primitivep"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_primitivep(first)
+        }),
+        (<span style="color: #ce9178;">"closurep"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_closurep(first)
+        }),
+        (<span style="color: #ce9178;">"functionp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_functionp(first)
+        }),
+        (<span style="color: #ce9178;">"macrop"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_macrop(first)
+        }),
+        (<span style="color: #ce9178;">"errorp"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1), |_, args, _| {
+            <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+            maj_errorp(first)
+        }),
+        (<span style="color: #ce9178;">"zerop"</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(1),
+         |<span style="color: #569cd6;">mut</span> state, args, env| {
+             <span style="color: #c586c0;">maj_destructure_args!</span>(args, first);
+             maj_zerop(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, env, first)
+         }),
+    ];
+
+    <span style="color: #569cd6;">for</span> <span style="color: #9cdcfe;">predicate</span> <span style="color: #569cd6;">in</span> predicates.iter() {
+        <span style="color: #569cd6;">let</span> (name, arity, f) = predicate;
+        state.register_primitive(name, *arity, *f);
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Lucas S. Vieira</p>
+<p class="date">Created: 2022-10-23 dom 23:28</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

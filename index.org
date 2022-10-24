@@ -44,13 +44,11 @@ Este projeto utiliza a licença MIT.
    - [[./04-02-tipos-de-dados-fundamentais.org][Tipos de dados fundamentais]]
    - [[./04-03-contextos.org][Contextos]]
 5. [[./05-axiomas.org][Axiomas]]
-   - Assinatura para funções primitivas
-   - Símbolos constantes
-   - Predicados
-   - Funções primitivas
-   - /Boostrapping/
-   - Exportação de axiomas (no módulo)
-   - Utilitários
+   - [[./05-01-simbolos-constantes.org][Símbolos constantes]]
+   - [[./05-02-predicados.org][Predicados]]
+   - [[./05-03-funcoes-primitivas.org][Funções primitivas]]
+   - [[./05-04-bootstrapping.org][/Boostrapping/]]
+   - [[./05-05-utilitarios.org][Utilitários]]
 6. Impressão
 7. Leitor de expressões
 8. Interpretador

@@ -2,6 +2,7 @@
 #+html_link_up: index.html
 #+title: Núcleo da linguagem
 
+#+property: header-args:rust :tangle src/core/mod.rs
 
 A implementação do  programa é constituída de  diversos módulos. Esses
 módulos desdobram-se  em vários submódulos, e  também entrelaçam-se em
@@ -15,9 +16,6 @@ de  uma  instância  do  interpretador.  Também  aqui  criamos  algumas
 definições para gerenciamento de /contextos/ (global e léxico).
 
 * Declaração de submódulos
-:PROPERTIES:
-:header-args:rust: :tangle src/core/mod.rs
-:END:
 
 O primeiro passo para a criação dos módulos de Rust é criar um arquivo
 para  tal, que  especifique  os submódulos  contidos  no mesmo.  Estas

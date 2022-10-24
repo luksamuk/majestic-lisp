@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
 <head>
-<!-- 2022-10-23 dom 22:47 -->
+<!-- 2022-10-23 dom 23:28 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Tipos de dados fundamentais</title>
@@ -497,7 +497,7 @@ seja <code>nil</code> ou  outra célula <i>cons</i>, que recursivamente  deverá
 mesmo princípio. Assim, a lista
 </p>
 
-<pre class="example" id="orgefba0bc">
+<pre class="example" id="org86e987e">
 (a . (b . (c . nil)))
 </pre>
 
@@ -551,7 +551,7 @@ Se nosso macro  se chama <code>maj_list!</code>, então podemos  identificar as 
 situações dessa forma, sintaticamente:
 </p>
 
-<pre class="example" id="orga433e78">
+<pre class="example" id="orgbbb2056">
 1. maj_list!(x)       =&gt; Maj::cons(x, Maj::nil())
 2. maj_list!(x, r...) =&gt; Maj::cons(x, maj_list!(r...))
 </pre>
@@ -601,7 +601,7 @@ objetos &#x2013; em  outras palavras, listas que não terminam  com o símbolo
 <code>nil</code>:
 </p>
 
-<pre class="example" id="org8001602">
+<pre class="example" id="org0fda5d6">
 (a . (b . (c . d)))
 </pre>
 
@@ -610,7 +610,7 @@ Esse tipo de lista pode  ser escrita utilizando uma sintaxe abreviada,
 da seguinte forma:
 </p>
 
-<pre class="example" id="org8549ccc">
+<pre class="example" id="org51bfd65">
 (a b c . d)
 </pre>
 
@@ -666,7 +666,7 @@ Por exemplo, suponhamos a função <code>err</code>.  O retorno dessa função p
 visto como adequando-se ao formato
 </p>
 
-<pre class="example" id="org4b9e752">
+<pre class="example" id="org7895422">
 (lit error fmt . rest)
 </pre>
 
@@ -704,7 +704,7 @@ uma  lista  <code>(a b c)</code>.  Esta operação  produzirá,  então,  o  seg
 resultado:
 </p>
 
-<pre class="example" id="org4a20bc9">
+<pre class="example" id="orgf16dff3">
 (lit error "foo" . (a b c))
 </pre>
 
@@ -714,7 +714,7 @@ pontuada também é uma lista,  podemos reescrever a lista pontuada como
 a lista adequada que acabou por tornar-se:
 </p>
 
-<pre class="example" id="org774cba3">
+<pre class="example" id="org7cde4ba">
 (lit error "foo" a b c)
 </pre>
 </div>
@@ -1364,7 +1364,7 @@ verificada sob um contexto.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Lucas S. Vieira</p>
-<p class="date">Created: 2022-10-23 dom 22:47</p>
+<p class="date">Created: 2022-10-23 dom 23:28</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
