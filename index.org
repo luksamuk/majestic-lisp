@@ -17,7 +17,10 @@
    - [[./02-04-elementos-avancados.org][Elementos avançados]]
    - [[./02-05-exemplos.org][Exemplos de Majestic Lisp]]
 3. [[./03-configuracao.org][Configurando o projeto]]
-4. Núcleo
+4. [[./04-nucleo.org][Núcleo da linguagem]]
+   - [[./04-01-estado-global.org][Estado global]]
+   - [[./04-02-tipos-de-dados-fundamentais.org][Tipos de dados fundamentais]]
+   - [[./04-03-contextos.org][Contextos]]
 5. Axiomas
 6. Impressão
 7. Leitor de expressões

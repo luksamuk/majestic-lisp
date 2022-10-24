@@ -1,0 +1,45 @@
+#+setupfile: static/setupfile.org
+#+html_link_up: index.html
+#+title: Núcleo da linguagem
+
+
+A implementação do  programa é constituída de  diversos módulos. Esses
+módulos desdobram-se  em vários submódulos, e  também entrelaçam-se em
+interdependências   para    garantir   algumas    funcionalidades   do
+interpretador de Majestic Lisp,
+
+A seguir, especificamos o /núcleo/ da aplicação, localizado no diretório
+~src/core~. Este módulo  é responsável pela definição  dos tipos básicos
+de Majestic Lisp  e também da estrutura que carregará  o estado global
+de  uma  instância  do  interpretador.  Também  aqui  criamos  algumas
+definições para gerenciamento de /contextos/ (global e léxico).
+
+* Declaração de submódulos
+:PROPERTIES:
+:header-args:rust: :tangle src/core/mod.rs
+:END:
+
+O primeiro passo para a criação dos módulos de Rust é criar um arquivo
+para  tal, que  especifique  os submódulos  contidos  no mesmo.  Estas
+definições serão salvas no arquivo ~src/core/mod.rs~.
+
+#+begin_src rust
+pub mod environment;
+pub mod state;
+pub mod types;
+#+end_src
+
+Outro passo importante  é reexportar alguns símbolos que  podem ser de
+uso  importante  para o  resto  da  aplicação.  Esses  símbolos  serão
+reexportados  dos  submódulos  onde  existem,  de  forma  a  parecerem
+pertencer ao módulo atual.
+
+Por  exemplo, reexportar  ~types::Maj~  faz com  que seja  desnecessário
+importar  ~core::types::Maj~ onde  a  estrutura ~Maj~  for necessária;  ao
+invés disso, poderemos importar apenas ~core::Maj~.
+
+#+begin_src rust
+pub use state::MajState;
+pub use types::Maj;
+#+end_src
+

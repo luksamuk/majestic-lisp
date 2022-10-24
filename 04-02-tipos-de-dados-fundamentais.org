@@ -1,0 +1,921 @@
+#+setupfile: static/setupfile.org
+#+html_link_up: 04-nucleo.html
+#+title: Tipos de dados fundamentais
+#+options: toc:t
+
+#+property: header-args:rust :tangle src/core/types.rs
+
+O próximo submódulo trata dos  tipos de dados fundamentais de Majestic
+Lisp. Em suma, estamos tratando  dos cinco tipos fundamentais tratados
+na especificação da linguagem.
+
+A maior  parte do código  do arquivo ~src/core/types.rs~  corresponde ao
+código nesta seção.
+
+* Importações
+
+Nosso  primeiro  passo  é  importar  algumas  dependências  de  outros
+lugares. Importamos, inicialmente, o genérico  ~Gc~ e os /traits/ ~Finalize~
+e ~Trace~  da nossa biblioteca  de coletor de  lixo. Isso nos  ajudará a
+garantir  que não  teremos  problemas  de coleta  de  lixo na  memória
+automaticamente gerenciada para alocar nossos objetos. da linguagem.
+
+Também utilizaremos o objeto  ~MajState~ para criarmos alguns ajudantes,
+que nos levarão a algumas  facilidades ao instanciarmos nossos objetos
+da linguagem.
+
+#+begin_src rust
+use gc::{Finalize, Gc, GcCell, Trace};
+use super::MajState;
+#+end_src
+
+* A estrutura ~Maj~: Objetos fundamentais
+
+O  objeto principal  (do  ponto de  vista da  linguagem  Rust) para  o
+interpretador  é a  enumeração chamada  ~Maj~, utilizada  extensivamente
+durante a implementação.
+
+Em Rust,  enumerações possuem  a propriedade  especial de  agirem como
+/estruturas  de  dados  polimórficas/:  para cada  caso  da  enumeração,
+podemos ter um tipo de dados associado.
+
+Os tipos de dados com enumeração associados são:
+
+- /Symbol/  (~Maj::Sym~): Possui  um número  de tipo  ~u64~ associado,  para
+  armazenar um símbolo;
+- /Cons/  (~Maj::Cons~):  Possui uma  estrutura  de  dados associada  para
+  armazenar uma  célula /cons/.  O /cons/  possui dois  componentes, sendo
+  estes  objetos  ~Maj~,  que  sejam  necessariamente  gerenciados  pelo
+  coletor de lixo.  Isto torna o /cons/ um objeto  recursivo. Por razões
+  históricas, chamamos esses componentes de ~car~ e ~cdr~;
+- /Char/ (~Maj::Char~): Possui um caractere de tipo ~char~ associado;
+- /Stream/  (~Maj::Stream~):  Possui  uma   estrutura  de  tipo  ~MajStream~
+  associada, correspondendo  a um /stream/. Essa  estrutura será tratada
+  posteriormente;
+- /Number/  (~Maj::Number~):  Possui  uma   estrutura  de  tipo  ~MajNumber~
+  associada, correspondendo  a um /número/. Essa  estrutura será tratada
+  posteriormente.
+
+#+begin_src rust
+#[derive(Debug, Trace, Finalize, Clone)]
+pub enum Maj {
+    Sym(u64),
+    Cons {
+        car: Gc<Maj>,
+        cdr: Gc<Maj>
+    },
+    Char(char),
+    Stream(MajStream),
+    Number(MajNumber),
+    Vector(MajVector)
+}
+#+end_src
+
+* TODO Construtores de alguns tipos fundamentais
+
+Podemos  criar alguns  métodos estáticos  para ~Maj~,  que nos  ajudem a
+gerar objetos gerenciados por coletor de lixo sem muito esforço.
+
+Para construirmos símbolos, é  obrigatório que tenhamos uma referência
+mutável  a um  ~MajState~  sendo  passada, pois  símbolos  só podem  ter
+significado apropriado quando em associação à tabela de símbolos. Essa
+prática também garante que não  dupliquemos um certo símbolo na tabela
+de símbolos.
+
+#+begin_src rust
+impl Maj {
+    pub fn symbol(state: &mut MajState, str: &str) -> Gc<Maj> {
+        Gc::new(Maj::Sym(state.gen_symbol(str)))
+    }
+}
+#+end_src
+
+# Construção de símbolo arbitrário
+
+#+begin_src rust
+impl Maj {
+    pub fn gensym(state: &mut MajState) -> Gc<Maj> {
+        Gc::new(Maj::Sym(state.gen_random_symbol()))
+    }
+}
+#+end_src
+
+Construir um  /cons/ também é  simples, uma  vez que assumimos  que seus
+componentes  ~car~ e  ~cdr~  já  sejam elementos  alocados  no coletor  de
+lixo. Basta então associá-los  para que tomem a forma de  um par sob a
+mesma estrutura de dados.
+
+#+begin_src rust
+impl Maj {
+    pub fn cons(car: Gc<Maj>, cdr: Gc<Maj>) -> Gc<Maj> {
+        Gc::new(Maj::Cons { car, cdr })
+    }
+}
+#+end_src
+
+Caracteres são tipos ainda mais simplificados: aqui, apenas utilizamos
+o tipo ~char~  subjacente de Rust para representar  nossos caracteres na
+linguagem, e isso será tudo o que é necessário.
+
+#+begin_src rust
+impl Maj {
+    pub fn character(chr: char) -> Gc<Maj> {
+        Gc::new(Maj::Char(chr))
+    }
+}
+#+end_src
+
+* Construtores de strings
+
+Poderemos converter strings de Rust  para strings de Majestic Lisp.  O
+processo envolve  a criação  recursiva de um  vetor da  linguagem, que
+envolve criar uma ~String~ por baixo dos panos.
+
+#+begin_src rust
+impl Maj {
+    pub fn string(string: &str) -> Gc<Maj> {
+        Gc::new(Maj::Vector(MajVector::Char(
+            GcCell::new(String::from(string)))))
+    }
+}
+#+end_src
+
+* Conversão booleana
+
+Podemos abusar  um pouco da  especificação de Majestic Lisp  e definir
+alguns outros métodos  que nos auxiliem a efetuar  lógica booleana com
+objetos ~Maj~,  diretamente na  linguagem Rust.  Essa ideia  permite que
+criemos predicados que funcionem tanto  em Majestic Lisp quanto em seu
+ambiente de programação em Rust.
+
+Os métodos estáticos ~Maj::nil~ e ~Maj::t~ criam, respectivamente, objetos
+que  representem os  símbolos  ~nil~ e  ~t~. Como  pode  ser observado,  a
+criação desses símbolos *não depende de um estado do interpretador*, uma
+vez  que, pela  nossa implementação,  é *garantido*  que estes  símbolos
+assumam   os  índices   ~0~  e   ~1~   na  tabela   de  símbolos,   também
+respectivamente.  Isso  será  melhor  visto na  seção  de  /axiomas/  da
+linguagem, discutidos posteriormente.
+
+#+begin_src rust
+impl Maj {
+    pub fn nil() -> Gc<Maj> {
+        Gc::new(Maj::Sym(0))
+    }
+
+    pub fn t() -> Gc<Maj> {
+        Gc::new(Maj::Sym(1))
+    }
+}
+#+end_src
+
+Podemos, agora,  criar um método  ~Maj::to_bool~, que converte  um certo
+objeto para um valor booleano em Rust, correspondente a ~true~ ou ~false~.
+
+Essa conversão  é feita  de acordo com  a especificação  da linguagem:
+este  método só  retornará ~false~  quando o  objeto em  questão for  um
+símbolo, e for idêntico ao  símbolo ~nil~. Para demais casos, retorna-se
+sempre ~true~.
+
+Podemos  tornar  a  implementação   desse  método  mais  eficiente  ao
+valermo-nos do  mesmo princípio  dos métodos estáticos  anteriores, de
+que  alguns  símbolos possuem  valores  sempre  específicos por  serem
+/axiomas/  da linguagem.  Assim, uma  falsidade será  indicada quando  o
+símbolo que o objeto atual representa possuir um índice igual a ~0~.
+
+#+begin_src rust
+impl Maj {
+    pub fn to_bool(&self) -> bool {
+        if let Maj::Sym(idx) = self {
+            !(*idx == 0)
+        } else {
+            true
+        }
+    }
+}
+#+end_src
+
+* Macro Rust para listas adequadas
+
+Um  aspecto interessante  de  um  ~Maj::Cons~ é  que  o  mesmo pode  ser
+utilizado para compor listas, de acordo com a especificação.
+
+Listas /adequadas/ são, de acordo  com a especificação, aquelas formadas
+por encadeamento  de células /cons/,  de forma que  o ~cdr~ de  uma célula
+seja ~nil~ ou  outra célula /cons/, que recursivamente  deverá obedecer ao
+mesmo princípio. Assim, a lista
+
+#+begin_example
+(a . (b . (c . nil)))
+#+end_example
+
+poderá ser  criada, em  Rust, da seguinte  forma (assumindo  um estado
+global mutável ~state~):
+
+#+begin_src rust :tangle no
+// Exemplo
+Maj::cons(
+    Maj::symbol(&mut state, "a"),
+    Maj::cons(
+        Maj::symbol(&mut state, "b"),
+        Maj::cons(
+            Maj::symbol(&mut state, "c"),
+            Maj::nil())));
+#+end_src
+
+Ainda que  essa forma de  construição já  mostre o poder  recursivo da
+estrutura,  ela  é  inadequada  para   uso  imediato:  sua  escrita  é
+trabalhosa e ocupa espaço desnecessário.
+
+Assim, poderemos  criar um /macro/,  na linguagem Rust, que  *escreva por
+nós* toda essa estrutura, eliminando sintaxe desnecessária.
+
+Macros de Rust  têm uma sintaxe peculiar, portanto  vale aqui abreviar
+rapidamente o que o mesmo  faz. Primeiramente, devemos identificar que
+nosso  macro deverá  funcionar /recursivamente/,  e que  deverá observar
+duas situações de escrita:
+
+1. Estamos  descrevendo o  último elemento de  uma lista:  nesse caso,
+   basta utilizar ~Maj::cons~  e especificar ~car~ como  sendo este último
+   elemento, e ~cdr~ como sendo o símbolo ~nil~;
+2. Estamos descrevendo um elemento em qualquer outra posição da lista:
+   nesse caso, basta  utilizar ~Maj::cons~ e especificar  ~car~ como sendo
+   este  elemento.  Os  próximos   elementos  serão  então  atribuídos
+   recursivamente ao ~cdr~, através do mesmo macro.
+
+Se nosso macro  se chama ~maj_list!~, então podemos  identificar as duas
+situações dessa forma, sintaticamente:
+
+#+begin_example
+1. maj_list!(x)       => Maj::cons(x, Maj::nil())
+2. maj_list!(x, r...) => Maj::cons(x, maj_list!(r...))
+#+end_example
+
+Basta  agora identificarmos  as situações  e escrevermo-nas  como duas
+regras  sintáticas do  macro em  questão.  O elemento  atual é  sempre
+escrito como uma  /expressão/ da linguagem Rust; se tivermos  mais de um
+elemento passado a ~maj_list!~, então  isso significa que precisamos nos
+adequar à  segunda regra,  que chamará o  macro recursivamente  para o
+~cdr~.
+
+#+begin_src rust
+#[macro_export]
+macro_rules! maj_list {
+    ($x:expr) => (Maj::cons($x, Maj::nil()));
+
+    ($x:expr, $($y:expr),+) => (
+	    Maj::cons($x, maj_list!($($y),+))
+    )
+}
+#+end_src
+
+Munidos dessa nova  notação, podemos reescrever o  exemplo anterior de
+forma simplificada e muito mais didática:
+
+#+begin_src rust :tangle no
+// Exemplo
+maj_list!(Maj::symbol(&mut state, "a"),
+          Maj::symbol(&mut state, "b"),
+          Maj::symbol(&mut state, "c"));
+#+end_src
+
+* Macro Rust para listas pontuadas
+
+Outra  ideia interessante  é termos  macros para  listas pontuadas  de
+objetos -- em  outras palavras, listas que não terminam  com o símbolo
+~nil~:
+
+#+begin_example
+(a . (b . (c . d)))
+#+end_example
+
+Esse tipo de lista pode  ser escrita utilizando uma sintaxe abreviada,
+da seguinte forma:
+
+#+begin_example
+(a b c . d)
+#+end_example
+
+Veja que esse tipo de lista difere-se da anterior pelo fato de não ser
+uma  lista adequada,  ou seja,  não  ter seu  último /cons/  com um  ~cdr~
+equivalente a ~nil~.
+
+Para criar  um macro capaz  de gerar  esse tipo de  estrutura, podemos
+basear-nos no  macro para  listas adequadas  e descrever  as seguintes
+regras:
+
+1. Estamos  tratando, dessa vez, de  uma lista formada por  /pelo menos/
+   dois  elementos. No  caso de  lidarmos com  apenas dois  elementos,
+   faremos um par com eles, através de uma célula /cons/;
+2. Caso estejamos  tratando de mais de dois  elementos, basta criarmos
+   uma célula /cons/  tal que seu ~car~ seja o  primeiro elemento da lista
+   dada, e  o ~cdr~ seja  tratado recursivamente pelo nosso  macro, como
+   feito no anterior;
+3. Não  há tratamento  válido para apenas  um elemento;  tal tentativa
+   constitui sintaxe inválida.
+
+Expostas  essas considerações,  a implementação  do macro  para listas
+pontuadas passa a ser trivial:
+
+#+begin_src rust
+#[macro_export]
+macro_rules! maj_dotted_list {
+    ($x:expr, $y:expr) => (Maj::cons($x, $y));
+
+    ($x:expr, $y:expr, $($z:expr),+) => (
+	    Maj::cons($x, maj_dotted_list!($y, $($z),+))
+    )
+}
+#+end_src
+
+O aspecto mais interessante da  criação de uma lista pontuada, através
+do nosso macro recém-criado ~maj_dotted_list!~, é que esse macro auxilia
+no processo de /anexação/ de listas a outras.
+
+Por exemplo, suponhamos a função ~err~.  O retorno dessa função pode ser
+visto como adequando-se ao formato
+
+#+begin_example
+(lit error fmt . rest)
+#+end_example
+
+em outras palavras,  a lista inicia-se com os símbolos  ~lit~ e ~error~, e
+então com  uma string  de formato chamada  ~fmt~. Após  esses elementos,
+podem vir nenhum  ou mais elementos, que serão  utiizados na impressão
+da mensagem de erro, sendo estes relacionados à string ~fmt~.
+
+Em  Rust, a  implementação da  função ~err~  (a ser  discutida em  outro
+lugar)  envolve receber  os objetos  ~fmt~  e ~rest~  como parâmetro.  ~fmt~
+deverá ser obrigatoriamente  uma string, mas ~rest~ nada mais  é que uma
+lista de outros objetos quaisquer, que será /anexada/ ao fim do literal.
+
+Essa  operação de  /anexação/ poderá  ser feita  com extrema  facilidade
+usando nosso novo macro:
+
+#+begin_src rust :tangle no
+// Exemplo
+maj_dotted_list!(Maj::lit(),
+                 Maj::error(),
+                 fmt,
+                 rest);
+#+end_src
+
+Suponhamos que ~fmt~  seja um texto qualquer como ~"foo"~  e que ~rest~ seja
+uma  lista  ~(a b c)~.  Esta operação  produzirá,  então,  o  seguinte
+resultado:
+
+#+begin_example
+(lit error "foo" . (a b c))
+#+end_example
+
+Pela regra de confecção de listas, como o último par colocado na lista
+pontuada também é uma lista,  podemos reescrever a lista pontuada como
+a lista adequada que acabou por tornar-se:
+
+#+begin_example
+(lit error "foo" a b c)
+#+end_example
+
+* Números
+
+Em Majestic  Lisp, o número é  um tipo /opaco/, a  princípio. Porém, sua
+implementação envolve um sistema elaborado  de subtipos, que podem ser
+fabricados com  o mesmo  sistema de estruturas  de dados  associadas a
+elementos de uma enumeração.  Aqui, escolhemos implementá-los seguindo
+as regras abaixo:
+
+- Um  número  /inteiro/  (~MajNumber::Integer~) constitui-se  de  um  mero
+  número inteiro, com sinal, de 64 bits;
+- Um /ponto flutuante/ (~MajNumber::Float~)  constitui-se de um mero ponto
+  flutuante de 64 bits;
+- Uma  /fração/  (~MajNumber::Fraction~)   constitui-se  de  dois  números
+  inteiros, com sinal, de 64 bits;
+- Um   número  /complexo/   (~MajNumber::Complex~)  constitui-se   de  uma
+  estrutura de  dados, que  armazena recursivamente  outros ~MajNumber~,
+  gerenciados pelo coletor de lixo.
+
+#+begin_src rust
+#[derive(Debug, Trace, Finalize, Clone)]
+pub enum MajNumber {
+    Integer(i64),
+    Float(f64),
+    Fraction(i64, i64),
+    Complex {
+        real: Gc<MajNumber>,
+        imag: Gc<MajNumber>
+    }
+}
+#+end_src
+
+Todos os subtipos enumerados possuem implementação trivial do ponto de
+vista de dados. Todavia, ~MajNumber::Complex~ requererá um pouco mais de
+cuidado durante  sua fabricação,  uma vez que  *um número  complexo não
+pode* ser constituído recursivamente de outros números complexos.
+
+* Construtores de números
+
+À exceção de ~MajNumber::Complex~, a  construção dos subtipos de números
+é trivial.
+
+Podemos adicionar diretamente a ~Maj~ mais alguns métodos estáticos para
+a  construção desses  elementos. Começaremos  com a  construção de  um
+número inteiro, que é trivial.
+
+#+begin_src rust
+impl Maj {
+    pub fn integer(num: i64) -> Gc<Maj> {
+        Gc::new(Maj::Number(MajNumber::Integer(num)))
+    }
+}
+#+end_src
+
+O segundo método  estático de construção será o de  um ponto flutuante
+que, assim como no caso dos inteiros, também é trivial.
+
+#+begin_src rust
+impl Maj {
+    pub fn float(num: f64) -> Gc<Maj> {
+        Gc::new(Maj::Number(MajNumber::Float(num)))
+    }
+}
+#+end_src
+
+A  fração requer  um  pouco mais  de  escrita, mas  não  deixa de  ser
+igualmente simples. Aqui, tomamos numerador e denominador como números
+inteiros simples.
+
+#+begin_src rust
+impl Maj {
+    pub fn fraction(numer: i64, denom: i64) -> Gc<Maj> {
+        Gc::new(Maj::Number(MajNumber::Fraction(numer, denom)))
+    }
+}
+#+end_src
+
+Já  no caso  dos números  complexos,  precisaremos tomar  um pouco  de
+cuidado. Se alguma das partes informadas (/real/ ou /imaginária/) for, por
+si, um outro número complexo, *a aplicação entrará em pânico*, pois este
+será   um   indicativo   de    construção   absurda   de   um   número
+complexo. Ademais,  o mesmo deverá  ocorrer quando um  número complexo
+for construído a partir de elementos que não sejam números.
+
+# TODO: Talvez seja legal construir o complexo por cópia.
+Caso as componentes  do número complexo sejam  elementos válidos, será
+criado  um novo  número  complexo, usando  os  números fornecidos  /por
+referência/:   ou  seja,   os   valores   fornecidos  são   diretamente
+reutilizados, do ponto de vista do coletor de lixo, e não copiados.
+
+A aplicação entra  em pânico nos casos supracitados  por constituir um
+erro vindo  do programador em  si, através de construção  incorreta do
+programa,  e  não  do  usuário da  linguagem:  qualquer  tentativa  de
+construir   números   complexos   usando  objetos   não-numéricos   ou
+componentes  complexos   será  interpretado  como  erro   de  sintaxe,
+portanto, essas situações nunca deverão  ocorrer em tempo de execução,
+a não ser de forma proposital.
+
+#+begin_src rust
+impl Maj {
+    pub fn complex(r: Gc<Maj>, i: Gc<Maj>) -> Gc<Maj> {
+        use crate::axioms::predicates::maj_complexp;
+
+        let r_complexp = maj_complexp(r.clone()).to_bool();
+        let i_complexp = maj_complexp(i.clone()).to_bool();
+
+        if r_complexp || i_complexp {
+            panic!("Complex cannot have complex parts");
+        }
+
+        if let Maj::Number(rc) = &*r.clone() {
+            if let Maj::Number(ic) = &*i.clone() {
+                return Gc::new(
+                    Maj::Number(MajNumber::Complex {
+                        real: Gc::new(rc.clone()),
+                        imag: Gc::new(ic.clone())
+                    }));
+            } else {};
+        } else {};
+
+        panic!("Complex cannot have non-numeric parts");
+    }
+}
+#+end_src
+
+* Conversões para tipos numéricos
+
+Outra coisa  interessante a se  ter na interface de  comunicação entre
+objetos Majestic Lisp e Rust são funções que convertam automaticamente
+alguns objetos para valores nativos de Rust.
+
+Algo   extremamente    valoroso   de   se   tratar    são   os   tipos
+numéricos.  Primeiramente,  criemos  uma função,  visível  apenas  aos
+métodos de ~Maj~, que converta um objeto ~Maj~ para um ~MajNumber~; todavia,
+isso só será  feito caso for possível, como sugere  o retorno do valor
+dentro de um ~Option~.
+
+#+begin_src rust
+impl Maj {
+    fn to_maj_number(x: &Maj) -> Option<MajNumber> {
+        if let Maj::Number(num) = x {
+            Some(num.clone())
+        } else {
+            None
+        }
+    }
+}
+#+end_src
+
+A  conversão de  ~Maj~  para inteiro  (~i64~) e  ponto  flutuante (~f64~)  é
+trivial. Usamos  o método definido  previamente, e retornamos  o valor
+associado, mas apenas se for possível; novamente, temos aqui o retorno
+de um ~Option~.
+
+#+begin_src rust
+impl Maj {
+    pub fn to_integer(&self) -> Option<i64> {
+        match Maj::to_maj_number(self) {
+            Some(num) => {
+                if let MajNumber::Integer(n) = num {
+                    return Some(n);
+                } else {};
+            }
+            None => {},
+        };
+        None
+    }
+
+    pub fn to_float(&self) -> Option<f64> {
+        match Maj::to_maj_number(self) {
+            Some(num) => {
+                if let MajNumber::Float(n) = num {
+                    return Some(n);
+                } else {};
+            },
+            None => {},
+        };
+        None
+    }
+}
+#+end_src
+
+No caso das frações, que são compostas unicamente de um /numerador/ e um
+/denominador/, cada qual sendo um  número /inteiro/ (~i64~), convém retornar
+um par (tupla  de dois elementos) -- novamente, isso  só será feito se
+for possível, portanto retornamos um ~Option~.
+
+#+begin_src rust
+impl Maj {
+    pub fn to_fraction(&self) -> Option<(i64, i64)> {
+        match Maj::to_maj_number(self) {
+            Some(num) => {
+                if let MajNumber::Fraction(n, d) = num {
+                    return Some((n, d));
+                } else {};
+            },
+            None => {},
+        };
+        None
+    }
+}
+#+end_src
+
+Podemos  também  /forçar/  a  conversão  de uma  fração  para  um  ponto
+flutuante. Para tanto, basta que realizemos coerções de tipos.
+
+Por conveniência, faremos com que esse método realize conversão para
+ponto flutuante a  partir de todos os outros tipos  de números (exceto
+para  números   complexos,  pois  essa  manipulação   não  fará  muito
+sentido).
+
+#+begin_src rust
+impl MajNumber {
+    pub fn into_float(&self) -> f64 {
+        match self {
+            MajNumber::Integer(n) => {
+                *n as f64
+            },
+            MajNumber::Float(n) => {
+                *n
+            },
+            MajNumber::Fraction(n, d) => {
+                *n as f64 / *d as f64
+            },
+            MajNumber::Complex {
+                real: _,
+                imag: _
+            } => {
+                panic!("Cannot convert complex to float");
+            }
+        }
+    }
+}
+
+impl Maj {
+    pub fn to_forced_float(&self) -> Option<f64> {
+        match Maj::to_maj_number(self) {
+            Some(num) => Some(num.into_float()),
+            None => None,
+        }
+    }
+}
+#+end_src
+
+Finalmente,  faremos a  conversão  de um  número  complexo para  algum
+objeto  de Rust  que  possa carregá-lo.  Aqui,  optamos por  converter
+forçadamente cada  uma de suas partes  em /floats/. Isso pode  ser feito
+com o método anteriormente definido.
+
+#+begin_src rust
+impl Maj {
+    pub fn to_complex(&self) -> Option<(f64, f64)> {
+        match Maj::to_maj_number(self) {
+            Some(num) => {
+                let num = num.clone();
+                if let MajNumber::Complex {
+                    real, imag
+                } = &num {
+                    let rreal = (*real.clone()).into_float();
+                    let rimag = (*imag.clone()).into_float();
+                    return Some((rreal, rimag));
+                } else {};
+            },
+            None => {},
+        }
+        None
+    }
+}
+#+end_src
+
+* Conversão para string
+
+É igualmente conveniente que tenhamos alguns recursos para transformar
+um objeto ~Maj~ para strings de Rust propriamente ditas.
+
+Strings nada mais são que vetores de caracteres. Em sua implementação,
+armazenamo-nas utilizando a estrutura ~String~ de Rust.
+
+Caso o  objeto ~x~ em  questão seja exatamente  um ~vector~ cujo  tipo dos
+elementos seja  uniformemente ~char~,  retornaremos ~Some~ associado  a um
+clone da ~String~  utilizada na implementação. Caso  esta comparação não
+se enquadre, retornamos ~None~.
+
+#+begin_src rust
+fn maj_to_string(x: Gc<Maj>) -> Option<String> {
+    if let Maj::Vector(vv) = &*x {
+        if let MajVector::Char(s) = &vv {
+            Some(s.borrow().clone())
+        } else {
+            None
+        }
+    } else {
+        None
+    }
+}
+#+end_src
+
+Finalmente, o método ~Maj::stringify~  (diferente de ~Maj::to_string~, que
+é automaticamente implementado com a  formatação simples de objetos, a
+ser discutida em outra seção) clona ~self~ para que seja gerenciado pelo
+coletor  de lixo,  e então  invoca ~maj_to_string~  para que  o trabalho
+pesado seja feito.
+
+#+begin_src rust
+impl Maj {
+    pub fn stringify(&self) -> Option<String> {
+        maj_to_string(Gc::new(self.clone()))
+    }
+}
+#+end_src
+
+* TODO Conversão para caractere
+
+#+begin_src rust
+impl Maj {
+    pub fn to_char(&self) -> Option<char> {
+        if let Maj::Char(c) = &*self {
+            Some(*c)
+        } else {
+            None
+        }
+    }
+}
+#+end_src
+
+* Recuperação de símbolo cru
+
+#+begin_src rust
+impl Maj {
+    pub fn to_raw_sym(&self) -> Option<u64> {
+        match *self {
+            Maj::Sym(n) => Some(n),
+            _ => None
+        }
+    }
+}
+#+end_src
+
+* TODO Streams
+
+/Streams/ são um tipo de objeto em construção. Mais será dito a respeito
+deles  no   futuro,  quando  forem  efetivamente   implementados.  Por
+enquanto, o código a seguir serve de espaço reservado.
+
+# Usar std::os::unix::io::{ FromRawFd, IntoRawFd }
+# Usar std::os::windows::io::{ FromRawHandle, IntoRawHandle }
+
+# Considere os links:
+# https://doc.rust-lang.org/std/os/unix/io/index.html
+# https://doc.rust-lang.org/std/os/windows/io/index.html
+
+#+begin_src rust
+#[derive(Trace, Finalize, Debug, Clone, PartialEq)]
+pub enum MajStreamDirection {
+    In,
+    Out
+}
+#+end_src
+
+#+begin_src rust
+#[derive(Trace, Finalize, Debug, Clone, PartialEq)]
+pub enum MajStreamType {
+    File,
+    Stdin,
+    Stdout,
+    Stderr
+}
+#+end_src
+
+#+begin_src rust
+#[derive(Debug, Trace, Finalize, Clone)]
+pub struct MajStream {
+    pub direction: MajStreamDirection,
+    pub handle:    usize,
+    pub stype:     MajStreamType
+}
+#+end_src
+
+#+begin_src rust
+impl MajStream {
+    pub fn is_internal(&self) -> bool {
+        self.stype != MajStreamType::File
+    }
+}
+#+end_src
+
+#+begin_src rust :tangle no
+// Para referência futura
+#[derive(Trace, Finalize)]
+struct MeuArquivo {
+    #[unsafe_ignore_trace]
+    inner: std::fs::File,
+}
+#+end_src
+
+#+begin_src rust
+impl Maj {
+    pub fn stream(state: &mut MajState,
+                  file: &str,
+                  dir: MajStreamDirection
+    ) -> Option<Gc<Maj>> {
+        state.make_stream(file, dir)
+    }
+}
+#+end_src
+
+
+* Impressão simples
+
+#+begin_src rust
+use std::fmt;
+#+end_src
+
+** Impressão simples de objetos
+
+#+begin_src rust
+impl fmt::Display for Maj {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Maj::Sym(idx) => {
+                write!(f, "~sym#{}", idx)
+            },
+            Maj::Cons { car, cdr } => {
+                // Temporary cons cell display
+                write!(f, "({} . {})", car, cdr)
+            },
+            Maj::Char(chr) =>
+                write!(f, "~char##{}", *chr),
+            Maj::Stream(_) => write!(f, "~stream"),
+            Maj::Number(num) => write!(f, "{}", num),
+            Maj::Vector(_) => write!(f, "~vector"),
+        }
+    }
+}
+#+end_src
+
+Para símbolos, também é válido apontar  que sua forma textual pode ser
+verificada sob um contexto.
+
+#+begin_src rust
+impl Maj {
+    pub fn symbol_name(&self, state: &MajState) -> String {
+        if let Maj::Sym(idx) = self {
+            state.symbol_name(idx)
+        } else {
+            // Cannot give a symbol name to something
+            // that is not a symbol... but..
+            format!("~maj#{:?}", self)
+        }
+    }
+}
+#+end_src
+
+** Impressão de números
+
+#+begin_src rust
+impl fmt::Display for MajNumber {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            MajNumber::Integer(num) => write!(f, "{}", num),
+            MajNumber::Float(num) => {
+                use crate::axioms::utils::format_raw_float;
+                write!(f, "{}", format_raw_float(*num))
+            },
+            MajNumber::Fraction(numer, denom) => {
+                write!(f, "{}/{}", numer, denom)
+            },
+            MajNumber::Complex { real, imag } => {
+                write!(f, "{}J{}", real, imag)
+            }
+        }
+    }
+}
+#+end_src
+
+* Construtores de símbolos constantes
+
+#+begin_src rust
+use crate::axioms::MajRawSym;
+use crate::axioms::utils::sym_from_raw;
+#+end_src
+
+#+begin_src rust
+impl Maj {
+    pub fn prim() -> Gc<Maj> {
+        sym_from_raw(MajRawSym::Prim)
+    }
+
+    pub fn lit() -> Gc<Maj> {
+        sym_from_raw(MajRawSym::Lit)
+    }
+
+    pub fn closure() -> Gc<Maj> {
+        sym_from_raw(MajRawSym::Closure)
+    }
+
+    pub fn error() -> Gc<Maj> {
+        sym_from_raw(MajRawSym::Error)
+    }
+
+    pub fn fn_sym() -> Gc<Maj> {
+        sym_from_raw(MajRawSym::Fn)
+    }
+
+    pub fn ampersand() -> Gc<Maj> {
+        sym_from_raw(MajRawSym::Ampersand)
+    }
+
+    pub fn apply() -> Gc<Maj> {
+        sym_from_raw(MajRawSym::Apply)
+    }
+
+    pub fn macro_sym() -> Gc<Maj> {
+        sym_from_raw(MajRawSym::Macro)
+    }
+
+    pub fn mac() -> Gc<Maj> {
+        sym_from_raw(MajRawSym::Mac)
+    }
+
+    pub fn quote() -> Gc<Maj> {
+        sym_from_raw(MajRawSym::Quote)
+    }
+
+    pub fn unquote() -> Gc<Maj> {
+        sym_from_raw(MajRawSym::Unquote)
+    }
+
+    pub fn unquote_splice() -> Gc<Maj> {
+        sym_from_raw(MajRawSym::UnquoteSplice)
+    }
+
+    pub fn quasiquote() -> Gc<Maj> {
+        sym_from_raw(MajRawSym::Quasiquote)
+    }
+
+    pub fn do_sym() -> Gc<Maj> {
+        sym_from_raw(MajRawSym::Do)
+    }
+
+    pub fn vector_sym() -> Gc<Maj> {
+        sym_from_raw(MajRawSym::Vector)
+    }
+}
+#+end_src

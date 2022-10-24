@@ -1,0 +1,223 @@
+#+setupfile: static/setupfile.org
+#+html_link_up: 04-nucleo.html
+#+title: Contextos
+#+options: toc:t
+
+#+property: header-args:rust :tangle src/core/environment.rs
+
+Trataremos  agora  do  submódulo  que diz  respeito  a  /contextos/.  Em
+Majestic Lisp, um /contexto/ é impresso em formato de /lista associativa/,
+onde cada um  dos elementos da lista  será um /cons/; em  cada um desses
+/cons/, o ~car~ corresponde a um símbolo, e o ~cdr~ corresponde a um valor.
+
+Por exemplo, a lista associativa
+
+#+begin_example
+((square . (lit closure nil (x) (* x x)))
+ (y      . 90)
+ (x      . 5J2/3))
+#+end_example
+
+é um contexto qualquer válido, que realiza as seguintes associações:
+
+#+begin_example
+square = (lit closure nil (x) (* x x))
+y      = 90
+x      = 5J2/3
+#+end_example
+
+como podemos ver, o símbolo ~square~  está associado a uma certa função,
+o  símbolo  ~y~ está  associado  ao  numero $90$,  e  o  símbolo ~x~  está
+associado ao número complexo $5 + \frac{2}{3}i$.
+
+A maior  parte do  código listado  a seguir  poderá ser  encontrado em
+~src/core/environment.rs~, exceto onde for apontado.
+
+* Importações
+
+Começaremos importando  alguns objetos  importantes, como  a estrutura
+~Maj~,  que descreve  os  tipos primitivos  de  nossa linguagem.  Também
+teremos  à   mão  a   estrutura  genérica  para   identificar  objetos
+gerenciados pelo coletor de lixo.
+
+#+begin_src rust
+use super::Maj;
+use gc::Gc;
+#+end_src
+
+Algumas das operações que se  seguem envolvem comparações de tipos nos
+objetos, ou compara dois objetos.  Para tanto, podemos importar alguns
+predicados da nossa  lista de axiomas, que servirão para  esse tipo de
+comparação. Os  predicados possuem  uma interface  voltada diretamente
+para  uso   no  próprio   interpretador,  mas   poderemos  utilizá-los
+normalmente em Rust se utilizarmos o método ~to_bool~ do tipo ~Maj~.
+
+#+begin_src rust
+use crate::axioms::predicates::{
+    maj_nilp,
+    maj_eq,
+    maj_proper_list_p,
+    maj_symbolp
+};
+#+end_src
+
+* Extensão de contexto
+
+O processo de  extensão do contexto é um  processo não-destrutivo, que
+toma um certo  /contexto/, um certo /símbolo/ e um  /valor/ qualquer, e cria
+um *novo*  contexto tal  que, em  seu topo,  haverá uma  nova associação
+entre o  símbolo e o valor  supracitados, feita através da  criação de
+uma célula /cons/.
+
+Portanto, dado um contexto
+
+#+begin_example
+((x . 2))
+#+end_example
+
+se quisermos adicionar uma nova associação  tal que ~y = 3~, teremos, ao
+final da operação, este exato novo contexto:
+
+#+begin_example
+((y . 3) (x . 2))
+#+end_example
+
+A  função  pública  ~maj_env_push~   realiza  esse  trabalho.  Também  é
+importante ressaltar  que o processo  de identificação de  um /contexto/
+envolve verificar se o mesmo é  uma lista adequada, e o símbolo também
+será  verificado quanto  a tal.  O  valor poderá  ser qualquer  coisa,
+portanto não será verificado.
+
+A criação de um novo contexto  não pressupõe cópia do anterior: apenas
+aproveitamos o mesmo contexto antigo e adicionamos uma nova associação
+em seu topo, sem realizar nenhum processo destrutivo.
+
+#+begin_src rust
+pub fn maj_env_push(env: Gc<Maj>, sym: Gc<Maj>, val: Gc<Maj>) -> Gc<Maj> {
+    let is_env = maj_proper_list_p(env.clone()).to_bool();
+    let is_sym = maj_symbolp(sym.clone()).to_bool();
+    
+    if !is_env || !is_sym {
+        Maj::nil()
+    } else {
+        Maj::cons(
+            Maj::cons(sym, val),
+            env)
+    }
+}
+#+end_src
+
+É interessante ressaltar que um /contexto/, por ser validado apenas pela
+ideia de  /lista adequada/,  também envolve  o uso  correto da  parte do
+programador.
+
+* TODO Procura por símbolo em um contexto
+
+Outro  processo importante  de  ser  mencionado para  o  contexto é  a
+/procura/, que  envolve procurar  pelo valor associado  a um  /símbolo/ no
+contexto. Para  tanto, atravessa-se o contexto  recursivamente, /cons/ a
+/cons/, e verifica-se pela igualdade (~eq~)  entre o símbolo procurado e o
+~car~ da associação.
+
+# TODO: Não encontrar um símbolo poderia ser classificado como erro de
+# lookup.
+# TODO: Retornar  nil aqui é  problemático também! E os  símbolos cujo
+# valor associado seja nil? Precisamos retornar formalmente um erro.
+Caso o  contexto seja  completamente atravessado e  nenhuma associação
+seja encontrada,  trata-se de um  erro. Retornamos aqui o  símbolo ~nil~
+para referência, mas isso poderá ser mudado em breve.
+
+#+begin_src rust
+pub fn maj_env_assoc(env: Gc<Maj>, sym: Gc<Maj>) -> Gc<Maj> {
+    use crate::axioms::primitives::maj_err;
+    use crate::maj_list;
+    let mut itr = env.clone();
+    while !maj_nilp(itr.clone()).to_bool() {
+        if let Maj::Cons { car: entry, cdr } = &*itr.clone() {
+            if let Maj::Cons {
+                car: symbol,
+                cdr: _
+            } = &*entry.clone() {
+                if maj_eq(symbol.clone(), sym.clone()).to_bool() {
+                    return entry.clone();
+                }
+            } else {
+                panic!("All entries on an environment must be pairs");
+            }
+            itr = cdr.clone();
+        } else {
+            panic!("Environment is not an alist");
+        }
+    }
+    maj_err(
+        Maj::string("{} is unbound"),
+        maj_list!(sym))
+}
+#+end_src
+
+#+begin_src rust
+pub fn maj_env_lookup(env: Gc<Maj>, sym: Gc<Maj>) -> Gc<Maj> {
+    use crate::axioms::predicates::maj_errorp;
+    use crate::axioms::primitives::maj_cdr;
+    let result = maj_env_assoc(env, sym);
+    if !maj_errorp(result.clone()).to_bool() {
+        maj_cdr(result)
+    } else {
+        result
+    }
+}
+#+end_src
+
+* TODO União de contextos
+
+#+begin_src rust
+pub fn maj_env_union(env1: Gc<Maj>, env2: Gc<Maj>) -> Gc<Maj> {
+    use crate::axioms::{
+        primitives::{ maj_car, maj_cdr },
+        predicates::maj_errorp
+    };
+    let is_env_env1 = maj_proper_list_p(env1.clone()).to_bool();
+    let is_env_env2 = maj_proper_list_p(env2.clone()).to_bool();
+    if !is_env_env1 || !is_env_env2 {
+        panic!("Attempted union of improper lists");
+    }
+    
+    // Uniting two envs involves creating a new env with mixed bindings.
+    // It must basically be env2 with env1 bindings substituting wherever
+    // a substitution is needed.
+    let mut iter = env2.clone();
+    // 0. Reverse env2 (because of the way it works)
+    let mut env2_bindings = vec![];
+    while !maj_nilp(iter.clone()).to_bool() {
+        env2_bindings.push(maj_car(iter.clone()));
+        iter = maj_cdr(iter);
+    }
+    
+    // 1. traverse for each bind2 on env2.
+    let mut newenv = Maj::nil();
+    for bind2 in env2_bindings.iter().rev() {
+        // 2. if (sym in bind2) is defined in (bind1 in env1), collect bind1.
+        let sym = maj_car(bind2.clone());
+        let bind1 = maj_env_assoc(env1.clone(), sym);
+        newenv = if !maj_errorp(bind1.clone()).to_bool() {
+            Maj::cons(bind1, newenv)
+        } else {
+            //    2.5. otherwise collect bind2.
+            Maj::cons(bind2.clone(), newenv)
+        };
+    }
+
+    // 3. Add bindings on env1 that were not added
+    iter = env1.clone();
+    while !maj_nilp(iter.clone()).to_bool() {
+        let binding = maj_car(iter.clone());
+        let sym = maj_car(binding.clone());
+        if maj_errorp(maj_env_assoc(newenv.clone(), sym.clone())).to_bool() {
+            newenv = Maj::cons(binding, newenv);
+        }
+        iter = maj_cdr(iter);
+    }
+
+    newenv
+}
+#+end_src

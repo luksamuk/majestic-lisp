@@ -6,7 +6,7 @@
 <!-- 2022-10-23 dom 22:46 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sintaxe da Linguagem</title>
+<title>Núcleo da linguagem</title>
 <meta name="author" content="Lucas S. Vieira" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -206,20 +206,58 @@
  |
  <a accesskey="H" href="index.html"> HOME </a>
 </div><div id="content" class="content">
-<h1 class="title">Sintaxe da Linguagem</h1>
+<h1 class="title">Núcleo da linguagem</h1>
 <p>
-Agora que sabemos o escopo do nosso projeto e a forma como vamos lidar
-com  ele,   vamos  falar  um   pouco  sobre  a  linguagem   que  vamos
-construir.  Para  isso,  teremos   agora  uma  introdução  didática  à
-linguagem Majestic Lisp.
+A implementação do  programa é constituída de  diversos módulos. Esses
+módulos desdobram-se  em vários submódulos, e  também entrelaçam-se em
+interdependências   para    garantir   algumas    funcionalidades   do
+interpretador de Majestic Lisp,
 </p>
 
 <p>
-O  objetivo deste  capítulo não  é  especificar com  detalhes a  nossa
-linguagem; aliás,  a especificação da linguagem  poderá ser encontrada
-no Apêndice A.  Faremos apenas um <i>tour</i> pela sintaxe  de Majestic Lisp,
-com seus detalhes mais importantes que a tornam uma linguagem única.
+A seguir, especificamos o <i>núcleo</i> da aplicação, localizado no diretório
+<code>src/core</code>. Este módulo  é responsável pela definição  dos tipos básicos
+de Majestic Lisp  e também da estrutura que carregará  o estado global
+de  uma  instância  do  interpretador.  Também  aqui  criamos  algumas
+definições para gerenciamento de <i>contextos</i> (global e léxico).
 </p>
+
+<div id="outline-container-orge2cda49" class="outline-2">
+<h2 id="orge2cda49"><span class="section-number-2">1.</span> Declaração de submódulos</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+O primeiro passo para a criação dos módulos de Rust é criar um arquivo
+para  tal, que  especifique  os submódulos  contidos  no mesmo.  Estas
+definições serão salvas no arquivo <code>src/core/mod.rs</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">mod</span> <span style="color: #569cd6;">environment</span>;
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">mod</span> <span style="color: #569cd6;">state</span>;
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">mod</span> <span style="color: #569cd6;">types</span>;
+</pre>
+</div>
+
+<p>
+Outro passo importante  é reexportar alguns símbolos que  podem ser de
+uso  importante  para o  resto  da  aplicação.  Esses  símbolos  serão
+reexportados  dos  submódulos  onde  existem,  de  forma  a  parecerem
+pertencer ao módulo atual.
+</p>
+
+<p>
+Por  exemplo, reexportar  <code>types::Maj</code>  faz com  que seja  desnecessário
+importar  <code>core::types::Maj</code> onde  a  estrutura <code>Maj</code>  for necessária;  ao
+invés disso, poderemos importar apenas <code>core::Maj</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">state</span>::<span style="color: #4ec9b0;">MajState</span>;
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">types</span>::<span style="color: #4ec9b0;">Maj</span>;
+</pre>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Lucas S. Vieira</p>

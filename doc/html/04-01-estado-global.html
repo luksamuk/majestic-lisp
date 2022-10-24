@@ -1,0 +1,1036 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+<head>
+<!-- 2022-10-23 dom 22:47 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Estado global</title>
+<meta name="author" content="Lucas S. Vieira" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="./main.css" />
+<link rel="stylesheet" type="text/css" href="./syntax.css" />
+<link id="theme-css" rel="stylesheet" type="text/css" href="./dark-theme.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="../img/cat-i-mage.jpg">
+<meta name="theme-color" content="#14171e">
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="04-nucleo.html"> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Estado global</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org83f4eea">1. <span class="todo TODO">TODO</span> Importações</a></li>
+<li><a href="#org971165c">2. A estrutura <code>MajState</code>: Estado global do Majestic Lisp</a></li>
+<li><a href="#org56adb4d">3. <span class="todo TODO">TODO</span> Métodos para o estado global</a></li>
+<li><a href="#orge9f2bbf">4. <span class="todo TODO">TODO</span> Impressão do estado global (para debug)</a></li>
+<li><a href="#org8a0d2b8">5. Mais construtores</a>
+<ul>
+<li><a href="#org2ae0b16">5.1. <span class="todo TODO">TODO</span> Criação do stream</a></li>
+<li><a href="#org41913f5">5.2. Fechamento do stream</a></li>
+<li><a href="#orgc85ab86">5.3. Status do stream</a></li>
+<li><a href="#org38a0205">5.4. Empréstimo do stream</a></li>
+<li><a href="#org351687e">5.5. Caractere espionado em <code>*stdin*</code></a></li>
+<li><a href="#orgce73668">5.6. <span class="todo TODO">TODO</span> Vetores</a>
+<ul>
+<li><a href="#org6767e4a">5.6.1. Criação de vetores</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgcdfade9">6. <span class="todo TODO">TODO</span> Contexto global</a></li>
+</ul>
+</div>
+</div>
+<p>
+O  primeiro   submódulo  a  ser   citado  é  o  submódulo   de  <i>estado
+global</i>. Aqui, criamos estruturas  e ferramentas relacionadas ao estado
+global do interpretador de Majestic Lisp.
+</p>
+
+<p>
+A  palavra <i>global</i>  pode ser  um pouco  sugestiva nesse  contexto, pois
+parece designar globalidade no âmbito da implementação, mas esse não é
+o  caso  aqui.  Por  <i>global</i>, compreenda-se  que  estamos  tratando  de
+elementos  vitais  para o  interpretador  de  Lisp, que  precisam  ser
+registrados durante o tempo de vida de execução do programa.
+</p>
+
+<p>
+Por  exemplo, precisamos  ter alguma  forma de  registrar a  tabela de
+símbolos utilizados, e também o escopo global da aplicação.
+</p>
+
+<p>
+As  seções que  se seguem  tratarão de  estruturas criadas  no arquivo
+<code>src/core/state.rs</code>.
+</p>
+
+<div id="outline-container-org83f4eea" class="outline-2">
+<h2 id="org83f4eea"><span class="section-number-2">1.</span> <span class="todo TODO">TODO</span> Importações</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Primeiramente,  trataremos  das   importações  necessárias  para  esse
+submódulo. Utilizaremos  uma estrutura  de <i>hash</i> para  registrar alguns
+elementos  à medida  do  necessário e  também  para recuperar  algumas
+informações,  e  usaremos a  estrutura  <code>File</code>  para tratar  <i>streams</i>  de
+arquivo.
+</p>
+
+<p>
+Também importaremos a estrutura genérica  do coletor de lixo, que será
+utilizada para envolver os objetos da nossa linguagem.
+</p>
+
+<p>
+Ademais,  também importaremos  o tipo  padrão que  designa objetos  de
+Majestic Lisp.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">use</span> <span style="color: #569cd6;">std</span>::<span style="color: #569cd6;">collections</span>::<span style="color: #4ec9b0;">HashMap</span>;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">std</span>::<span style="color: #569cd6;">collections</span>::<span style="color: #4ec9b0;">VecDeque</span>;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">std</span>::<span style="color: #569cd6;">fs</span>::<span style="color: #4ec9b0;">File</span>;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">gc</span>::<span style="color: #4ec9b0;">Gc</span>;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">super</span>::<span style="color: #4ec9b0;">Maj</span>;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::{ <span style="color: #4ec9b0;">MajPrimFn</span>, <span style="color: #4ec9b0;">MajPrimArgs</span> };
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">bimap</span>::<span style="color: #4ec9b0;">BiMap</span>;
+
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">std</span>::fmt;
+</pre>
+</div>
+
+<p>
+No  caso dos  arquivos, é  conveniente  definir um  tipo que  implique
+alocação dinâmica e também finalização sob demanda.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">type</span> <span style="color: #4ec9b0;">MajInternalStream</span> = <span style="color: #4ec9b0;">Option</span>&lt;<span style="color: #4ec9b0;">File</span>&gt;;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org971165c" class="outline-2">
+<h2 id="org971165c"><span class="section-number-2">2.</span> A estrutura <code>MajState</code>: Estado global do Majestic Lisp</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Criaremos, agora,  uma estrutura de  dados <code>MajState</code>, que  representa o
+estado <i>global</i> do interpretador.
+</p>
+
+<p>
+Para a  maior parte da  aplicação, esta  é uma estrutura  estática. Em
+geral, ela possui as seguintes responsabilidades:
+</p>
+
+<ul class="org-ul">
+<li>Gerenciar uma lista de símbolos;</li>
+<li>Gerenciar o contexto global da aplicação;</li>
+<li>Armazenar handlers para primitivas;</li>
+<li>Gerenciar a forma interna dos <i>streams</i>.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">struct</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #9cdcfe;">symbols</span>:      <span style="color: #4ec9b0;">BiMap</span>&lt;<span style="color: #4ec9b0;">u64</span>, <span style="color: #4ec9b0;">String</span>&gt;,
+    <span style="color: #9cdcfe;">last_sym</span>:     <span style="color: #4ec9b0;">u64</span>,
+    <span style="color: #9cdcfe;">primitives</span>:   <span style="color: #4ec9b0;">HashMap</span>&lt;<span style="color: #4ec9b0;">u64</span>, (<span style="color: #4ec9b0;">MajPrimFn</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>)&gt;,
+    <span style="color: #9cdcfe;">streams</span>:      <span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">MajInternalStream</span>&gt;,
+    <span style="color: #9cdcfe;">free_streams</span>: <span style="color: #4ec9b0;">VecDeque</span>&lt;<span style="color: #4ec9b0;">usize</span>&gt;,
+    <span style="color: #9cdcfe;">stdin_peeked</span>: <span style="color: #4ec9b0;">Option</span>&lt;<span style="color: #4ec9b0;">char</span>&gt;,
+    <span style="color: #9cdcfe;">global_env</span>:   <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org56adb4d" class="outline-2">
+<h2 id="org56adb4d"><span class="section-number-2">3.</span> <span class="todo TODO">TODO</span> Métodos para o estado global</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+A  seguir, criaremos  alguns métodos  de auxílio  para gerenciarmos  o
+estado  global,  de forma  indireta,  a  partir  de outras  partes  do
+programa.
+</p>
+
+<p>
+Inicialmente, criamos um método público <code>new</code>. Este método é estático,
+sendo responsável pela criação e inicialização de um objeto <code>MajState</code>.
+</p>
+
+<p>
+O  que fazemos  aqui é  inicializar estruturas  como o  gerenciador de
+símbolos, o contexto  global, e definimos o estado atual  de erro como
+sendo <code>nil</code> (falso).
+</p>
+
+<p>
+Ademais, usamos  a função <code>majestic_initialize</code> para  inicializar alguns
+elementos  do estado  global, como  definições globais  e a  tabela de
+símbolos, por exemplo.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">new</span>() -&gt; <span style="color: #4ec9b0;">MajState</span> {
+        <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::majestic_initialize;
+        <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">state</span> =
+            <span style="color: #4ec9b0;">MajState</span> {
+                <span style="color: #9cdcfe;">symbols</span>:      <span style="color: #4ec9b0;">BiMap</span>::new(),
+                <span style="color: #9cdcfe;">primitives</span>:   <span style="color: #4ec9b0;">HashMap</span>::new(),
+                <span style="color: #9cdcfe;">last_sym</span>:     0,
+                <span style="color: #9cdcfe;">streams</span>:      <span style="color: #4ec9b0;">Vec</span>::new(),
+                <span style="color: #9cdcfe;">free_streams</span>: <span style="color: #4ec9b0;">VecDeque</span>::new(),
+                <span style="color: #9cdcfe;">stdin_peeked</span>: <span style="color: #4ec9b0;">None</span>,
+                <span style="color: #9cdcfe;">global_env</span>:   <span style="color: #4ec9b0;">Maj</span>::nil()
+            };
+        majestic_initialize(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state);
+        state
+    }
+}
+</pre>
+</div>
+
+<p>
+Criaremos também  um método  <code>gen_symbol</code>, associado ao  <code>MajState</code> atual,
+desde que o mesmo seja <i>mutável</i>.
+</p>
+
+<p>
+Símbolos  são,   na  realidade,   <i>números</i>,  normalmente   alocados  em
+sequência.  Alguns símbolos  correspondem  a símbolos  <i>fixos</i>, que  são
+compartilhados  através de  todas  as  instâncias de  interpretadores;
+estes  fazem parte  dos  <i>axiomas</i> da  linguagem,  que serão  discutidos
+posteriormente. Demais  símbolos são alocados sob  demanda, tendo seus
+respectivos números atribuídos à medida que forem necessários.
+</p>
+
+<p>
+Todo símbolo possui uma representação textual associada, que só existe
+de  fato  para  efeitos   estéticos;  o  interpretador  normalmente  é
+executado  sem que  haja interferência  de nenhuma  comparação textual
+para com os nomes dos símbolos.
+</p>
+
+<p>
+Por tratarem-se de  elementos muito particulares para  o estado global
+de  uma sessão,  a  geração de  um símbolo  dá-se  apenas quando  este
+símbolo já não existe na tabela. Se o mesmo existe, então basta apenas
+retornarmos o número associado a ele.
+</p>
+
+<p>
+Utilizamos aqui uma estrutura de  <code>BiMap</code>, capaz de associar <i>números</i> dos
+símbolos, como  índice, às  suas <i>representações textuais</i>.  A diferença
+aqui é que  ambas as informações devem servir como  chave de pesquisa;
+assim, poderemos recuperar  um símbolo através de  mera procura direta
+pela sua  representação textual,  mas também poderemos  recuperar esta
+representação textual através de seu índice.
+</p>
+
+<p>
+Os  símbolos são  gerados sequencialmente,  começando do  número <code>0</code>.  O
+estado global da sessão mantém o histórico do número a ser gerado para
+o próximo símbolo.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">gen_symbol</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">name</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">str</span>) -&gt; <span style="color: #4ec9b0;">u64</span> {
+        <span style="color: #569cd6;">match</span> <span style="color: #569cd6;">self</span>.symbols.get_by_right(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>name.to_string()) {
+            <span style="color: #4ec9b0;">Some</span>(old_sym) =&gt; *old_sym,
+            <span style="color: #4ec9b0;">None</span> =&gt; {
+                <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">new_sym</span> = <span style="color: #569cd6;">self</span>.last_sym;
+                <span style="color: #569cd6;">self</span>.last_sym += 1;
+                <span style="color: #569cd6;">self</span>.symbols.insert(new_sym, name.to_string());
+                new_sym
+            }
+        }
+    }
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">gen_random_symbol</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">u64</span> {
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">new_sym</span> = <span style="color: #569cd6;">self</span>.last_sym;
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">sym_name</span> = <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">":G</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, new_sym);
+        <span style="color: #569cd6;">self</span>.last_sym += 1;
+        <span style="color: #569cd6;">self</span>.symbols.insert(new_sym, sym_name.to_string());
+        new_sym
+    }
+}
+</pre>
+</div>
+
+<p>
+Como  anteriormente  citado,  precisamos  determinar  um  método  para
+recuperar a representação  textual de um símbolo;  em outras palavras,
+seu <i>nome</i>. Este processo é facilitado pela estrutura de <code>BiMap</code>.
+</p>
+
+<p>
+Caso o  símbolo não  tenha sido  registrado na  tabela de  símbolos do
+interpretador,  então significa  que o  símbolo não  foi <i>internado</i>  no
+mesmo.  Assim,  retornamos   um  texto  genérico  que   não  pode  ser
+adequadamente compreendido pelo usuário, como <code>~uninterned##5</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">symbol_name</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">sym</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">u64</span>) -&gt; <span style="color: #4ec9b0;">String</span> {
+        <span style="color: #569cd6;">match</span> <span style="color: #569cd6;">self</span>.symbols.get_by_left(sym) {
+            <span style="color: #4ec9b0;">Some</span>(string) =&gt; string.clone(),
+            <span style="color: #4ec9b0;">None</span> =&gt; <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"~uninterned##</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, sym)
+        }
+    }
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">register_primitive</span>(
+        <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">self</span>,
+        <span style="color: #9cdcfe;">name</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>'<span style="color: #569cd6;">static</span> <span style="color: #4ec9b0;">str</span>,
+        <span style="color: #9cdcfe;">arity</span>: <span style="color: #4ec9b0;">MajPrimArgs</span>,
+        <span style="color: #9cdcfe;">f</span>: <span style="color: #4ec9b0;">MajPrimFn</span>
+    ) {
+        <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::maj_list;
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">symbol</span> = <span style="color: #4ec9b0;">Maj</span>::symbol(<span style="color: #569cd6;">self</span>, name);
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(num) = *symbol.clone() {
+            <span style="color: #569cd6;">self</span>.primitives.insert(num, (f, arity));
+            <span style="color: #569cd6;">let</span> (arity_type, arity) = <span style="color: #569cd6;">match</span> arity {
+                <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">None</span> =&gt;
+                    (<span style="color: #4ec9b0;">Maj</span>::symbol(<span style="color: #569cd6;">self</span>, <span style="color: #ce9178;">"required"</span>),
+                     <span style="color: #4ec9b0;">Maj</span>::integer(0)),
+                <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(n) =&gt;
+                    (<span style="color: #4ec9b0;">Maj</span>::symbol(<span style="color: #569cd6;">self</span>, <span style="color: #ce9178;">"required"</span>),
+                     <span style="color: #4ec9b0;">Maj</span>::integer(n <span style="color: #569cd6;">as</span> <span style="color: #4ec9b0;">i64</span>)),
+                <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Variadic</span>(n) =&gt;
+                    (<span style="color: #4ec9b0;">Maj</span>::symbol(<span style="color: #569cd6;">self</span>, <span style="color: #ce9178;">"variadic"</span>),
+                     <span style="color: #4ec9b0;">Maj</span>::integer(n <span style="color: #569cd6;">as</span> <span style="color: #4ec9b0;">i64</span>)),
+            };
+            <span style="color: #569cd6;">self</span>.push(symbol.clone(),
+                  <span style="color: #c586c0;">maj_list!</span>(<span style="color: #4ec9b0;">Maj</span>::lit(), <span style="color: #4ec9b0;">Maj</span>::prim(),
+                            symbol, arity_type, arity));
+        } <span style="color: #569cd6;">else</span> {
+            <span style="color: #c586c0;">panic!</span>(<span style="color: #ce9178;">"Error creating symbol for primitive function"</span>);
+        }
+    }
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">find_primitive</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">sym</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Option</span>&lt;<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>(<span style="color: #4ec9b0;">MajPrimFn</span>, <span style="color: #4ec9b0;">MajPrimArgs</span>)&gt; {
+        <span style="color: #569cd6;">match</span> *sym {
+            <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(num) =&gt; <span style="color: #569cd6;">self</span>.primitives.get(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>num),
+            _             =&gt; <span style="color: #4ec9b0;">None</span>,
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge9f2bbf" class="outline-2">
+<h2 id="orge9f2bbf"><span class="section-number-2">4.</span> <span class="todo TODO">TODO</span> Impressão do estado global (para debug)</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Display</span> <span style="color: #569cd6;">for</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">fmt</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">f</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Formatter</span>&lt;'<span style="color: #9cdcfe;">_</span>&gt;) -&gt; <span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Result</span> {
+        <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">printing</span>::maj_format_env;
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">_</span> =
+            <span style="color: #c586c0;">writeln!</span>(f, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;"> symbols registered"</span>, <span style="color: #569cd6;">self</span>.symbols.len());
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">_</span> =
+            <span style="color: #c586c0;">writeln!</span>(f, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;"> streams registered (</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;"> free)"</span>,
+                     <span style="color: #569cd6;">self</span>.streams.len(),
+                     <span style="color: #569cd6;">self</span>.free_streams.len());
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">_</span> =
+            <span style="color: #c586c0;">writeln!</span>(f, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;"> primitives registered"</span>, <span style="color: #569cd6;">self</span>.primitives.len());
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">_</span> =
+            <span style="color: #c586c0;">writeln!</span>(f, <span style="color: #ce9178;">"global environment table:"</span>);
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">env</span> = <span style="color: #569cd6;">self</span>.global_env.clone();
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">_</span> =
+            <span style="color: #c586c0;">writeln!</span>(f, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, maj_format_env(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>, env));
+        <span style="color: #4ec9b0;">Ok</span>(())
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org8a0d2b8" class="outline-2">
+<h2 id="org8a0d2b8"><span class="section-number-2">5.</span> Mais construtores</h2>
+<div class="outline-text-2" id="text-5">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">use</span> <span style="color: #569cd6;">super</span>::<span style="color: #569cd6;">types</span>::{
+    <span style="color: #4ec9b0;">MajStream</span>,
+    <span style="color: #4ec9b0;">MajStreamDirection</span>,
+    <span style="color: #4ec9b0;">MajStreamType</span>
+};
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org2ae0b16" class="outline-3">
+<h3 id="org2ae0b16"><span class="section-number-3">5.1.</span> <span class="todo TODO">TODO</span> Criação do stream</h3>
+<div class="outline-text-3" id="text-5-1">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">make_stream_stdin</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Stream</span>(<span style="color: #4ec9b0;">MajStream</span> {
+            <span style="color: #9cdcfe;">direction</span>: <span style="color: #4ec9b0;">MajStreamDirection</span>::<span style="color: #4ec9b0;">In</span>,
+            <span style="color: #9cdcfe;">handle</span>:    <span style="color: #4ec9b0;">usize</span>::<span style="color: #4ec9b0;">MAX</span>,
+            <span style="color: #9cdcfe;">stype</span>:     <span style="color: #4ec9b0;">MajStreamType</span>::<span style="color: #4ec9b0;">Stdin</span>
+        }))
+    }
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">make_stream_stdout</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Stream</span>(<span style="color: #4ec9b0;">MajStream</span> {
+            <span style="color: #9cdcfe;">direction</span>: <span style="color: #4ec9b0;">MajStreamDirection</span>::<span style="color: #4ec9b0;">Out</span>,
+            <span style="color: #9cdcfe;">handle</span>:    <span style="color: #4ec9b0;">usize</span>::<span style="color: #4ec9b0;">MAX</span>,
+            <span style="color: #9cdcfe;">stype</span>:     <span style="color: #4ec9b0;">MajStreamType</span>::<span style="color: #4ec9b0;">Stdout</span>
+        }))
+    }
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">make_stream_stderr</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Stream</span>(<span style="color: #4ec9b0;">MajStream</span> {
+            <span style="color: #9cdcfe;">direction</span>: <span style="color: #4ec9b0;">MajStreamDirection</span>::<span style="color: #4ec9b0;">Out</span>,
+            <span style="color: #9cdcfe;">handle</span>:    <span style="color: #4ec9b0;">usize</span>::<span style="color: #4ec9b0;">MAX</span>,
+            <span style="color: #9cdcfe;">stype</span>:     <span style="color: #4ec9b0;">MajStreamType</span>::<span style="color: #4ec9b0;">Stderr</span>
+        }))
+    }
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">make_stream</span>(
+        <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">self</span>,
+        <span style="color: #9cdcfe;">file</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">str</span>,
+        <span style="color: #9cdcfe;">direction</span>: <span style="color: #4ec9b0;">MajStreamDirection</span>
+    ) -&gt; <span style="color: #4ec9b0;">Option</span>&lt;<span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;&gt; {
+        <span style="color: #569cd6;">match</span> direction {
+            <span style="color: #4ec9b0;">MajStreamDirection</span>::<span style="color: #4ec9b0;">In</span>  =&gt; {
+                <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">handle</span> = <span style="color: #4ec9b0;">File</span>::open(file);
+                <span style="color: #569cd6;">if</span> handle.is_err() {
+                    <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">None</span>;
+                }
+
+                <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">handle</span> = handle.unwrap();
+                <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">index</span>;
+                <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">self</span>.free_streams.is_empty() {
+                    <span style="color: #569cd6;">self</span>.streams.push(<span style="color: #4ec9b0;">Some</span>(handle));
+                    index = <span style="color: #569cd6;">self</span>.streams.len() - 1;
+                } <span style="color: #569cd6;">else</span> {
+                    index = <span style="color: #569cd6;">self</span>.free_streams
+                        .pop_front()
+                        .unwrap();
+                    <span style="color: #569cd6;">self</span>.streams[index] = <span style="color: #4ec9b0;">Some</span>(handle);
+                }
+                <span style="color: #4ec9b0;">Some</span>(<span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Stream</span>(
+                    <span style="color: #4ec9b0;">MajStream</span> {
+                        direction,
+                        <span style="color: #9cdcfe;">handle</span>: index,
+                        <span style="color: #9cdcfe;">stype</span>: <span style="color: #4ec9b0;">MajStreamType</span>::<span style="color: #4ec9b0;">File</span>,
+                    })))
+            }
+            <span style="color: #4ec9b0;">MajStreamDirection</span>::<span style="color: #4ec9b0;">Out</span> =&gt; {
+                <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">handle</span> = <span style="color: #569cd6;">std</span>::<span style="color: #569cd6;">fs</span>::<span style="color: #4ec9b0;">OpenOptions</span>::new()
+                    .create(<span style="color: #569cd6;">true</span>)
+                    .append(<span style="color: #569cd6;">true</span>)
+                    .open(file);
+                <span style="color: #569cd6;">if</span> handle.is_err() {
+                    <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">None</span>;
+                }
+
+                <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">handle</span> = handle.unwrap();
+                <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">index</span>;
+                <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">self</span>.free_streams.is_empty() {
+                    <span style="color: #569cd6;">self</span>.streams.push(<span style="color: #4ec9b0;">Some</span>(handle));
+                    index = <span style="color: #569cd6;">self</span>.streams.len() - 1;
+                } <span style="color: #569cd6;">else</span> {
+                    index = <span style="color: #569cd6;">self</span>.free_streams
+                        .pop_front()
+                        .unwrap();
+                    <span style="color: #569cd6;">self</span>.streams[index] = <span style="color: #4ec9b0;">Some</span>(handle);
+                }
+                <span style="color: #4ec9b0;">Some</span>(<span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Stream</span>(
+                    <span style="color: #4ec9b0;">MajStream</span> {
+                        direction,
+                        <span style="color: #9cdcfe;">handle</span>: index,
+                        <span style="color: #9cdcfe;">stype</span>: <span style="color: #4ec9b0;">MajStreamType</span>::<span style="color: #4ec9b0;">File</span>,
+                    })))
+            },
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org41913f5" class="outline-3">
+<h3 id="org41913f5"><span class="section-number-3">5.2.</span> Fechamento do stream</h3>
+<div class="outline-text-3" id="text-5-2">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">close_stream</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">stream</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">primitives</span>::maj_err;
+        <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::maj_list;
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Stream</span>(mstream) = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*stream.clone() {
+            <span style="color: #569cd6;">if</span> mstream.is_internal() {
+                <span style="color: #569cd6;">return</span> maj_err(
+                    <span style="color: #4ec9b0;">Maj</span>::string(<span style="color: #ce9178;">"Cannot close standard streams"</span>),
+                    <span style="color: #4ec9b0;">Maj</span>::nil());
+            }
+
+            <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">index</span> = mstream.handle;
+            <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">self</span>.streams.len() &lt;= index {
+                maj_err(
+                    <span style="color: #4ec9b0;">Maj</span>::string(<span style="color: #ce9178;">"Invalid stream {}"</span>),
+                    <span style="color: #c586c0;">maj_list!</span>(stream))
+            } <span style="color: #569cd6;">else</span> {
+                <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">self</span>.streams[index].is_none() {
+                    <span style="color: #4ec9b0;">Maj</span>::nil()
+                } <span style="color: #569cd6;">else</span> {
+                    <span style="color: #569cd6;">self</span>.streams[index] = <span style="color: #4ec9b0;">None</span>;
+                    <span style="color: #569cd6;">self</span>.free_streams.push_back(index);
+                    <span style="color: #4ec9b0;">Maj</span>::t()
+                }
+            }
+        }  <span style="color: #569cd6;">else</span> {
+            maj_err(
+                <span style="color: #4ec9b0;">Maj</span>::string(<span style="color: #ce9178;">"Not a stream: {}"</span>),
+                <span style="color: #c586c0;">maj_list!</span>(stream))
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc85ab86" class="outline-3">
+<h3 id="orgc85ab86"><span class="section-number-3">5.3.</span> Status do stream</h3>
+<div class="outline-text-3" id="text-5-3">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">stat_stream</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">which</span>: <span style="color: #4ec9b0;">usize</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">primitives</span>::maj_err;
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">self</span>.streams.len() &lt;= which {
+            maj_err(
+                <span style="color: #4ec9b0;">Maj</span>::string(<span style="color: #ce9178;">"Invalid stream"</span>),
+                <span style="color: #4ec9b0;">Maj</span>::nil())
+        } <span style="color: #569cd6;">else</span> {
+            <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">self</span>.streams[which].is_none() {
+                <span style="color: #4ec9b0;">Maj</span>::nil()
+            } <span style="color: #569cd6;">else</span> {
+                <span style="color: #4ec9b0;">Maj</span>::t()
+            }
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org38a0205" class="outline-3">
+<h3 id="org38a0205"><span class="section-number-3">5.4.</span> Empréstimo do stream</h3>
+<div class="outline-text-3" id="text-5-4">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">borrow_stream</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">which</span>: <span style="color: #4ec9b0;">usize</span>) -&gt; <span style="color: #4ec9b0;">Option</span>&lt;<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">File</span>&gt; {
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">self</span>.streams.len() &lt;= which {
+            <span style="color: #4ec9b0;">None</span>
+        } <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">self</span>.streams[which].is_none() {
+            <span style="color: #4ec9b0;">None</span>
+        } <span style="color: #569cd6;">else</span> {
+            <span style="color: #4ec9b0;">Some</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>.streams[which].as_ref().unwrap())
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org351687e" class="outline-3">
+<h3 id="org351687e"><span class="section-number-3">5.5.</span> Caractere espionado em <code>*stdin*</code></h3>
+<div class="outline-text-3" id="text-5-5">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">push_stdin_peeked</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">c</span>: <span style="color: #4ec9b0;">char</span>) {
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">self</span>.stdin_peeked.is_some() {
+            <span style="color: #c586c0;">panic!</span>(<span style="color: #ce9178;">"Cannot overwrite peeked *stdin* character!"</span>);
+        }
+        <span style="color: #569cd6;">self</span>.stdin_peeked = <span style="color: #4ec9b0;">Some</span>(c);
+    }
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">pop_stdin_peeked</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">Option</span>&lt;<span style="color: #4ec9b0;">char</span>&gt; {
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">result</span> = <span style="color: #569cd6;">self</span>.stdin_peeked;
+        <span style="color: #569cd6;">self</span>.stdin_peeked = <span style="color: #4ec9b0;">None</span>;
+        result
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgce73668" class="outline-3">
+<h3 id="orgce73668"><span class="section-number-3">5.6.</span> <span class="todo TODO">TODO</span> Vetores</h3>
+<div class="outline-text-3" id="text-5-6">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #c586c0;">#[derive(Debug, Trace, Finalize, Clone)]</span>
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">enum</span> <span style="color: #4ec9b0;">MajVector</span> {
+    <span style="color: #4ec9b0;">Integer</span>(<span style="color: #4ec9b0;">GcCell</span>&lt;<span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">i64</span>&gt;&gt;),
+    <span style="color: #4ec9b0;">Float</span>(<span style="color: #4ec9b0;">GcCell</span>&lt;<span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">f64</span>&gt;&gt;),
+    <span style="color: #4ec9b0;">Char</span>(<span style="color: #4ec9b0;">GcCell</span>&lt;<span style="color: #4ec9b0;">String</span>&gt;),
+    <span style="color: #4ec9b0;">Any</span>(<span style="color: #4ec9b0;">GcCell</span>&lt;<span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;&gt;&gt;)
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #c586c0;">#[derive(Debug, PartialEq)]</span>
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">enum</span> <span style="color: #4ec9b0;">MajVectorType</span> {
+    <span style="color: #4ec9b0;">Integer</span>,
+    <span style="color: #4ec9b0;">Float</span>,
+    <span style="color: #4ec9b0;">Char</span>,
+    <span style="color: #4ec9b0;">Any</span>
+}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org6767e4a" class="outline-4">
+<h4 id="org6767e4a"><span class="section-number-4">5.6.1.</span> Criação de vetores</h4>
+<div class="outline-text-4" id="text-5-6-1">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">vector</span>(<span style="color: #9cdcfe;">vtype</span>: <span style="color: #4ec9b0;">MajVectorType</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(
+            <span style="color: #569cd6;">match</span> vtype {
+                <span style="color: #4ec9b0;">MajVectorType</span>::<span style="color: #4ec9b0;">Integer</span> =&gt; {
+                    <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Integer</span>(
+                        <span style="color: #4ec9b0;">GcCell</span>::new(<span style="color: #4ec9b0;">Vec</span>::new()))
+                },
+                <span style="color: #4ec9b0;">MajVectorType</span>::<span style="color: #4ec9b0;">Float</span> =&gt; {
+                    <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Float</span>(
+                        <span style="color: #4ec9b0;">GcCell</span>::new(<span style="color: #4ec9b0;">Vec</span>::new()))
+                },
+                <span style="color: #4ec9b0;">MajVectorType</span>::<span style="color: #4ec9b0;">Char</span> =&gt; {
+                    <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Char</span>(
+                        <span style="color: #4ec9b0;">GcCell</span>::new(<span style="color: #4ec9b0;">String</span>::new()))
+                },
+                <span style="color: #4ec9b0;">MajVectorType</span>::<span style="color: #4ec9b0;">Any</span> =&gt; {
+                    <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Any</span>(
+                        <span style="color: #4ec9b0;">GcCell</span>::new(<span style="color: #4ec9b0;">Vec</span>::new()))
+                },
+            }))
+    }
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">vector_integer</span>(<span style="color: #9cdcfe;">vec</span>: <span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">i64</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(
+            <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Integer</span>(
+                <span style="color: #4ec9b0;">GcCell</span>::new(vec.clone()))))
+    }
+    
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">vector_float</span>(<span style="color: #9cdcfe;">vec</span>: <span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">f64</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(
+            <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Float</span>(
+                <span style="color: #4ec9b0;">GcCell</span>::new(vec.clone()))))
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">vector_any</span>(<span style="color: #9cdcfe;">vec</span>: <span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(
+            <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Any</span>(
+                <span style="color: #4ec9b0;">GcCell</span>::new(vec.clone()))))
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcdfade9" class="outline-2">
+<h2 id="orgcdfade9"><span class="section-number-2">6.</span> <span class="todo TODO">TODO</span> Contexto global</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Trataremos brevemente, agora, da ideia de <i>contexto global</i>. Na próxima seção,
+trataremos  de  contextos  de  forma  mais  genérica,  sem  diferenciá-los  como
+<i>léxicos</i> ou <i>globais</i>, mas de antemão, vamos discuti-los.
+</p>
+
+<p>
+O  contexto  <i>léxico</i>  é  aquele  produzido  especificamente  durante  a
+aplicação de funções. Seja a função
+</p>
+
+<pre class="example" id="org6f352bc">
+(fn (x y) (+ x y))
+</pre>
+
+<p>
+Se esta mesma função for aplicada  aos valores <code>2</code> e <code>3</code>, respectivamente,
+o <i>contexto</i> em que essa função  foi criada precisará ser extendido duas
+vezes: uma, com uma associação <code>x =  2</code>, e outra, com uma associação <code>y =
+3</code>,  criando, portanto,  um  <i>novo</i>  contexto, que  poderá  ser usado  no
+processo de <i>procura</i> ao interpretarmos o corpo da função <code>(+ x y)</code>.
+</p>
+
+<p>
+O  contexto global  é  um  contexto que  possui  todas as  associações
+básicas de símbolos  da linguagem, sendo portanto  visível em qualquer
+expressão, <i>globalmente</i>.
+</p>
+
+<p>
+Uma função como  a anterior, quando interpretada  no chamado <i>top-level</i>
+da aplicação, poderá ser representada internamente da seguinte forma:
+</p>
+
+<pre class="example" id="org23b310f">
+(lit closure nil (x y) (+ x y))
+</pre>
+
+<p>
+Veja  que,  pela especificação,  o  terceiro  elemento da  lista  mais
+externa (<code>nil</code>) corresponde ao contexto atual. Todavia, o contexto atual
+está <i>vazio</i>;  mesmo que  apliquemos essa função,  a <i>procura</i>  por certos
+símbolos que não estejam ligados &#x2013; como  será o caso de <code>+</code> &#x2013; prova-se
+problemática, se considerarmos apenas o contexto em questão.
+</p>
+
+<p>
+O  motivo para  isso  é que  o  contexto capturado  na  clausura é  um
+contexto <i>léxico</i>,  dizendo respeito apenas  a escopos de funções  e sua
+aplicação. Funções como <code>+</code>, que  são pressupostas como já existentes na
+linguagem, são  verdadeiramente <i>ligadas</i> no <i>contexto  global</i>. Como esse
+contexto é visível  para toda a aplicação,  é desnecessário capturá-lo
+na clausura em questão.
+</p>
+
+<p>
+Diferentemente do código anterior, o código a seguir será adicionado a
+<code>src/core/state.rs</code>,  por  estar  diretamente  relacionado  ao  contexto
+global instanciado em um <code>MajState</code>.
+</p>
+
+<p>
+Vamos  começar importando,  do  submódulo de  <i>contexto</i>, as  estruturas
+definidas nas subseções anteriores.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">use</span> <span style="color: #569cd6;">super</span>::<span style="color: #569cd6;">environment</span>::{
+    maj_env_push,
+    maj_env_lookup,
+    maj_env_assoc
+};
+</pre>
+</div>
+
+<p>
+A primeira operação  envolve a extensão do contexto  global. Esse tipo
+de extensão será ocasionada por situações envolvendo as <i>forma especial</i>
+<code>def</code>  e, consequentemente,  o <i>macro</i>  <code>defn</code>. Também  poderá ser  usada ao
+definirmos certas operações primitivas  para a linguagem (por exemplo,
+a já citada operação primitiva <code>+</code>).
+</p>
+
+<p>
+Esta operação não serve para extensão de contexto léxico.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">push</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">sym</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;, <span style="color: #9cdcfe;">val</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">new_ge</span> = <span style="color: #569cd6;">self</span>.global_env.clone();
+        new_ge = maj_env_push(new_ge.clone(),
+                              sym.clone(),
+                              val.clone());
+        <span style="color: #569cd6;">self</span>.global_env = new_ge;
+        sym.clone()
+    }
+}
+</pre>
+</div>
+
+<p>
+A seguir, temos  a operação de consulta no contexto  global. Esse tipo
+de consulta é feita como <i>último  caso</i>; portanto, o que fazemos é pedir
+um contexto léxico, no qual realizamos  a consulta. Caso a consulta em
+contexto léxico <i>falhe</i>, nesse caso  realizaremos a consulta no contexto
+global.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">assoc</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">lexenv</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;, <span style="color: #9cdcfe;">sym</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">predicates</span>::maj_errorp;
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">result</span> = maj_env_assoc(lexenv, sym.clone());
+        <span style="color: #569cd6;">if</span> maj_errorp(result.clone()).to_bool() {
+            maj_env_assoc(<span style="color: #569cd6;">self</span>.global_env.clone(), sym)
+        } <span style="color: #569cd6;">else</span> {
+            result
+        }
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">lookup</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">lexenv</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;, <span style="color: #9cdcfe;">sym</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">predicates</span>::maj_errorp;
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">result</span> = maj_env_lookup(lexenv, sym.clone());
+        <span style="color: #569cd6;">if</span> maj_errorp(result.clone()).to_bool() {
+            maj_env_lookup(<span style="color: #569cd6;">self</span>.global_env.clone(), sym)
+        } <span style="color: #569cd6;">else</span> {
+            result
+        }
+    }
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajState</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">get_global_env</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #569cd6;">self</span>.global_env.clone()
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Lucas S. Vieira</p>
+<p class="date">Created: 2022-10-23 dom 22:47</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

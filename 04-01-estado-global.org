@@ -1,0 +1,673 @@
+#+setupfile: static/setupfile.org
+#+html_link_up: 04-nucleo.html
+#+title: Estado global
+#+options: toc:t
+
+#+property: header-args:rust :tangle src/core/state.rs
+
+O  primeiro   submódulo  a  ser   citado  é  o  submódulo   de  /estado
+global/. Aqui, criamos estruturas  e ferramentas relacionadas ao estado
+global do interpretador de Majestic Lisp.
+
+A  palavra /global/  pode ser  um pouco  sugestiva nesse  contexto, pois
+parece designar globalidade no âmbito da implementação, mas esse não é
+o  caso  aqui.  Por  /global/, compreenda-se  que  estamos  tratando  de
+elementos  vitais  para o  interpretador  de  Lisp, que  precisam  ser
+registrados durante o tempo de vida de execução do programa.
+
+Por  exemplo, precisamos  ter alguma  forma de  registrar a  tabela de
+símbolos utilizados, e também o escopo global da aplicação.
+
+As  seções que  se seguem  tratarão de  estruturas criadas  no arquivo
+~src/core/state.rs~.
+
+* TODO Importações
+
+Primeiramente,  trataremos  das   importações  necessárias  para  esse
+submódulo. Utilizaremos  uma estrutura  de /hash/ para  registrar alguns
+elementos  à medida  do  necessário e  também  para recuperar  algumas
+informações,  e  usaremos a  estrutura  ~File~  para tratar  /streams/  de
+arquivo.
+
+Também importaremos a estrutura genérica  do coletor de lixo, que será
+utilizada para envolver os objetos da nossa linguagem.
+
+Ademais,  também importaremos  o tipo  padrão que  designa objetos  de
+Majestic Lisp.
+
+#+begin_src rust
+use std::collections::HashMap;
+use std::collections::VecDeque;
+use std::fs::File;
+use gc::Gc;
+use super::Maj;
+use crate::axioms::{ MajPrimFn, MajPrimArgs };
+use bimap::BiMap;
+
+use std::fmt;
+#+end_src
+
+No  caso dos  arquivos, é  conveniente  definir um  tipo que  implique
+alocação dinâmica e também finalização sob demanda.
+
+#+begin_src rust
+type MajInternalStream = Option<File>;
+#+end_src
+
+* A estrutura ~MajState~: Estado global do Majestic Lisp
+
+Criaremos, agora,  uma estrutura de  dados ~MajState~, que  representa o
+estado /global/ do interpretador.
+
+Para a  maior parte da  aplicação, esta  é uma estrutura  estática. Em
+geral, ela possui as seguintes responsabilidades:
+
+- Gerenciar uma lista de símbolos;
+- Gerenciar o contexto global da aplicação;
+- Armazenar handlers para primitivas;
+- Gerenciar a forma interna dos /streams/.
+
+#+begin_src rust
+pub struct MajState {
+    symbols:      BiMap<u64, String>,
+    last_sym:     u64,
+    primitives:   HashMap<u64, (MajPrimFn, MajPrimArgs)>,
+    streams:      Vec<MajInternalStream>,
+    free_streams: VecDeque<usize>,
+    stdin_peeked: Option<char>,
+    global_env:   Gc<Maj>
+}
+#+end_src
+
+* TODO Métodos para o estado global
+
+A  seguir, criaremos  alguns métodos  de auxílio  para gerenciarmos  o
+estado  global,  de forma  indireta,  a  partir  de outras  partes  do
+programa.
+
+Inicialmente, criamos um método público ~new~. Este método é estático,
+sendo responsável pela criação e inicialização de um objeto ~MajState~.
+
+O  que fazemos  aqui é  inicializar estruturas  como o  gerenciador de
+símbolos, o contexto  global, e definimos o estado atual  de erro como
+sendo ~nil~ (falso).
+
+Ademais, usamos  a função ~majestic_initialize~ para  inicializar alguns
+elementos  do estado  global, como  definições globais  e a  tabela de
+símbolos, por exemplo.
+
+#+begin_src rust
+impl MajState {
+    pub fn new() -> MajState {
+        use crate::axioms::majestic_initialize;
+        let mut state =
+            MajState {
+                symbols:      BiMap::new(),
+                primitives:   HashMap::new(),
+                last_sym:     0,
+                streams:      Vec::new(),
+                free_streams: VecDeque::new(),
+                stdin_peeked: None,
+                global_env:   Maj::nil()
+            };
+        majestic_initialize(&mut state);
+        state
+    }
+}
+#+end_src
+
+Criaremos também  um método  ~gen_symbol~, associado ao  ~MajState~ atual,
+desde que o mesmo seja /mutável/.
+
+Símbolos  são,   na  realidade,   /números/,  normalmente   alocados  em
+sequência.  Alguns símbolos  correspondem  a símbolos  /fixos/, que  são
+compartilhados  através de  todas  as  instâncias de  interpretadores;
+estes  fazem parte  dos  /axiomas/ da  linguagem,  que serão  discutidos
+posteriormente. Demais  símbolos são alocados sob  demanda, tendo seus
+respectivos números atribuídos à medida que forem necessários.
+
+Todo símbolo possui uma representação textual associada, que só existe
+de  fato  para  efeitos   estéticos;  o  interpretador  normalmente  é
+executado  sem que  haja interferência  de nenhuma  comparação textual
+para com os nomes dos símbolos.
+
+Por tratarem-se de  elementos muito particulares para  o estado global
+de  uma sessão,  a  geração de  um símbolo  dá-se  apenas quando  este
+símbolo já não existe na tabela. Se o mesmo existe, então basta apenas
+retornarmos o número associado a ele.
+
+Utilizamos aqui uma estrutura de  ~BiMap~, capaz de associar /números/ dos
+símbolos, como  índice, às  suas /representações textuais/.  A diferença
+aqui é que  ambas as informações devem servir como  chave de pesquisa;
+assim, poderemos recuperar  um símbolo através de  mera procura direta
+pela sua  representação textual,  mas também poderemos  recuperar esta
+representação textual através de seu índice.
+
+Os  símbolos são  gerados sequencialmente,  começando do  número ~0~.  O
+estado global da sessão mantém o histórico do número a ser gerado para
+o próximo símbolo.
+
+#+begin_src rust
+impl MajState {
+    pub fn gen_symbol(&mut self, name: &str) -> u64 {
+        match self.symbols.get_by_right(&name.to_string()) {
+            Some(old_sym) => *old_sym,
+            None => {
+                let new_sym = self.last_sym;
+                self.last_sym += 1;
+                self.symbols.insert(new_sym, name.to_string());
+                new_sym
+            }
+        }
+    }
+}
+#+end_src
+
+# Geração de símbolo arbitrário
+
+#+begin_src rust
+impl MajState {
+    pub fn gen_random_symbol(&mut self) -> u64 {
+        let new_sym = self.last_sym;
+        let sym_name = format!(":G{}", new_sym);
+        self.last_sym += 1;
+        self.symbols.insert(new_sym, sym_name.to_string());
+        new_sym
+    }
+}
+#+end_src
+
+Como  anteriormente  citado,  precisamos  determinar  um  método  para
+recuperar a representação  textual de um símbolo;  em outras palavras,
+seu /nome/. Este processo é facilitado pela estrutura de ~BiMap~.
+
+Caso o  símbolo não  tenha sido  registrado na  tabela de  símbolos do
+interpretador,  então significa  que o  símbolo não  foi /internado/  no
+mesmo.  Assim,  retornamos   um  texto  genérico  que   não  pode  ser
+adequadamente compreendido pelo usuário, como ~~uninterned##5~.
+
+#+begin_src rust
+impl MajState {
+    pub fn symbol_name(&self, sym: &u64) -> String {
+        match self.symbols.get_by_left(sym) {
+            Some(string) => string.clone(),
+            None => format!("~uninterned##{}", sym)
+        }
+    }
+}
+#+end_src
+
+# TODO: Adição de nova função primitiva
+
+#+begin_src rust
+impl MajState {
+    pub fn register_primitive(
+        &mut self,
+        name: &'static str,
+        arity: MajPrimArgs,
+        f: MajPrimFn
+    ) {
+        use crate::maj_list;
+        let symbol = Maj::symbol(self, name);
+        if let Maj::Sym(num) = *symbol.clone() {
+            self.primitives.insert(num, (f, arity));
+            let (arity_type, arity) = match arity {
+                MajPrimArgs::None =>
+                    (Maj::symbol(self, "required"),
+                     Maj::integer(0)),
+                MajPrimArgs::Required(n) =>
+                    (Maj::symbol(self, "required"),
+                     Maj::integer(n as i64)),
+                MajPrimArgs::Variadic(n) =>
+                    (Maj::symbol(self, "variadic"),
+                     Maj::integer(n as i64)),
+            };
+            self.push(symbol.clone(),
+                  maj_list!(Maj::lit(), Maj::prim(),
+                            symbol, arity_type, arity));
+        } else {
+            panic!("Error creating symbol for primitive function");
+        }
+    }
+}
+#+end_src
+
+#+begin_src rust
+impl MajState {
+    pub fn find_primitive(&self, sym: Gc<Maj>) -> Option<&(MajPrimFn, MajPrimArgs)> {
+        match *sym {
+            Maj::Sym(num) => self.primitives.get(&num),
+            _             => None,
+        }
+    }
+}
+#+end_src
+
+* TODO Impressão do estado global (para debug)
+
+#+begin_src rust
+impl fmt::Display for MajState {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        use crate::printing::maj_format_env;
+        let _ =
+            writeln!(f, "{} symbols registered", self.symbols.len());
+        let _ =
+            writeln!(f, "{} streams registered ({} free)",
+                     self.streams.len(),
+                     self.free_streams.len());
+        let _ =
+            writeln!(f, "{} primitives registered", self.primitives.len());
+        let _ =
+            writeln!(f, "global environment table:");
+        let env = self.global_env.clone();
+        let _ =
+            writeln!(f, "{}", maj_format_env(&self, env));
+        Ok(())
+    }
+}
+#+end_src
+
+
+* Mais construtores
+
+#+begin_src rust
+use super::types::{
+    MajStream,
+    MajStreamDirection,
+    MajStreamType
+};
+#+end_src
+
+** TODO Criação do stream
+
+# TODO: ARGH! Remova esse monte de repetições, isso é coisa de louco!
+
+#+begin_src rust
+impl MajState {
+    pub fn make_stream_stdin(&mut self) -> Gc<Maj> {
+        Gc::new(Maj::Stream(MajStream {
+            direction: MajStreamDirection::In,
+            handle:    usize::MAX,
+            stype:     MajStreamType::Stdin
+        }))
+    }
+}
+#+end_src
+
+#+begin_src rust
+impl MajState {
+    pub fn make_stream_stdout(&mut self) -> Gc<Maj> {
+        Gc::new(Maj::Stream(MajStream {
+            direction: MajStreamDirection::Out,
+            handle:    usize::MAX,
+            stype:     MajStreamType::Stdout
+        }))
+    }
+}
+#+end_src
+
+#+begin_src rust
+impl MajState {
+    pub fn make_stream_stderr(&mut self) -> Gc<Maj> {
+        Gc::new(Maj::Stream(MajStream {
+            direction: MajStreamDirection::Out,
+            handle:    usize::MAX,
+            stype:     MajStreamType::Stderr
+        }))
+    }
+}
+#+end_src
+
+#+begin_src rust
+impl MajState {
+    pub fn make_stream(
+        &mut self,
+        file: &str,
+        direction: MajStreamDirection
+    ) -> Option<Gc<Maj>> {
+        match direction {
+            MajStreamDirection::In  => {
+                let handle = File::open(file);
+                if handle.is_err() {
+                    return None;
+                }
+
+                let handle = handle.unwrap();
+                let index;
+                if self.free_streams.is_empty() {
+                    self.streams.push(Some(handle));
+                    index = self.streams.len() - 1;
+                } else {
+                    index = self.free_streams
+                        .pop_front()
+                        .unwrap();
+                    self.streams[index] = Some(handle);
+                }
+                Some(Gc::new(Maj::Stream(
+                    MajStream {
+                        direction,
+                        handle: index,
+                        stype: MajStreamType::File,
+                    })))
+            }
+            MajStreamDirection::Out => {
+                let handle = std::fs::OpenOptions::new()
+                    .create(true)
+                    .append(true)
+                    .open(file);
+                if handle.is_err() {
+                    return None;
+                }
+
+                let handle = handle.unwrap();
+                let index;
+                if self.free_streams.is_empty() {
+                    self.streams.push(Some(handle));
+                    index = self.streams.len() - 1;
+                } else {
+                    index = self.free_streams
+                        .pop_front()
+                        .unwrap();
+                    self.streams[index] = Some(handle);
+                }
+                Some(Gc::new(Maj::Stream(
+                    MajStream {
+                        direction,
+                        handle: index,
+                        stype: MajStreamType::File,
+                    })))
+            },
+        }
+    }
+}
+#+end_src
+
+** Fechamento do stream
+
+#+begin_src rust
+impl MajState {
+    pub fn close_stream(&mut self, stream: Gc<Maj>) -> Gc<Maj> {
+        use crate::axioms::primitives::maj_err;
+        use crate::maj_list;
+        if let Maj::Stream(mstream) = &*stream.clone() {
+            if mstream.is_internal() {
+                return maj_err(
+                    Maj::string("Cannot close standard streams"),
+                    Maj::nil());
+            }
+
+            let index = mstream.handle;
+            if self.streams.len() <= index {
+                maj_err(
+                    Maj::string("Invalid stream {}"),
+                    maj_list!(stream))
+            } else {
+                if self.streams[index].is_none() {
+                    Maj::nil()
+                } else {
+                    self.streams[index] = None;
+                    self.free_streams.push_back(index);
+                    Maj::t()
+                }
+            }
+        }  else {
+            maj_err(
+                Maj::string("Not a stream: {}"),
+                maj_list!(stream))
+        }
+    }
+}
+#+end_src
+
+** Status do stream
+
+#+begin_src rust
+impl MajState {
+    pub fn stat_stream(&mut self, which: usize) -> Gc<Maj> {
+        use crate::axioms::primitives::maj_err;
+        if self.streams.len() <= which {
+            maj_err(
+                Maj::string("Invalid stream"),
+                Maj::nil())
+        } else {
+            if self.streams[which].is_none() {
+                Maj::nil()
+            } else {
+                Maj::t()
+            }
+        }
+    }
+}
+#+end_src
+
+** Empréstimo do stream
+
+#+begin_src rust
+impl MajState {
+    pub fn borrow_stream(&self, which: usize) -> Option<&File> {
+        if self.streams.len() <= which {
+            None
+        } else if self.streams[which].is_none() {
+            None
+        } else {
+            Some(&self.streams[which].as_ref().unwrap())
+        }
+    }
+}
+#+end_src
+
+** Caractere espionado em ~*stdin*~
+
+#+begin_src rust
+impl MajState {
+    pub fn push_stdin_peeked(&mut self, c: char) {
+        if self.stdin_peeked.is_some() {
+            panic!("Cannot overwrite peeked *stdin* character!");
+        }
+        self.stdin_peeked = Some(c);
+    }
+}
+#+end_src
+
+#+begin_src rust
+impl MajState {
+    pub fn pop_stdin_peeked(&mut self) -> Option<char> {
+        let result = self.stdin_peeked;
+        self.stdin_peeked = None;
+        result
+    }
+}
+#+end_src
+
+** TODO Vetores
+
+#+begin_src rust
+#[derive(Debug, Trace, Finalize, Clone)]
+pub enum MajVector {
+    Integer(GcCell<Vec<i64>>),
+    Float(GcCell<Vec<f64>>),
+    Char(GcCell<String>),
+    Any(GcCell<Vec<Gc<Maj>>>)
+}
+#+end_src
+
+#+begin_src rust
+#[derive(Debug, PartialEq)]
+pub enum MajVectorType {
+    Integer,
+    Float,
+    Char,
+    Any
+}
+#+end_src
+
+*** Criação de vetores
+
+#+begin_src rust
+impl Maj {
+    pub fn vector(vtype: MajVectorType) -> Gc<Maj> {
+        Gc::new(Maj::Vector(
+            match vtype {
+                MajVectorType::Integer => {
+                    MajVector::Integer(
+                        GcCell::new(Vec::new()))
+                },
+                MajVectorType::Float => {
+                    MajVector::Float(
+                        GcCell::new(Vec::new()))
+                },
+                MajVectorType::Char => {
+                    MajVector::Char(
+                        GcCell::new(String::new()))
+                },
+                MajVectorType::Any => {
+                    MajVector::Any(
+                        GcCell::new(Vec::new()))
+                },
+            }))
+    }
+}
+#+end_src
+
+#+begin_src rust
+impl Maj {
+    pub fn vector_integer(vec: Vec<i64>) -> Gc<Maj> {
+        Gc::new(Maj::Vector(
+            MajVector::Integer(
+                GcCell::new(vec.clone()))))
+    }
+    
+    pub fn vector_float(vec: Vec<f64>) -> Gc<Maj> {
+        Gc::new(Maj::Vector(
+            MajVector::Float(
+                GcCell::new(vec.clone()))))
+    }
+
+    pub fn vector_any(vec: Vec<Gc<Maj>>) -> Gc<Maj> {
+        Gc::new(Maj::Vector(
+            MajVector::Any(
+                GcCell::new(vec.clone()))))
+    }
+}
+#+end_src
+
+* TODO Contexto global
+
+Trataremos brevemente, agora, da ideia de /contexto global/. Na próxima seção,
+trataremos  de  contextos  de  forma  mais  genérica,  sem  diferenciá-los  como
+/léxicos/ ou /globais/, mas de antemão, vamos discuti-los.
+
+O  contexto  /léxico/  é  aquele  produzido  especificamente  durante  a
+aplicação de funções. Seja a função
+
+#+begin_example
+(fn (x y) (+ x y))
+#+end_example
+
+Se esta mesma função for aplicada  aos valores ~2~ e ~3~, respectivamente,
+o /contexto/ em que essa função  foi criada precisará ser extendido duas
+vezes: uma, com uma associação ~x =  2~, e outra, com uma associação ~y =
+3~,  criando, portanto,  um  /novo/  contexto, que  poderá  ser usado  no
+processo de /procura/ ao interpretarmos o corpo da função ~(+ x y)~.
+
+O  contexto global  é  um  contexto que  possui  todas as  associações
+básicas de símbolos  da linguagem, sendo portanto  visível em qualquer
+expressão, /globalmente/.
+
+Uma função como  a anterior, quando interpretada  no chamado /top-level/
+da aplicação, poderá ser representada internamente da seguinte forma:
+
+#+begin_example
+(lit closure nil (x y) (+ x y))
+#+end_example
+
+Veja  que,  pela especificação,  o  terceiro  elemento da  lista  mais
+externa (~nil~) corresponde ao contexto atual. Todavia, o contexto atual
+está /vazio/;  mesmo que  apliquemos essa função,  a /procura/  por certos
+símbolos que não estejam ligados -- como  será o caso de ~+~ -- prova-se
+problemática, se considerarmos apenas o contexto em questão.
+
+O  motivo para  isso  é que  o  contexto capturado  na  clausura é  um
+contexto /léxico/,  dizendo respeito apenas  a escopos de funções  e sua
+aplicação. Funções como ~+~, que  são pressupostas como já existentes na
+linguagem, são  verdadeiramente /ligadas/ no /contexto  global/. Como esse
+contexto é visível  para toda a aplicação,  é desnecessário capturá-lo
+na clausura em questão.
+
+Diferentemente do código anterior, o código a seguir será adicionado a
+~src/core/state.rs~,  por  estar  diretamente  relacionado  ao  contexto
+global instanciado em um ~MajState~.
+
+Vamos  começar importando,  do  submódulo de  /contexto/, as  estruturas
+definidas nas subseções anteriores.
+
+#+begin_src rust
+use super::environment::{
+    maj_env_push,
+    maj_env_lookup,
+    maj_env_assoc
+};
+#+end_src
+
+A primeira operação  envolve a extensão do contexto  global. Esse tipo
+de extensão será ocasionada por situações envolvendo as /forma especial/
+~def~  e, consequentemente,  o /macro/  ~defn~. Também  poderá ser  usada ao
+definirmos certas operações primitivas  para a linguagem (por exemplo,
+a já citada operação primitiva ~+~).
+
+# TODO: Sendo assim, será que não é melhor trocar o nome?
+Esta operação não serve para extensão de contexto léxico.
+
+#+begin_src rust
+impl MajState {
+    pub fn push(&mut self, sym: Gc<Maj>, val: Gc<Maj>) -> Gc<Maj> {
+        let mut new_ge = self.global_env.clone();
+        new_ge = maj_env_push(new_ge.clone(),
+                              sym.clone(),
+                              val.clone());
+        self.global_env = new_ge;
+        sym.clone()
+    }
+}
+#+end_src
+
+A seguir, temos  a operação de consulta no contexto  global. Esse tipo
+de consulta é feita como /último  caso/; portanto, o que fazemos é pedir
+um contexto léxico, no qual realizamos  a consulta. Caso a consulta em
+contexto léxico /falhe/, nesse caso  realizaremos a consulta no contexto
+global.
+
+#+begin_src rust
+impl MajState {
+    pub fn assoc(&self, lexenv: Gc<Maj>, sym: Gc<Maj>) -> Gc<Maj> {
+        use crate::axioms::predicates::maj_errorp;
+        let result = maj_env_assoc(lexenv, sym.clone());
+        if maj_errorp(result.clone()).to_bool() {
+            maj_env_assoc(self.global_env.clone(), sym)
+        } else {
+            result
+        }
+    }
+
+    pub fn lookup(&self, lexenv: Gc<Maj>, sym: Gc<Maj>) -> Gc<Maj> {
+        use crate::axioms::predicates::maj_errorp;
+        let result = maj_env_lookup(lexenv, sym.clone());
+        if maj_errorp(result.clone()).to_bool() {
+            maj_env_lookup(self.global_env.clone(), sym)
+        } else {
+            result
+        }
+    }
+}
+#+end_src
+
+# Aqui retorna o contexto global.
+
+#+begin_src rust
+impl MajState {
+    pub fn get_global_env(&self) -> Gc<Maj> {
+        self.global_env.clone()
+    }
+}
+#+end_src
+
