@@ -49,9 +49,13 @@ Este projeto utiliza a licença MIT.
    - [[./05-03-funcoes-primitivas.org][Funções primitivas]]
    - [[./05-04-bootstrapping.org][/Boostrapping/]]
    - [[./05-05-utilitarios.org][Utilitários]]
-6. Impressão
-7. Leitor de expressões
-8. Interpretador
+6. [[./06-impressao.org][Impressão]]
+7. [[./07-leitor-de-expressoes.org][Leitor de expressões]]
+   - Parser
+   - Tokenizador
+8. [[./08-interpretador.org][Interpretador]]
+   - [[./08-01-interpretacao.org][Interpretação]]
+   - [[./08-02-aplicacao.org][Aplicação]]
 9. Ponto de entrada
 10. Testes
 

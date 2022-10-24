@@ -1,0 +1,28 @@
+#+setupfile: static/setupfile.org
+#+html_link_up: index.html
+#+title: Interpretador
+#+startup: content
+
+#+property: header-args:rust :tangle src/evaluator/mod.rs
+
+Amplamente baseado  na ideia do  interpretador metacircular, como  instruído por
+Abelson, Sussman e Sussman (1996).
+
+Arquivo: ~evaluator/mod.rs~.
+
+#+begin_src rust
+pub mod evaluation;
+pub mod application;
+
+pub use evaluation::maj_eval;
+pub use application::maj_apply;
+#+end_src
+
+* Bibliografia
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+[cite/n:@sicp]
+
+#+print_bibliography:

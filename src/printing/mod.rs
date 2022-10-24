@@ -1,0 +1,394 @@
+use std::fmt::Write;
+use gc::Gc;
+use crate::core::{ Maj, MajState };
+use crate::core::types::MajStream;
+use crate::axioms::predicates::{
+    maj_nilp,
+    maj_stringp,
+    maj_closurep,
+    maj_primitivep,
+    maj_macrop
+};
+use crate::axioms::primitives::{
+    maj_car,
+    maj_cdr
+};
+
+pub fn maj_format(state: &MajState, obj: Gc<Maj>) -> String {
+    maj_format_raw(state, obj, true)
+}
+
+pub fn maj_format_raw(
+    state: &MajState,
+    obj: Gc<Maj>,
+    format_read_macros: bool
+) -> String {
+    match &*obj.clone() {
+        Maj::Sym(_) => obj.symbol_name(&state),
+        Maj::Cons { car: _, cdr: _ } =>
+            maj_format_list(&state, obj, format_read_macros),
+        Maj::Char(c) => maj_format_char(*c),
+        Maj::Stream(s) => maj_format_stream(s, obj),
+        Maj::Vector(_) =>
+            maj_format_vector(&state, obj, format_read_macros),
+        _ => format!("{}", obj)
+    }
+}
+
+pub fn maj_format_char(c: char) -> String {
+    let f;
+    format!("#\\{}",
+            match c {
+                '\x07' => "␇",
+                ' ' => "space",
+                '\n' => "newline",
+                '\t' => "tab",
+                _ => {
+                    f = format!("{}", c);
+                    &f
+                },
+            })
+}
+
+fn maj_format_list(
+    state: &MajState,
+    list: Gc<Maj>,
+    rm: bool
+) -> String {
+    use crate::axioms::predicates::maj_errorp;
+    use crate::evaluator::evaluation::{
+        maj_quotep,
+        maj_unquotep,
+        maj_quasiquotep,
+        maj_unquote_splice_p
+    };
+
+    if rm {
+        if maj_quotep(list.clone()).to_bool() {
+            return format!(
+                "'{}", maj_format_raw(
+                    state,
+                    maj_car(maj_cdr(list)),
+                    rm));
+        } else if maj_quasiquotep(list.clone()).to_bool() {
+            return format!(
+                "`{}", maj_format_raw(
+                    state,
+                    maj_car(maj_cdr(list)),
+                    rm));
+        } else if maj_unquotep(list.clone()).to_bool() {
+            return format!(
+                ",{}", maj_format_raw(
+                    state,
+                    maj_car(maj_cdr(list)),
+                    rm));
+        } else if maj_unquote_splice_p(list.clone()).to_bool() {
+            return format!(
+                ",@{}", maj_format_raw(
+                    state,
+                    maj_car(maj_cdr(list)),
+                    rm));
+        }
+    }
+    
+    if maj_errorp(list.clone()).to_bool() {
+        // Handle errors
+        return maj_format_error(&state, list, rm);
+    } else if maj_closurep(list.clone()).to_bool() && rm {
+        // Handle closures
+        return maj_format_closure(&state, list, rm);
+    } else if maj_primitivep(list.clone()).to_bool() && rm {
+        // Handle primitives
+        return maj_format_primitive(&state, list, rm);
+    } else if maj_macrop(list.clone()).to_bool() && rm {
+        // Handle macros
+        return maj_format_macro(&state, list, rm);
+    }
+
+    // Handle all other lists
+    let mut buffer = String::new();
+    let mut itr = list.clone();
+    write!(&mut buffer, "(").unwrap();
+    loop {
+        match &*itr.clone() {
+            Maj::Cons { car, cdr } => {
+                write!(&mut buffer, "{}",
+                       maj_format_raw(
+                           &state, car.clone(),
+                           rm))
+                    .unwrap();
+                if maj_nilp(cdr.clone()).to_bool() {
+                    break;
+                }
+                if let Maj::Cons { car: _, cdr: _ } = *cdr.clone() {
+                    write!(&mut buffer, " ").unwrap();
+                    itr = cdr.clone();
+                } else {
+                    write!(&mut buffer, " . {}",
+                           maj_format_raw(
+                               &state, cdr.clone(),
+                               rm))
+                        .unwrap();
+                    break;
+                }
+            },
+            _ => panic!("Cannot print ordinary object as a list")
+        }
+    }
+    write!(&mut buffer, ")").unwrap();
+    buffer
+}
+
+fn maj_format_vector(
+    state: &MajState,
+    vector: Gc<Maj>,
+    rm: bool
+) -> String {
+    let mut buffer = String::new();
+    use crate::core::types::MajVector;
+
+    if let Maj::Vector(vector) = &*vector {
+        match vector {
+            MajVector::Integer(v) => {
+                write!(&mut buffer, "[").unwrap();
+                let len = v.borrow().len();
+                for (i, int) in v.borrow().iter().enumerate() {
+                    write!(&mut buffer, "{}{}",
+                           int,
+                           if (i + 1) < len {
+                               " "
+                           } else {
+                               ""
+                           }).unwrap();
+                }
+                write!(&mut buffer, "]").unwrap();
+            },
+            MajVector::Float(v) => {
+                use crate::axioms::utils::format_raw_float;
+                write!(&mut buffer, "[").unwrap();
+                let len = v.borrow().len();
+                for (i, fl) in v.borrow().iter().enumerate() {
+                    // Bug com casas decimais?
+                    write!(&mut buffer, "{}{}",
+                           format_raw_float(*fl),
+                           if (i + 1) < len {
+                               " "
+                           } else {
+                               ""
+                           }).unwrap();
+                }
+                write!(&mut buffer, "]").unwrap();
+            },
+            MajVector::Char(s) => {
+                write!(&mut buffer, "\"{}\"",
+                       s.borrow()).unwrap();
+            },
+            MajVector::Any(v) => {
+                write!(&mut buffer, "[").unwrap();
+                let len = v.borrow().len();
+                for (i, obj) in v.borrow().iter().enumerate() {
+                    write!(&mut buffer, "{}{}",
+                           maj_format_raw(&state, obj.clone(), rm),
+                           if (i + 1) < len {
+                               " "
+                           } else {
+                               ""
+                           }).unwrap();
+                }
+                write!(&mut buffer, "]").unwrap();
+            },
+        }
+    } else {
+        panic!("Vector printing on non-vector object");
+    }
+    buffer
+}
+
+fn maj_format_closure(
+    state: &MajState,
+    closure: Gc<Maj>,
+    rm: bool
+) -> String {
+    // Lambda list is fourth element (cadddr).
+    // Sorry for this ugly thing.
+    let lambda_list = maj_car(
+        maj_cdr(maj_cdr(maj_cdr(closure.clone()))));
+    format!("#<function (fn {}) {{{:p}}}>",
+           maj_format_raw(&state, lambda_list, rm),
+           Gc::into_raw(closure))
+}
+
+fn maj_format_macro(state: &MajState, mac: Gc<Maj>, rm: bool) -> String {
+    let closure = maj_car(maj_cdr(maj_cdr(mac)));
+    let lambda_list = maj_car(
+        maj_cdr(maj_cdr(maj_cdr(closure.clone()))));
+    format!("#<macro (mac {}) {{{:p}}}>",
+            maj_format_raw(&state, lambda_list, rm),
+            Gc::into_raw(closure))
+}
+
+fn maj_format_primitive(
+    state: &MajState,
+    primitive: Gc<Maj>,
+    rm: bool
+) -> String {
+    // Symbol for primitive is third element (caddr)
+    let prim_sym = maj_car(maj_cdr(maj_cdr(primitive.clone())));
+    // Arity for primitive starts at fourth element (cdddr)
+    let prim_arity = maj_cdr(maj_cdr(maj_cdr(primitive)));
+    format!("#<function (prim {} (arity {}))>",
+            maj_format_raw(&state, prim_sym, rm),
+            maj_format_raw(&state, prim_arity, rm))
+}
+
+fn maj_format_error(state: &MajState, error: Gc<Maj>, rm: bool) -> String {
+    use crate::axioms::primitives::maj_format_prim;
+    // (lit error fmt . rest)
+    let fmt  = maj_car(maj_cdr(maj_cdr(error.clone())));
+    let rest = maj_cdr(maj_cdr(maj_cdr(error)));
+    let formatted = maj_format_prim(&state, fmt, rest);
+    let formatted = maj_format_raw(&state, formatted, rm);
+    let len = formatted.len();
+    format!("{}", &formatted[1..len-1])
+}
+
+fn maj_format_stream(s: &MajStream, obj: Gc<Maj>) -> String {
+    use crate::core::types::MajStreamDirection;
+    format!("#<stream ({}) {{{:p}}}>",
+            match s.direction {
+                MajStreamDirection::In  => "in",
+                MajStreamDirection::Out => "out",
+            },
+            Gc::into_raw(obj))
+}
+
+fn maj_pformat_helper(
+    state: &MajState,
+    obj: Gc<Maj>,
+    ind: u64,
+) -> String {
+    use crate::axioms::predicates::maj_atomp;
+    use crate::axioms::primitives::maj_length;
+    let indent_max = 8;
+
+    let mut buffer = String::new();
+    for _ in 0..ind {
+        write!(&mut buffer, " ").unwrap();
+    }
+
+    if maj_atomp(obj.clone()).to_bool()
+        || maj_stringp(obj.clone()).to_bool()
+        || (maj_length(obj.clone())
+            .to_integer()
+            .unwrap() < indent_max)
+    {
+        write!(&mut buffer, "{}",
+               maj_format(&state, obj))
+            .unwrap();
+    } else {
+        write!(&mut buffer, "(").unwrap();
+        write!(&mut buffer, "{}",
+               maj_format(
+                   &state,
+                   maj_car(obj.clone())))
+            .unwrap();
+        let mut itr = maj_cdr(obj.clone());
+
+        // TODO: Add check for special forms:
+        // (and (member (prin1 (pop x)) *specials*)
+        //      ...)
+        while maj_length(itr.clone())
+            .to_integer()
+            .unwrap() >= indent_max
+        {
+            write!(&mut buffer, " ").unwrap();
+            itr = maj_cdr(itr);
+        }
+
+        itr = maj_cdr(obj.clone());
+        while !maj_nilp(itr.clone()).to_bool() {
+            write!(&mut buffer, "\n{}",
+            maj_pformat_helper(&state,
+                               maj_car(itr.clone()),
+                               ind + 2))
+                   .unwrap();
+            itr = maj_cdr(itr);
+        }
+        write!(&mut buffer, ")").unwrap();
+    }
+    buffer
+}
+
+pub fn maj_pretty_format(state: &MajState,obj: Gc<Maj>) -> String {
+    maj_pformat_helper(state, obj, 0)
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+pub fn maj_format_env(state: &MajState, env: Gc<Maj>) -> String {
+    use comfy_table::*;
+    use comfy_table::presets::UTF8_FULL;
+    use comfy_table::modifiers::UTF8_ROUND_CORNERS;
+
+    let mut table = Table::new();
+    table.load_preset(UTF8_FULL);
+    table.apply_modifier(UTF8_ROUND_CORNERS);
+    table.set_content_arrangement(ContentArrangement::Dynamic);
+    table.set_header(&vec!["Symbol", "Value"]);
+
+    let mut iter = env.clone();
+    while !maj_nilp(iter.clone()).to_bool() {
+        let pair = maj_car(iter.clone());
+        let sym  = maj_car(pair.clone());
+        let val  = maj_cdr(pair);
+
+        table.add_row(vec![
+            maj_format(&state, sym),
+            maj_format(&state, val),
+        ]);
+
+        iter = maj_cdr(iter);
+    }
+    format!("{}", table)
+}
+
+#[cfg(target_arch = "wasm32")]
+#[inline]
+pub fn maj_format_env_hline() -> String {
+    format!("+{:-<21}+{:-<61}+", "", "")
+}
+
+#[cfg(target_arch = "wasm32")]
+pub fn maj_format_env(state: &MajState, env: Gc<Maj>) -> String {
+    use crate::axioms::utils::truncate_format;
+    let mut buffer = String::new();
+    let mut iter = env.clone();
+    let _ =
+        writeln!(&mut buffer, "{}", maj_format_env_hline())
+        .unwrap();
+    let _ =
+        writeln!(&mut buffer, "|{:<21}|{:<61}|",
+                 " Symbol", " Value");
+    let _ =
+        writeln!(&mut buffer, "{}", maj_format_env_hline())
+        .unwrap();
+    while !maj_nilp(iter.clone()).to_bool() {
+        let pair = maj_car(iter.clone());
+        let sym  = maj_car(pair.clone());
+        let val  = maj_cdr(pair);
+        let _ =
+            writeln!(&mut buffer,
+                     "| {:<20}| {:<60}|",
+                     truncate_format(
+                         maj_format(&state, sym.clone()),
+                         20),
+                     truncate_format(
+                         maj_format(&state, val),
+                     60))
+            .unwrap();
+        iter = maj_cdr(iter.clone());
+    }
+    let _ =
+        writeln!(&mut buffer, "{}", maj_format_env_hline())
+        .unwrap();
+    buffer
+}

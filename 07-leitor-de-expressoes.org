@@ -1,0 +1,768 @@
+#+setupfile: static/setupfile.org
+#+html_link_up: index.html
+#+title: Leitor de expressões
+#+startup: content
+
+#+property: header-args:rust :tangle src/reader/mod.rs
+
+Arquivo: ~reader/mod.rs~.
+
+# Lib para cores no terminal: https://github.com/mackwic/colored
+# Lib para readline: https://github.com/kkawakam/rustyline
+# Lib para usar UTF-8 no tokenizador: https://crates.io/crates/rustf8
+
+* Teste de lib de UTF-8 :noexport:
+
+#+begin_src rust :tangle no
+use rustyline::error::ReadlineError;
+use rustyline::Editor;
+use rustf8::*;
+use std::io::prelude::*;
+use std::io::Cursor;
+
+fn main() {
+    let mut rl = Editor::<()>::new();
+    loop {
+        let readline = rl.readline(">> ");
+        match readline {
+            Ok(line) => {
+                let input: Vec<u8> = line.into_bytes();
+                let stream = Cursor::new(input);
+                let iter = stream.bytes();
+                let chiter = Utf8Iterator::new(iter);
+                for c in chiter {
+                    let c = c.unwrap();
+                    println!("{}", c);
+                    if c == '⊃' {
+                        println!("Ok!");
+                    }
+                }
+            },
+            Err(ReadlineError::Interrupted) |
+            Err(ReadlineError::Eof) => break,
+            Err(err) => {
+                println!("Error: {:?}", err);
+                break
+            }
+        }
+    }
+    println!("Hello, world!");
+}
+#+end_src
+
+
+* Leitor: Protótipo :noexport:
+
+Esse aqui é o tokenizador e o parser na fase de protótipos. Eles ainda
+não permitem read macros.
+
+Os códigos a  seguir podem conter altas doses de  câncer. Mas... ainda
+bem que eles não vão para a versão final, não é?
+
+#+begin_src rust
+pub mod tokenizer;
+pub mod parser;
+#+end_src
+
+** Tokenizador
+:PROPERTIES:
+:header-args:rust: :tangle src/reader/tokenizer.rs
+:END:
+
+Arquivo: ~reader/tokenizer.rs~.
+
+Toma  como parâmetro  uma string,  retorna uma  lista de  tokens. Cada
+token é uma substring.
+
+Aqui eu  não vou usar  nenhuma abstração  de Majestic, por  motivos de
+performance e de  falta de implementação mesmo.  Pra comparar strings,
+eu teria que  usar ~=~, que não está implementado.  Além do mais, existe
+uma proposta pendente de que strings sejam armazenadas como vetores --
+algo que  seria melhor  feito tendo vetores  na linguagem  em primeiro
+lugar.
+
+Pra não  dar um  gargalo enorme, vou  usar primeiro  uma implementação
+intangível do  ponto de vista de  read macros. O importante  é ter uma
+lista de tokens individuais que eu possa usar para interpretar.
+
+#+begin_src rust
+pub fn maj_tokenize(
+    text: &str
+) -> Result<Vec<String>, (i64, &'static str)> {
+    let mut tokens = Vec::new();
+    let mut buffer = String::new();
+    let mut ignore_count = 0;
+    let mut line = 1;
+
+    for (i, c) in text.chars().enumerate() {
+        if ignore_count > 0 {
+            ignore_count -= 1;
+        } else {
+            match c {
+                // Read macros
+                ';' => {
+                    let mut count = 1;
+                    loop {
+                        let c = text.chars().nth(i + count);
+                        match c {
+                            Some('\n') | None => {
+                                break;
+                            },
+                            _ => {
+                                count += 1;
+                            }
+                        }
+                    }
+                    ignore_count = count;
+                },
+                '\"' => {
+                    // Keep fetching string
+                    buffer.push('"');
+                    let mut count = 1;
+                    let mut ignore_next = false;
+                    loop {
+                        let c = text.chars().nth(i + count);
+                        if ignore_next {
+                            count += 2;
+                            ignore_next = false;
+                        } else {
+                            match c {
+                                Some('"') => {
+                                    buffer.push('"');
+                                    tokens.push(buffer.clone());
+                                    buffer = String::new();
+                                    ignore_count = count;
+                                    break;
+                                },
+                                Some('\\') => {
+                                    buffer.push('\\');
+                                    if let Some(next) = text.chars().nth(i + count + 1) {
+                                        buffer.push(next);
+                                    } else {
+                                        return Err((line, "Unexpected EOF while reading escaped character on string constant"));
+                                    }
+                                    ignore_next = true;
+                                },
+                                Some(c) => {
+                                    count += 1;
+                                    buffer.push(c);
+                                },
+                                None => {
+                                    return Err((line, "Unexpected EOF while reading string constant"));
+                                },
+                            }
+                        }
+                    }
+                },
+                '#' => {
+                    buffer.push('#');
+                    match text.chars().nth(i + 1) {
+                        Some('\\') => {
+                            buffer.push('\\');
+                            if let Some(c) = text.chars().nth(i + 2) {
+                                buffer.push(c);
+                            } else {
+                                return Err((line, "Unexpected EOF while reading character constant"));
+                            }
+                            // Keep fetching until white space or EOF
+                            let mut count = 2;
+                            loop {
+                                let c = text.chars().nth(i + 1 + count);
+                                match c {
+                                    // Every delimiter on  ):
+                                    // This needs a clever way to never include
+                                    // delimiters.
+                                    Some(' ')  |
+                                    Some('\n') |
+                                    Some('\t') |
+                                    Some(')')  |
+                                    Some('(') |
+                                    Some(']') |
+                                    Some('[') |
+                                    Some('"') |
+                                    None => {
+                                        if buffer.len() > 2 {
+                                            tokens.push(buffer.clone());
+                                            buffer = String::new();
+                                            ignore_count = count;
+                                            break;
+                                        } else {
+                                            return Err((line, "Unexpected end of character constant"));
+                                        }
+                                    },
+                                    Some(c) => {
+                                        buffer.push(c);
+                                        count += 1;
+                                    },
+                                }
+                            }
+                        },
+                        _ => return Err((line, "Unexpected character while reading character constant")),
+                    }
+                    // Parse character
+                    //unimplemented!("Character tokenization");
+                },
+                '\'' => {
+                    if buffer != "" {
+                        tokens.push(buffer.clone());
+                        buffer = String::new();
+                    }
+                    tokens.push(String::from("'"));
+                },
+                '`' => {
+                    if buffer != "" {
+                        tokens.push(buffer.clone());
+                        buffer = String::new();
+                    }
+                    tokens.push(String::from("`"));
+                }
+                ',' => {
+                    if buffer != "" {
+                        tokens.push(buffer.clone());
+                        buffer = String::new();
+                    }
+                    let nextchar = text.chars().nth(i + 1);
+                    tokens.push(String::from(
+                        match nextchar {
+                            Some(c) => {
+                                if c == '@' {
+                                    ignore_count = 1;
+                                    ",@"
+                                } else { "," }
+                            },
+                            None => ",",
+                        }));
+                },
+                '@' => {
+                    // Syntax error: @ alone
+                    return Err((line, "'@' should be preceeded by ','"));
+                },
+                '(' => {
+                    if buffer != "" {
+                        tokens.push(buffer.clone());
+                        buffer = String::new();
+                    }
+                    tokens.push(String::from("("));
+                },
+                ')' => {
+                    if buffer != "" {
+                        tokens.push(buffer.clone());
+                        buffer = String::new();
+                    }
+                    tokens.push(String::from(")"));
+                },
+                '[' => {
+                    if buffer != "" {
+                        tokens.push(buffer.clone());
+                        buffer = String::new();
+                    }
+                    tokens.push(String::from("["));
+                },
+                ']' => {
+                    if buffer != "" {
+                        tokens.push(buffer.clone());
+                        buffer = String::new();
+                    }
+                    tokens.push(String::from("]"));
+                },
+                
+                // Delimiters
+                ' ' | '\n' | '\t' => {
+                    if buffer != "" {
+                        tokens.push(buffer.clone());
+                        buffer = String::new();
+                    }
+                    if c == '\n' {
+                        line += 1;
+                    }
+                },
+
+                // Anything else is pushed
+                _ => buffer.push(c),
+            }
+        }
+    }
+    if buffer != "" {
+        tokens.push(buffer.clone());
+    }
+    Ok(tokens)
+}
+#+end_src
+
+*** Tokenizador para arquivos
+
+#+begin_src rust
+pub fn maj_tokenize_file<'a>(
+    filename: &str,
+    mut buffer: &'a mut String
+) -> Result<Vec<String>, (i64, &'static str)> {
+    use std::fs::File;
+    use std::io::Read;
+    match File::open(filename) {
+        Ok(mut file) => {
+            match file.read_to_string(&mut buffer) {
+                Ok(_) => {
+                    // Remove shebang line
+                    if buffer.len() >= 2 && &buffer[0..2] == "#!" {
+                        ,*buffer = buffer.replacen("#!", ";;", 1);
+                    }
+                    maj_tokenize(buffer.as_ref())
+                },
+                Err(_) => Err((0, "Cannot read file")),
+            }
+        },
+        Err(_) => Err((0, "Cannot open file")),
+    }
+}
+#+end_src
+
+** Parser
+:PROPERTIES:
+:header-args:rust: :tangle src/reader/parser.rs
+:END:
+
+Arquivo: ~reader/parser.rs~.
+
+#+begin_src rust
+use gc::Gc;
+use crate::core::{ MajState, Maj };
+use crate::axioms::predicates::maj_errorp;
+use crate::axioms::primitives::maj_err;
+#+end_src
+
+#+begin_src rust
+fn maj_read_one<'a>(
+    mut state: &mut MajState,
+    tokens: &'a [String]
+) -> Result<(Gc<Maj>, &'a [String]), &'static str> {
+    if tokens.len() == 0 {
+        return Ok((Maj::nil(), tokens));
+    }
+
+    let mut tokens = tokens.clone();
+    let first = tokens.first().unwrap();
+    match first.as_ref() {
+        "[" => {
+            tokens = &tokens[1..];
+            // Empty vector
+            if let Some(t) = tokens.first() {
+                if t == "]" {
+                    use crate::maj_list;
+                    return Ok(
+                        (maj_list!(
+                            Maj::vector_sym()),
+                         &tokens[1..]));
+                }
+            }
+            // Keep collecting to build a non-empty vector
+            let mut vector_elts = Vec::new();
+            loop {
+                match maj_read_one(&mut state, tokens) {
+                    Ok((obj, slice)) => {
+                        tokens = slice;
+                        vector_elts.push(obj);
+                    },
+                    Err(msg) => {
+                        return Err(msg);
+                    },  
+                }
+                match tokens.first() {
+                    Some(t) => {
+                        match t.as_ref() {
+                            "]" => {
+                                return Ok(
+                                    (maj_parser_into_vector(vector_elts),
+                                     &tokens[1..]));
+                            },
+                            // TODO: Check dotted?
+                            _ => {},
+                        }
+                    },
+                    None => return Err("Unmatched open bracket"),
+                }
+            }
+        },
+        "(" => {
+            tokens = &tokens[1..];
+            // Empty list
+            if let Some(t) = tokens.first() {
+                if t == ")" {
+                    return Ok((Maj::nil(), &tokens[1..]));
+                }
+            }
+            // Keep collecting to build a non-empty list
+            let mut list = Vec::new();
+            loop {
+                match maj_read_one(&mut state, tokens) {
+                    Ok((obj, slice)) => {
+                        tokens = slice;
+                        list.push(obj);
+                    },
+                    Err(msg) => {
+                        return Err(msg);
+                    },
+                }
+                match tokens.first() {
+                    Some(t) => {
+                        match t.as_ref() {
+                            ")" =>
+                                return Ok((maj_parser_into_list(list),
+                                           &tokens[1..])),
+                            "." => {
+                                // Read one more, cons to last
+                                // element, begone
+                                match maj_read_one(
+                                    &mut state,
+                                    &tokens[1..]) {
+                                    Ok((obj, slice)) => {
+                                        if let Some(e) = list.pop() {
+                                            tokens = slice;
+                                            if tokens.len() == 0 {
+                                                return Err("Unexpected EOF when reading dotted pair");
+                                            } else if tokens[0] != ")" {
+                                                return Err("Invalid usage of dotted element");
+                                            }
+                                            
+                                            let elt = Maj::cons(e, obj);
+                                            list.push(elt);
+                                            return Ok(
+                                                (maj_parser_into_dotted_list(list),
+                                                 &tokens[1..]));
+                                        } else {
+                                            return Err("Unexpected EOF while reading dotted element");
+                                        }
+                                    },
+                                    Err(msg) => {
+                                        return Err(msg);
+                                    },
+                                }
+                            },
+                            _ => {},
+                        }
+                    },
+                    None => return Err("Unmatched parenthesis"),
+                }
+            }
+        },
+        ")" => Err("Unmatched close parenthesis"),
+        "]" => Err("Unmatched close brackets"),
+        "." => {
+            // Best option for dotted stuff is here
+            Err("Invalid cons pair notation")
+        },
+        // TODO: Handle subsequent for the quote and quasiquote
+        // related!
+        "'" => {
+            if tokens.len() <= 1 {
+                return Err("Unmatched quote");
+            }
+
+            match maj_read_one(&mut state, &tokens[1..]) {
+                Ok((obj, slice)) => {
+                    Ok((maj_parser_into_list(vec![Maj::quote(), obj]),
+                        slice))
+                },
+                Err(msg) => Err(msg),
+            }
+        },
+        "`" => {
+            if tokens.len() <= 1 {
+                return Err("Unmatched quasiquote");
+            }
+
+            match maj_read_one(&mut state, &tokens[1..]) {
+                Ok((obj, slice)) => {
+                    Ok((maj_parser_into_list(vec![Maj::quasiquote(), obj]),
+                        slice))
+                },
+                Err(msg) => Err(msg),
+            }
+        },
+        "," => {
+            if tokens.len() <= 1 {
+                return Err("Unmatched unquote");
+            }
+
+            match maj_read_one(&mut state, &tokens[1..]) {
+                Ok((obj, slice)) => {
+                    Ok((maj_parser_into_list(vec![Maj::unquote(), obj]),
+                        slice))
+                },
+                Err(msg) => Err(msg),
+            }
+        },
+        ",@" => {
+            if tokens.len() <= 1 {
+                return Err("Unmatched unquote-splice");
+            }
+
+            match maj_read_one(&mut state, &tokens[1..]) {
+                Ok((obj, slice)) => {
+                    Ok((maj_parser_into_list(
+                        vec![Maj::unquote_splice(), obj]),
+                        slice))
+                },
+                Err(msg) => Err(msg),
+            }
+        },
+        _ => {
+            // Symbols
+            if let Some(obj) = maj_parse_character(first.as_ref()) {
+                // Character
+                Ok((obj, &tokens[1..]))
+            } else if let Some(obj) = maj_parse_string(first.as_ref()) {
+                // String
+                Ok((obj, &tokens[1..]))
+            } else if let Some(obj) = maj_parse_number(first.as_ref()) {
+                // Number
+                Ok((obj, &tokens[1..]))
+            } else {
+                let token: &str = first.as_ref();
+                if (token.len() >= 2) && (&token[0..2] == "#\\") {
+                    Err("Unknown character")
+                } else {
+                    // Ordinary symbol
+                    Ok((Maj::symbol(&mut state, first), &tokens[1..]))
+                }
+            }
+        }
+    }
+}
+#+end_src
+
+#+begin_src rust
+fn maj_parse_number(token: &str) -> Option<Gc<Maj>> {
+    if let Some(pos) = maj_token_once_p(&token.to_uppercase(), 'J') {
+        // Test for complex
+        let real_token = &token[0..pos];
+        let imag_token = &token[(pos+1)..];
+        let real = maj_parse_number(real_token);
+        let imag = maj_parse_number(imag_token);
+        if real.is_some() && imag.is_some() {
+            let (real, imag) = (real.unwrap(), imag.unwrap());
+            if maj_errorp(real.clone()).to_bool() {
+                return Some(real);
+            } else if maj_errorp(imag.clone()).to_bool() {
+                return Some(imag);
+            } else if let Some(num) = imag.to_integer() {
+                if num == 0 {
+                    return Some(real);
+                }
+            }
+            Some(Maj::complex(real, imag))
+        } else {
+            None
+        }
+    } else if let Some(_) = maj_token_once_p(token, '.') {
+        // Test for float
+        let float: f64 =
+            match token.parse() {
+                Ok(num) => num,
+                Err(_)  => return None,
+            };
+        Some(Maj::float(float))
+    } else if let Some(pos) = maj_token_once_p(token, '/') {
+        // Test for fraction
+        let numer_token = &token[0..pos];
+        let denom_token = &token[(pos+1)..];
+        let numer = maj_parse_number(numer_token);
+        let denom = maj_parse_number(denom_token);
+
+        if numer.is_some() && denom.is_some() {
+            let numer = numer.unwrap().to_integer();
+            let denom = denom.unwrap().to_integer();
+            if numer.is_some() && denom.is_some() {
+                use crate::axioms::utils::simplify_frac_raw;
+                if denom.unwrap() == 0 {
+                    return Some(maj_err(
+                        Maj::string("Division by zero"),
+                        Maj::nil()));
+                }
+                let (numer, denom) =
+                    simplify_frac_raw(numer.unwrap(),
+                                      denom.unwrap());
+                Some(Maj::fraction(numer, denom))
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    } else if maj_numeric_token_p(token) {
+        // Test for integer
+        let integer: i64 =
+                match token.parse() {
+                    Ok(num) => num,
+                    Err(_)  => return None,
+                };
+        Some(Maj::integer(integer))
+    } else {
+        None
+    }
+}
+#+end_src
+
+#+begin_src rust
+fn maj_numeric_token_p(token: &str) -> bool {
+    if token.len() == 0 {
+        return false;
+    }
+    let token = if token.chars().nth(0).unwrap() == '-' {
+        &token[1..]
+    } else { token };
+    token.chars().all(|x| x.is_digit(10))
+}
+#+end_src
+
+#+begin_src rust
+fn maj_token_once_p(token: &str, ch: char) -> Option<usize> {
+    let mut occurp = 0;
+    let mut num    = 0;
+    for (i, c) in token.chars().enumerate() {
+        if c == ch {
+            occurp = i;
+            num += 1;
+        }
+    }
+    if num == 1 {
+        Some(occurp)
+    } else {
+        None
+    }
+}
+#+end_src
+
+#+begin_src rust
+fn maj_parse_string(token: &str) -> Option<Gc<Maj>> {
+    if (token.len() < 2)
+        || (token.chars().nth(0).unwrap() != '"')
+        || (token.chars().last().unwrap() != '"') {
+            None
+        } else {
+            let mut buffer = String::new();
+            let mut ignore_next = false;
+            for i in 1..(token.len()-1) {
+                if ignore_next {
+                    ignore_next = false;
+                } else {
+                    match token.chars().nth(i).unwrap() {
+                        '\\' => {
+                            match token.chars().nth(i+1).unwrap() {
+                                'n' => {
+                                    buffer.push('\n');
+                                    ignore_next = true;
+                                },
+                                't' => {
+                                    buffer.push('\t');
+                                    ignore_next = true;
+                                },
+                                c => {
+                                    buffer.push(c);
+                                    ignore_next = true;
+                                },
+                            };
+                        },
+                        c    => buffer.push(c),
+                    }
+                }
+            }
+            Some(Maj::string(buffer.as_ref()))
+        }
+}
+#+end_src
+
+#+begin_src rust
+fn maj_parse_character(token: &str) -> Option<Gc<Maj>> {
+    if (token.len() <= 2) || (&token[0..2] != "#\\") {
+        None
+    } else {
+        let chr = &token[2..];
+        Some(Maj::character(match chr {
+            "␇" | "bel" => '\x07',
+            "newline" => '\n',
+            "tab" => '\t',
+            // Those should not be needed!
+            "space"    => ' ',
+            "lparen"   => '(',
+            "rparen"   => ')',
+            "lbracket" => '[',
+            "rbracket" => ']',
+            c => {
+                if c.len() == 1 {
+                    c.chars().nth(0).unwrap()
+                } else {
+                    return None;
+                }
+            },
+        }))
+    }
+}
+#+end_src
+
+#+begin_src rust
+pub fn maj_parse(
+    mut state: &mut MajState, tokens: Vec<String>
+) -> Result<Gc<Maj>, &str> {
+    let mut list = Vec::new();
+    let mut tokens = &tokens[..];
+    while tokens.len() > 0 {
+        match maj_read_one(&mut state, tokens) {
+            Ok((expr, slice)) => {
+                tokens = slice;
+                list.push(expr);
+            },
+            Err(msg) => return Err(msg),
+        }
+    }
+    Ok(maj_parser_into_list(list))
+}
+#+end_src
+
+#+begin_src rust
+fn maj_parser_into_list(list: Vec<Gc<Maj>>) -> Gc<Maj> {
+    if list.len() == 0 {
+        Maj::nil()
+    } else {
+        let mut expr = Maj::nil();
+        for elt in list.iter().rev() {
+            expr = Maj::cons(elt.clone(), expr);
+        }
+        expr
+    }
+}
+#+end_src
+
+#+begin_src rust
+fn maj_parser_into_dotted_list(list: Vec<Gc<Maj>>) -> Gc<Maj> {
+    match list.len() {
+        0 => Maj::nil(),
+        _ => {
+            let mut list = list.clone();
+            let mut expr = list.pop().unwrap();
+            for elt in list.iter().rev() {
+                expr = Maj::cons(elt.clone(), expr);
+            }
+            expr
+        }
+    }
+}
+#+end_src
+
+#+begin_src rust
+fn maj_parser_into_vector(elts: Vec<Gc<Maj>>) -> Gc<Maj> {
+    if elts.len() == 0 {
+        Maj::nil()
+    } else {
+        let mut expr = Maj::nil();
+        for elt in elts.iter().rev() {
+            expr = Maj::cons(elt.clone(), expr);
+        }
+        Maj::cons(Maj::vector_sym(), expr)
+    }
+}
+#+end_src
+
+* Construindo o objeto do leitor
+
+* Macros do leitor de expressões
+
