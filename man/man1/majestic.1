@@ -1,0 +1,133 @@
+.\" Majestic Lisp manpage
+.\" Copyright (c) 2020-2021 Lucas S. Vieira
+.TH majestic 1 "Updated 2021-01-23" "majestic-0.3.9" "MAJESTIC"
+.SH "NAME"
+.P
+majestic \- \fIMajestic Lisp Interpreter\fP
+.SH "SYNOPSIS"
+.P
+majestic [\fB\-l\fP | \fB\-\-load\fP \fIfile\fP] [\fB\-e\fP | \fB\-\-eval\fP \fIcommand\fP]
+         [\fB\-s\fP | \fB\-\-silent\fP] [\fB\-q\fP | \fB\-\-quit\fP] [\fB\-h\fP | \fB\-?\fP | \fB\-\-help\fP]
+         [\fB\-\-script\fP \fIfile\fP]
+.SH "DESCRIPTION"
+.P
+\fIMajestic Lisp\fP is a programming language, a dialect of Lisp
+built mostly for educational purposes. It is inspired by Lisp
+dialects such as Bel, Common Lisp and Clojure. It also draws some
+inspiration from languages such as APL. It is written as a
+\fIliterate program\fP in book form, so that readers can
+reimplement it and learn more about the implementation of Lisp
+languages.
+.PP
+The goals of \fIMajestic Lisp\fP are:
+.TP 2
+\-
+To provide a language which could have an educational purpose,
+through a didatic implementation.
+.TP
+\-
+To delegate performance favoring correctness, as performance is
+not a central topic, though it is desired at some points.
+.TP
+\-
+To provide a simple dialect of a Lisp language, so that veteran
+Lisp programmers could feel at home while using it.
+.TP
+\-
+To show that designing and implementing your own Lisp language is
+not an intangible task.
+.TP
+\-
+To provide a language simple enough so that even if the programmer
+is unable to execute its interpreter, he or she could still predict
+the outcome of an evaluation algebrically.
+.PP
+The program \fImajestic\fP is the first implementation of \fIMajestic Lisp\fP, built using the Rust language. Its prose is written using Org on Emacs.
+.SH "GENERAL USAGE"
+Most of \fImajestic\fP's usage can be done through an interactive prompt,
+known as a \fBREPL\fP (Read-Evaluate-Print-Loop).
+The \fBREPL\fP starts expecting the user input with an angled bracket (">").
+The user may then write a valid language command and press \fPEnter\fP.
+Afterwards, the interpreter will attempt to evaluate the expression and
+print its results. Should the process fail, the \fBREPL\fP will print an
+error message, then go back to the prompt which expects user input.
+.PP
+The user may exit the application anytime by typing Control-C or Control-D.
+.SS "DEBUG COMMANDS"
+The user may debug the tokenization process by entering the command \fI#t\fP
+at the \fBREPL\fP.
+.SH "COMMAND-LINE OPTIONS"
+.PP
+\fImajestic\fP recognizes the following command-line arguments:
+.TP 1i
+.B -l, --load \fIfile\fP
+Load and evaluate the contents of \fIfile\fP. This will leave a \fBREPL\fP
+prompt open afterwards so that the user can input commands, unless specified
+by the \fB\-\-quit\fP flag. This option may also be repeated; the files will
+be loaded in the order they are given. If the parsing or tokenization
+operations fail for a given file, the subsequent files will not be loaded.
+Loading of files take priority over execution of commands from command line.
+.TP
+.B -e, --eval \fIcommand\fP
+Evaluate the string \fIcommand\fP. This will leave a \fBREPL\fP prompt open
+afterwards so that the user can input commands, unless specified by the
+\fB\-\-quit\fP flag. This option may also be repeated; the commands will be
+evaluated in the order they are given. The evaluation of commands will not
+be interrupted by ordinary failures of any kind. Evaluation of commands
+will only happen after all files loaded are processed, and will carry on
+even when the file loading fails.
+.TP
+.B -s, --silent
+Inhibit output of greeting ribbon and prompt.
+.TP
+.B -q, --quit
+Suppress the \fBREPL\fP, exiting the application after all files and commands
+given through the command line are processed.
+.TP
+.B -h, -?, --help
+Shows a help prompt.
+.TP
+.B --script \fIfile\fB
+Loads a file and bails out. Same as \fB--silent\fP \fB--quit\fP \fB--load\fP \fIfile\fP.
+.SH "MAJESTIC LISP SCRIPTS"
+Generally, \fBmajestic\fP will attempt to ignore whenever the first line of a
+file is initialized with a shebang ("#!"). This means that, even when using
+\fB\-\-load\fP or \fB\-\-script\fP, the file will be loaded normally.
+.PP
+This enables for the possibility of using Majestic Lisp as a scripting
+language. But this will only happen if the exact two first characters of the
+given file are "#!", which will be treated as a comment such as ";;".
+.PP
+The code below is an example of the contents of a script file for Majestic
+Lisp, assuming that \fImajestic\fP is installed under \fI/usr/bin/majestic\fP.
+This script will create an output file \fItestfile.txt\fP on the current
+directory for output, and then will close it immediately.
+
+.br
+.EX
+#!/usr/bin/majestic --script
+(cls (ops "testfile.txt" 'out))
+.EE
+.SH "BUGS"
+.PP
+\fImajestic\fP is still beta quality, so it is possible that it does not
+fully comply with its specification or has some bugs. Here is a list of its
+known problematic bits.
+.TP 2
+\-
+There is currently no unicode support.
+.TP
+\-
+Partial application can be problematic on variadic arguments,
+specially on particular cases where all arguments are variadic.
+.TP
+\-
+Number arithmetic is not implemented or may not be fully implemented.
+.TP
+\-
+The codebase is still largely untested and may need refactoring for
+acceptable execution speeds.
+.SH "AUTHOR"
+Copyright (c) 2020-2021 Lucas S. Vieira.
+.br
+Licensed under the MIT License.

@@ -1,0 +1,297 @@
+#+setupfile: static/setupfile.org
+#+html_link_up: index.html
+#+title: Configurando o projeto
+
+Para iniciarmos o projeto, primeiro precisamos certificar-nos de que o
+mesmo  possui  uma configuração  adequada,  o  que  envolve o  uso  de
+dependências,  nome  do  software,   versão  do  software,  dados  dos
+mantenedores e outras coisas.
+
+Neste capítulo, trataremos das  configurações básicas do projeto. Isso
+envolve a criação de certos diretórios, configurações do projeto Rust,
+e /scripts/ de compilação.
+
+* Árvore do projeto
+
+O primeiro passo para criarmos os arquivos de projeto é construirmos a
+árvore do projeto. Isso envolve a criação de alguns diretórios.
+
+Para um  projeto Rust, teremos,  no diretório-raiz, um  diretório ~src~,
+que conterá todos os arquivos de código do projeto.
+
+Ademais, em  ~src~, também teremos  mais alguns diretórios,  cujos nomes
+designam módulos homônimos no projeto.
+
+O comando  de console a  seguir cria recursivamente  esses diretórios,
+ignorando-os caso já existam.
+
+#+begin_src bash
+mkdir -p           \
+      src/core     \
+      src/axioms   \
+      src/printing \
+      src/evaluator \
+      src/reader
+#+end_src
+
+#+RESULTS:
+
+* Pastas extras de apêndices :noexport:
+
+#+begin_src bash
+mkdir -p man/man1
+#+end_src
+
+#+RESULTS:
+
+* Configurando a crate
+
+O programa  ~cargo~ é o gerenciador  de pacotes da linguagem  Rust. Cada
+projeto é empacotado em estruturas  chamadas /crates/, e um projeto pode
+especificar dependências de outras /crates/ também.
+
+O  interpretador   de  Majestic   Lisp  é   construído  sob   a  /crate/
+~majestic-lisp~. Como dependências, utiliza:
+
+- ~rust-gc~[fn:7], um coletor de lixo simples, estilo /mark-and-sweep/;
+- ~colored~[fn:1], uma biblioteca de colorização de output no console;
+- ~rustyline~[fn:2], uma implementação de ~libreadline~ para Rust.
+- ~float-cmp~,
+- ~rustf8,~
+- ~comfy-table~,
+- ~bimap~,  para associarmos  certas informações  a seus  nomes e  ainda
+  assim realizarmos pesquisas em ambos os tipos de informação.
+  
+A  seguir, especificamos  o arquivo  ~Cargo.toml~, incluído  na raiz  do
+projeto.  Esse  arquivo  determina  a   configuração  para  o  uso  da
+ferramenta ~cargo~.
+
+#+begin_src toml :tangle Cargo.toml
+[package]
+name        = "majestic-lisp"
+version     = "0.4.0"
+authors     = ["Lucas Vieira <lucasvieira@protonmail.com>"]
+description = "Lisp dialect built with Rust as a literate program"
+license     = "MIT"
+keywords    = ["lisp", "language", "dialect", "interpreter"]
+readme      = "README.org"
+edition     = "2018"
+build       = "build.rs"
+
+[features]
+dumb_terminal = ["colored/no-color"]
+
+[build-dependencies]
+chrono = "0.4.19"
+
+[dev-dependencies]
+regex = "1.4.2"
+
+[dependencies]
+gc               = { version = "0.4.0", features = ["derive"] }
+rand             = { version = "0.7" }
+colored          = "2.0"
+rustyline        = "6.3.0"
+rustyline-derive = "0.3.1"
+float-cmp        = "0.8.0"
+rustf8           = "0.9.1"
+num-derive       = "0.3.3"
+num-traits       = "0.2.14"
+stacker          = "0.1"
+bimap            = "0.6.2"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+comfy-table      = "1.4.2"
+#+end_src
+
+Outra configuração muito importante a  ser feita é deixarmos claro que
+pretendemos usar, para  compilação, o canal ~nightly~  do compilador, já
+que  utilizaremos recursos  que ainda  estão instáveis  em Rust.  Para
+tanto, basta adicionarmos  o canal e a  data da versão do  mesmo em um
+arquivo ~rust-toolchain~:
+
+#+begin_src text :tangle rust-toolchain
+nightly
+#+end_src
+
+* Compilação
+
+Para  compilarmos o  projeto, podemos  criar um  arquivo ~Makefile~  que
+acelerará esse processo.
+
+Arquivos  ~Makefile~  são  normalmente utilizados  pela  ferramenta  GNU
+Make.  De forma  subjacente, utilizaremos  o  compilador de  Rust e  a
+ferramenta ~cargo~ para compilarmos o projeto.
+
+Por enquanto, algumas das  características necessárias para compilar o
+projeto  encontram-se  nas  ferramentas   /instáveis/  de  Rust,  também
+conhecidas pelo nome /nightly/.
+
+Podemos executar o comando de console
+
+# TODO: Isso é necessário ainda?
+
+#+begin_src bash :tangle no
+rustup install nightly-x86_64-unknown-linux-gnu
+#+end_src
+
+para instalar a /toolchain/ necessária para a compilação do projeto.
+
+Caso você queira  também testar o interpretador  com ~WASI~ (WebAssembly
+System Interface)[fn:8], instale a ferramenta ~cargo-wasi~:
+
+#+begin_src bash :tangle no
+cargo install cargo-wasi
+#+end_src
+
+A  seguir, especificamos  um arquivo  ~Makefile~, de  nome homônimo,  no
+diretório-raiz do projeto.
+
+#+begin_src makefile :tangle Makefile
+PROFILE=
+OBJTYPE=`uname -m`
+
+all: bin
+
+buildall: bin wasm win64
+
+release: PROFILE += --release
+release: buildall
+
+release-bin: PROFILE += --release
+release-bin: bin
+
+release-wasm: PROFILE += --release
+release-wasm: wasm
+
+release-win64: PROFILE += --release
+release-win64: win64
+#+end_src
+
+#+begin_src makefile :tangle Makefile
+bin:
+	cargo build ${PROFILE}
+
+install: release-bin man/man1/majestic.1
+	install -m 755 target/release/majestic-lisp ${PREFIX}/bin/majestic
+	install -m 644 man/man1/majestic.1 ${PREFIX}/share/man/man1/
+
+uninstall:
+	rm -f ${PREFIX}/bin/majestic
+	rm -f ${PREFIX}/share/man/man1/majestic.1
+
+test:
+	cargo test
+
+test-verbose:
+	cargo test -- --nocapture
+
+bench:
+	cargo bench
+
+run:
+	cargo run ${PROFILE}
+
+wasm:
+	cargo wasi build ${PROFILE}
+
+win64:
+	cargo build ${PROFILE} --target \
+		"x86_64-pc-windows-gnu" \
+		--features dumb_terminal
+
+wasmrun:
+	cargo wasi run ${PROFILE}
+
+winerun: win64
+	wineconsole \
+	./target/x86_64-pc-windows-gnu/debug/majestic-lisp.exe \
+	2>/dev/null
+#+end_src
+
+#+begin_src makefile :tangle Makefile
+present:
+	@majestic -l "examples/helper.maj"
+#+end_src
+
+* Utilitários :noexport:
+
+Utilitários de conveniência.
+
+** Makefile: Exportação do projeto
+
+Código  para exportação  do  projeto  em geral.  Isso  não aparece  no
+livro-texto.
+
+#+begin_src makefile :tangle Makefile
+.PHONY: clean nuke
+
+clean:
+	cargo clean
+	rm -rf _minted-* *.aux *.bbl *.blg *.brf *.fdb_latexmk \
+		,*.fls *.log *.out *.pyg *.toc *.xdv *.ilg *.ind \
+		ltximg
+
+clear:
+	rm -rf target
+
+nuke: clear clean
+	rm -f *.tex *.pdf *.html *~
+#+end_src
+
+#+begin_src makefile :tangle Makefile
+man/majestic(1).pdf: man/man1/majestic.1
+	man -M man -Tpdf 1 majestic >"man/majestic(1).pdf"
+#+end_src
+
+#+begin_src makefile :tangle Makefile
+package-objtype: release-bin man/man1/majestic.1
+	mkdir -p target/tarball/${OBJTYPE}
+	cp target/release/majestic-lisp target/tarball/${OBJTYPE}/
+	cp man/man1/majestic.1 target/tarball/${OBJTYPE}/
+	cd target/tarball/${OBJTYPE} && \
+		tar -czvf ../../majestic-lisp-${OBJTYPE}.tgz .
+#+end_src
+
+#+begin_src makefile :tangle Makefile
+package-wasm: release-wasm man/man1/majestic.1
+	mkdir -p target/tarball/wasm32-wasi
+	cp man/man1/majestic.1 target/tarball/wasm32-wasi/
+	cp target/wasm32-wasi/release/majestic-lisp.wasm \
+		target/tarball/wasm32-wasi/
+	cd target/tarball/wasm32-wasi && \
+		tar -czvf ../../majestic-lisp-wasm32-wasi.tgz .
+#+end_src
+
+#+begin_src makefile :tangle Makefile
+package-win64: release-win64 man/majestic(1).pdf
+	mkdir -p target/tarball/win64
+	cp "man/majestic(1).pdf" target/tarball/win64/
+	cp target/x86_64-pc-windows-gnu/release/majestic-lisp.exe \
+		target/tarball/win64/
+	cd target/tarball/win64 && \
+		7z a ../../majestic-lisp-win64.zip .
+#+end_src
+
+#+begin_src makefile :tangle Makefile
+package: release package-objtype package-wasm package-win64
+	rm -rf target/tarball
+#+end_src
+
+#+begin_src makefile :tangle Makefile
+sign: package
+	gpg2 --armor --detach-sign --yes ./target/majestic-lisp-${OBJTYPE}.tgz
+	gpg2 --armor --detach-sign --yes ./target/majestic-lisp-wasm32-wasi.tgz
+	gpg2 --armor --detach-sign --yes ./target/majestic-lisp-win64.zip
+#+end_src
+
+* Footnotes
+
+[fn:2]  https://github.com/kkawakam/rustyline
+
+[fn:1]  https://github.com/mackwic/colored
+
+[fn:8] https://wasi.dev/ 
+
+[fn:7] https://github.com/Manishearth/rust-gc 
+
