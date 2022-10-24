@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+<head>
+<!-- 2022-10-23 dom 23:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ponto de Entrada</title>
+<meta name="author" content="Lucas S. Vieira" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="./main.css" />
+<link rel="stylesheet" type="text/css" href="./syntax.css" />
+<link id="theme-css" rel="stylesheet" type="text/css" href="./dark-theme.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="../img/cat-i-mage.jpg">
+<meta name="theme-color" content="#14171e">
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Ponto de Entrada</h1>
+<p>
+Arquivo: <code>main.rs</code>.
+</p>
+
+<div id="outline-container-org4106f5a" class="outline-2">
+<h2 id="org4106f5a"><span class="section-number-2">1.</span> Declarando módulos</h2>
+<div class="outline-text-2" id="text-1">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #c586c0;">#![feature(seek_stream_len)]</span>
+
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">mod</span> <span style="color: #569cd6;">core</span>;
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">mod</span> <span style="color: #569cd6;">axioms</span>;
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">mod</span> <span style="color: #569cd6;">printing</span>;
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">mod</span> <span style="color: #569cd6;">evaluator</span>;
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">mod</span> <span style="color: #569cd6;">reader</span>;
+
+<span style="color: #c586c0;">#[cfg(test)]</span>
+<span style="color: #569cd6;">mod</span> <span style="color: #569cd6;">tests</span>;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org06ea119" class="outline-2">
+<h2 id="org06ea119"><span class="section-number-2">2.</span> Importações</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">use</span> <span style="color: #569cd6;">self</span>::<span style="color: #569cd6;">core</span>::{ <span style="color: #4ec9b0;">Maj</span>, <span style="color: #4ec9b0;">MajState</span> };
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">self</span>::<span style="color: #569cd6;">printing</span>::{ maj_format, maj_format_raw };
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">self</span>::<span style="color: #569cd6;">evaluator</span>::maj_eval;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">self</span>::<span style="color: #569cd6;">reader</span>::<span style="color: #569cd6;">tokenizer</span>::maj_tokenize;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">self</span>::<span style="color: #569cd6;">reader</span>::<span style="color: #569cd6;">parser</span>::maj_parse;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0e848cc" class="outline-2">
+<h2 id="org0e848cc"><span class="section-number-2">3.</span> REPL</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">use</span> <span style="color: #569cd6;">rustyline</span>::<span style="color: #569cd6;">error</span>::<span style="color: #4ec9b0;">ReadlineError</span>;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">rustyline</span>::<span style="color: #4ec9b0;">Editor</span>;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">rustyline</span>::<span style="color: #569cd6;">validate</span>::{
+    <span style="color: #4ec9b0;">ValidationContext</span>,
+    <span style="color: #4ec9b0;">ValidationResult</span>,
+    <span style="color: #4ec9b0;">Validator</span>
+};
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">rustyline_derive</span>::{<span style="color: #4ec9b0;">Completer</span>, <span style="color: #4ec9b0;">Helper</span>, <span style="color: #4ec9b0;">Highlighter</span>, <span style="color: #4ec9b0;">Hinter</span>};
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">colored</span>::*;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">std</span>::{ env, process };
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #c586c0;">#[derive(Completer, Helper, Highlighter, Hinter)]</span>
+<span style="color: #569cd6;">struct</span> <span style="color: #4ec9b0;">MajInputValidator</span> {}
+
+<span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Validator</span> <span style="color: #569cd6;">for</span> <span style="color: #4ec9b0;">MajInputValidator</span> {
+    <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">validate</span>(
+        <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>,
+        <span style="color: #9cdcfe;">ctx</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #4ec9b0;">ValidationContext</span>
+    ) -&gt; <span style="color: #4ec9b0;">Result</span>&lt;<span style="color: #4ec9b0;">ValidationResult</span>, <span style="color: #4ec9b0;">ReadlineError</span>&gt; {
+        <span style="color: #569cd6;">use</span> <span style="color: #4ec9b0;">ValidationResult</span>::{
+            <span style="color: #4ec9b0;">Incomplete</span>,
+            <span style="color: #4ec9b0;">Invalid</span>,
+            <span style="color: #4ec9b0;">Valid</span>
+        };
+
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">input</span> = ctx.input();
+        <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">ignore_one</span> = <span style="color: #569cd6;">false</span>;
+        <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">count</span> = 0;
+        <span style="color: #569cd6;">for</span> <span style="color: #9cdcfe;">c</span> <span style="color: #569cd6;">in</span> input.chars() {
+            <span style="color: #569cd6;">if</span> ignore_one {
+                ignore_one = <span style="color: #569cd6;">false</span>;
+            } <span style="color: #569cd6;">else</span> {
+                <span style="color: #569cd6;">match</span> c {
+                    <span style="color: #ce9178;">'('</span> =&gt; {
+                        count += 1;
+                    },
+                    <span style="color: #ce9178;">')'</span> =&gt; {
+                        <span style="color: #569cd6;">if</span> count == 0 {
+                            count = -1;
+                            <span style="color: #569cd6;">break</span>;
+                        } <span style="color: #569cd6;">else</span> {
+                            count -= 1;
+                        }
+                    },
+                    <span style="color: #ce9178;">'\\'</span> =&gt; {
+                        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Gambiarra for preventing</span>
+                        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">incomplete input on characters</span>
+                        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">such as #\( and #\)</span>
+                        ignore_one = <span style="color: #569cd6;">true</span>;
+                    }
+                    _ =&gt; {},
+                }
+            }
+        }
+
+        <span style="color: #569cd6;">if</span> count &gt; 0 {
+            <span style="color: #4ec9b0;">Ok</span>(<span style="color: #4ec9b0;">Incomplete</span>)
+        } <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> count &lt; 0 {
+            <span style="color: #4ec9b0;">Ok</span>(
+                <span style="color: #4ec9b0;">Invalid</span>(<span style="color: #4ec9b0;">Some</span>(<span style="color: #ce9178;">"No matching parenthesis found"</span>
+                             .to_owned()))
+            )
+        } <span style="color: #569cd6;">else</span> {
+            <span style="color: #4ec9b0;">Ok</span>(<span style="color: #4ec9b0;">Valid</span>(<span style="color: #4ec9b0;">None</span>))
+        }
+    }
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">repl</span>(<span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #4ec9b0;">MajState</span>, <span style="color: #9cdcfe;">options</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">ArgsOptions</span>) {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">predicates</span>::maj_errorp;
+    <span style="color: #569cd6;">if</span> !options.silent {
+        <span style="color: #c586c0;">println!</span>(<span style="color: #ce9178;">"Press C-c or C-d to quit"</span>);
+    }
+
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">validator</span> = <span style="color: #4ec9b0;">MajInputValidator</span> {};
+
+    <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">rl</span> = <span style="color: #4ec9b0;">Editor</span>::new();
+    rl.set_helper(<span style="color: #4ec9b0;">Some</span>(validator));
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">_</span> = rl.load_history(<span style="color: #ce9178;">".majestic_history"</span>);
+    <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">prompt</span> = <span style="color: #569cd6;">if</span> options.silent {
+        <span style="color: #4ec9b0;">String</span>::from(<span style="color: #ce9178;">""</span>)
+    } <span style="color: #569cd6;">else</span> {
+        <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, <span style="color: #ce9178;">"&gt; "</span>.green())
+    };
+
+    <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">show_tokens</span> = <span style="color: #569cd6;">false</span>;
+
+    <span style="color: #569cd6;">loop</span> {
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">readline</span> = rl.readline(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>prompt);
+        <span style="color: #569cd6;">match</span> readline {
+            <span style="color: #4ec9b0;">Ok</span>(line) =&gt; {
+                rl.add_history_entry(line.as_str());
+                <span style="color: #569cd6;">if</span> line == <span style="color: #ce9178;">"#t"</span> {
+                    show_tokens = !show_tokens;
+                    prompt =
+                        <span style="color: #569cd6;">if</span> options.silent {
+                            <span style="color: #4ec9b0;">String</span>::from(<span style="color: #ce9178;">""</span>)
+                        } <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> show_tokens {
+                            <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, <span style="color: #ce9178;">"&gt; "</span>.magenta())
+                        } <span style="color: #569cd6;">else</span> {
+                            <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, <span style="color: #ce9178;">"&gt; "</span>.green())
+                        };
+                } <span style="color: #569cd6;">else</span> {
+                    <span style="color: #6a9955;">//</span><span style="color: #6a9955;">use crate::printing::maj_pretty_format;</span>
+                    <span style="color: #569cd6;">match</span> maj_tokenize(line.as_ref()) {
+                        <span style="color: #4ec9b0;">Ok</span>(tokens) =&gt; {
+                            <span style="color: #569cd6;">if</span> show_tokens {
+                                <span style="color: #c586c0;">println!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>,
+                                         <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{:?}</span><span style="color: #ce9178;">"</span>, tokens)
+                                         .magenta());
+                            }
+                            <span style="color: #569cd6;">match</span> maj_parse(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state,
+                                                  tokens.clone()) {
+                                <span style="color: #4ec9b0;">Ok</span>(expressions) =&gt; {
+                                    <span style="color: #569cd6;">if</span> show_tokens {
+                                        <span style="color: #c586c0;">println!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>,
+                                                 maj_format_raw(
+                                                     <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state,
+                                                     expressions.clone(),
+                                                     <span style="color: #569cd6;">false</span>).magenta());
+                                    }
+                                    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">utils</span>::{
+                                        <span style="color: #4ec9b0;">STACK_RED_ZONE</span>,
+                                        <span style="color: #4ec9b0;">STACK_PER_RECURSION</span>
+                                    };
+                                    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">results</span> =
+                                        <span style="color: #569cd6;">stacker</span>::maybe_grow(
+                                            <span style="color: #4ec9b0;">STACK_RED_ZONE</span>,
+                                            <span style="color: #4ec9b0;">STACK_PER_RECURSION</span>,
+                                            || maj_eval(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state,
+                                                        <span style="color: #4ec9b0;">Maj</span>::cons(
+                                                            <span style="color: #4ec9b0;">Maj</span>::do_sym(),
+                                                            expressions),
+                                                        <span style="color: #4ec9b0;">Maj</span>::nil()));
+                                            <span style="color: #569cd6;">if</span> !maj_errorp(results.clone()).to_bool() {
+                                                <span style="color: #c586c0;">println!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>,
+                                                         maj_format(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, results)
+                                                         .cyan());
+                                            } <span style="color: #569cd6;">else</span> {
+                                                <span style="color: #c586c0;">eprintln!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;"> </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>,
+                                                          <span style="color: #ce9178;">"Error:"</span>.red().bold(),
+                                                          maj_format(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, results));
+                                            }
+                                            
+                                        },
+                                    <span style="color: #4ec9b0;">Err</span>(msg) =&gt;
+                                        <span style="color: #c586c0;">eprintln!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;"> </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>,
+                                                  <span style="color: #ce9178;">"Parser error:"</span>.red().bold(),
+                                                  msg),
+                                }
+                            },
+                            <span style="color: #4ec9b0;">Err</span>((line, msg)) =&gt;
+                                <span style="color: #c586c0;">eprintln!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;"> on line </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">: </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>,
+                                          <span style="color: #ce9178;">"Syntax error"</span>.red().bold(),
+                                          line, msg),
+                        };
+                    }
+                },
+                <span style="color: #4ec9b0;">Err</span>(<span style="color: #4ec9b0;">ReadlineError</span>::<span style="color: #4ec9b0;">Interrupted</span>) =&gt; {
+                    <span style="color: #569cd6;">if</span> !options.silent {
+                        <span style="color: #c586c0;">println!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, <span style="color: #ce9178;">"C-c"</span>.cyan().dimmed());
+                    }
+                    <span style="color: #569cd6;">break</span>
+                },
+                <span style="color: #4ec9b0;">Err</span>(<span style="color: #4ec9b0;">ReadlineError</span>::<span style="color: #4ec9b0;">Eof</span>) =&gt; {
+                    <span style="color: #569cd6;">if</span> !options.silent {
+                        <span style="color: #c586c0;">println!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, <span style="color: #ce9178;">"C-d"</span>.cyan().dimmed());
+                    }
+                    <span style="color: #569cd6;">break</span>
+                },
+                <span style="color: #4ec9b0;">Err</span>(err) =&gt; {
+                    <span style="color: #c586c0;">eprintln!</span>(<span style="color: #ce9178;">"REPL Error: </span><span style="color: #ce9178; font-style: italic;">{:?}</span><span style="color: #ce9178;">"</span>, err);
+                    <span style="color: #569cd6;">break</span>
+                }
+            }
+        }
+
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Err</span>(_) = rl.save_history(<span style="color: #ce9178;">".majestic_history"</span>) {
+            <span style="color: #c586c0;">eprintln!</span>(<span style="color: #ce9178;">"Failed saving history to .majestic_history."</span>);
+        }
+
+        <span style="color: #569cd6;">if</span> !options.silent {
+            <span style="color: #c586c0;">println!</span>(<span style="color: #ce9178;">"Quaerendo invenietis."</span>);
+        }
+    }
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org01b28da" class="outline-2">
+<h2 id="org01b28da"><span class="section-number-2">4.</span> Parsing de argumentos do console</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org9611725" class="outline-3">
+<h3 id="org9611725"><span class="section-number-3">4.1.</span> Estrutura de argumentos</h3>
+<div class="outline-text-3" id="text-4-1">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">struct</span> <span style="color: #4ec9b0;">ArgsOptions</span> {
+    <span style="color: #9cdcfe;">silent</span>:      <span style="color: #4ec9b0;">bool</span>,
+    <span style="color: #9cdcfe;">loadfiles</span>:   <span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">String</span>&gt;,
+    <span style="color: #9cdcfe;">programname</span>: <span style="color: #4ec9b0;">String</span>,
+    <span style="color: #9cdcfe;">quit</span>:        <span style="color: #4ec9b0;">bool</span>,
+    <span style="color: #9cdcfe;">execlines</span>:   <span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">String</span>&gt;,
+    <span style="color: #9cdcfe;">showhelp</span>:    <span style="color: #4ec9b0;">bool</span>,
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3d9be6f" class="outline-3">
+<h3 id="org3d9be6f"><span class="section-number-3">4.2.</span> Discriminação dos argumentos</h3>
+<div class="outline-text-3" id="text-4-2">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">ArgsOptions</span> {
+    <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">empty</span>() -&gt; <span style="color: #4ec9b0;">ArgsOptions</span> {
+        <span style="color: #4ec9b0;">ArgsOptions</span> {
+            <span style="color: #9cdcfe;">silent</span>:     <span style="color: #569cd6;">false</span>,
+            <span style="color: #9cdcfe;">loadfiles</span>:   <span style="color: #4ec9b0;">Vec</span>::new(),
+            <span style="color: #9cdcfe;">programname</span>: <span style="color: #4ec9b0;">String</span>::new(),
+            <span style="color: #9cdcfe;">quit</span>:        <span style="color: #569cd6;">false</span>,
+            <span style="color: #9cdcfe;">execlines</span>:   <span style="color: #4ec9b0;">Vec</span>::new(),
+            <span style="color: #9cdcfe;">showhelp</span>:    <span style="color: #569cd6;">false</span>,
+        }
+    }
+
+    <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">new</span>() -&gt; <span style="color: #4ec9b0;">Result</span>&lt;<span style="color: #4ec9b0;">ArgsOptions</span>, <span style="color: #4ec9b0;">String</span>&gt; {
+        <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">options</span> = <span style="color: #4ec9b0;">ArgsOptions</span>::empty();
+
+        <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">fetch_load</span>        = <span style="color: #569cd6;">false</span>;
+        <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">fetch_exec</span>        = <span style="color: #569cd6;">false</span>;
+        <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">fetch_programname</span> = <span style="color: #569cd6;">true</span>;
+
+        <span style="color: #569cd6;">for</span> <span style="color: #9cdcfe;">argument</span> <span style="color: #569cd6;">in</span> <span style="color: #569cd6;">env</span>::args() {
+            <span style="color: #569cd6;">if</span> fetch_programname {
+                options.programname = argument;
+                fetch_programname = <span style="color: #569cd6;">false</span>;
+            } <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> fetch_load {
+                options.loadfiles.push(argument);
+                fetch_load = <span style="color: #569cd6;">false</span>;
+            } <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> fetch_exec {
+                options.execlines.push(argument);
+                fetch_exec = <span style="color: #569cd6;">false</span>;
+            } <span style="color: #569cd6;">else</span> {
+                <span style="color: #569cd6;">match</span> argument.as_ref() {
+                    <span style="color: #ce9178;">"--load"</span> | <span style="color: #ce9178;">"-l"</span> =&gt; fetch_load = <span style="color: #569cd6;">true</span>,
+                    <span style="color: #ce9178;">"--silent"</span> | <span style="color: #ce9178;">"-s"</span> =&gt; options.silent = <span style="color: #569cd6;">true</span>,
+                    <span style="color: #ce9178;">"--quit"</span> | <span style="color: #ce9178;">"-q"</span> =&gt; options.quit = <span style="color: #569cd6;">true</span>,
+                    <span style="color: #ce9178;">"--eval"</span> | <span style="color: #ce9178;">"-e"</span> =&gt; fetch_exec = <span style="color: #569cd6;">true</span>,
+                    <span style="color: #ce9178;">"--help"</span> | <span style="color: #ce9178;">"-h"</span> | <span style="color: #ce9178;">"-?"</span> =&gt;
+                        options.showhelp = <span style="color: #569cd6;">true</span>,
+                    <span style="color: #ce9178;">"--script"</span> =&gt; {
+                        options.silent = <span style="color: #569cd6;">true</span>;
+                        options.quit = <span style="color: #569cd6;">true</span>;
+                        fetch_load = <span style="color: #569cd6;">true</span>;
+                    },
+                    _ =&gt; <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Err</span>(
+                        <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"Unknown argument: </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, argument)),
+                }
+            }
+        }
+        <span style="color: #4ec9b0;">Ok</span>(options)
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org92fbda4" class="outline-2">
+<h2 id="org92fbda4"><span class="section-number-2">5.</span> Utilitários</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-org7577371" class="outline-3">
+<h3 id="org7577371"><span class="section-number-3">5.1.</span> Constantes de compilação</h3>
+<div class="outline-text-3" id="text-5-1">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">static</span> <span style="color: #9cdcfe;">TIMESTAMP</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>'<span style="color: #569cd6;">static</span> <span style="color: #4ec9b0;">str</span> = <span style="color: #c586c0;">include_str!</span>(
+    <span style="color: #c586c0;">concat!</span>(<span style="color: #c586c0;">env!</span>(<span style="color: #ce9178;">"OUT_DIR"</span>), <span style="color: #ce9178;">"/timestamp.txt"</span>));
+
+<span style="color: #569cd6;">static</span> <span style="color: #9cdcfe;">VERSION</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>'<span style="color: #569cd6;">static</span> <span style="color: #4ec9b0;">str</span> = <span style="color: #c586c0;">include_str!</span>(
+    <span style="color: #c586c0;">concat!</span>(<span style="color: #c586c0;">env!</span>(<span style="color: #ce9178;">"OUT_DIR"</span>), <span style="color: #ce9178;">"/version.txt"</span>));
+
+<span style="color: #569cd6;">static</span> <span style="color: #9cdcfe;">TARGET</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>'<span style="color: #569cd6;">static</span> <span style="color: #4ec9b0;">str</span> = <span style="color: #c586c0;">include_str!</span>(
+    <span style="color: #c586c0;">concat!</span>(<span style="color: #c586c0;">env!</span>(<span style="color: #ce9178;">"OUT_DIR"</span>), <span style="color: #ce9178;">"/target.txt"</span>));
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgae1d1e5" class="outline-3">
+<h3 id="orgae1d1e5"><span class="section-number-3">5.2.</span> Carregando arquivos</h3>
+<div class="outline-text-3" id="text-5-2">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">handle_load_file</span>(<span style="color: #9cdcfe;">options</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">ArgsOptions</span>, <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #4ec9b0;">MajState</span>) {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">primitives</span>::maj_load;
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">predicates</span>::maj_errorp;
+    <span style="color: #569cd6;">for</span> <span style="color: #9cdcfe;">file</span> <span style="color: #569cd6;">in</span> <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>options.loadfiles {
+        <span style="color: #569cd6;">if</span> !options.silent {
+            <span style="color: #c586c0;">println!</span>(<span style="color: #ce9178;">"; loading </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">..."</span>, file);
+        }
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">results</span> =
+            maj_load(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, <span style="color: #4ec9b0;">Maj</span>::nil(), <span style="color: #4ec9b0;">Maj</span>::string(file));
+        <span style="color: #569cd6;">if</span> maj_errorp(results.clone()).to_bool() {
+            <span style="color: #c586c0;">eprintln!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;"> </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, <span style="color: #ce9178;">"Error:"</span>.red().bold(),
+                      maj_format(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, results));
+            <span style="color: #569cd6;">if</span> options.quit {
+                <span style="color: #569cd6;">process</span>::exit(1);
+            }
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0e9dbc8" class="outline-3">
+<h3 id="org0e9dbc8"><span class="section-number-3">5.3.</span> Execução de comandos pelo console</h3>
+<div class="outline-text-3" id="text-5-3">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">handle_exec_evals</span>(<span style="color: #9cdcfe;">options</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">ArgsOptions</span>, <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #4ec9b0;">MajState</span>) {
+    <span style="color: #569cd6;">for</span> <span style="color: #9cdcfe;">codeline</span> <span style="color: #569cd6;">in</span> <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>options.execlines {
+        <span style="color: #569cd6;">match</span> maj_tokenize(codeline.as_ref()) {
+            <span style="color: #4ec9b0;">Ok</span>(tokens) =&gt; {
+                <span style="color: #569cd6;">match</span> maj_parse(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, tokens.clone()) {
+                    <span style="color: #4ec9b0;">Ok</span>(expressions) =&gt; {
+                        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">results</span> =
+                            maj_eval(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state,
+                                     <span style="color: #4ec9b0;">Maj</span>::cons(<span style="color: #4ec9b0;">Maj</span>::do_sym(),
+                                               expressions),
+                                     <span style="color: #4ec9b0;">Maj</span>::nil());
+                        <span style="color: #c586c0;">println!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, maj_format(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, results)
+                                 .cyan());
+                    },
+                    <span style="color: #4ec9b0;">Err</span>(msg) =&gt; {
+                        <span style="color: #c586c0;">eprintln!</span>(<span style="color: #ce9178;">"Parser error: </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, msg)
+                    },
+                }
+            },
+            <span style="color: #4ec9b0;">Err</span>((line, msg)) =&gt;
+                <span style="color: #c586c0;">eprintln!</span>(<span style="color: #ce9178;">"Syntax error on line </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">: </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>,
+                          line, msg),
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org25abde6" class="outline-3">
+<h3 id="org25abde6"><span class="section-number-3">5.4.</span> Texto de ajuda</h3>
+<div class="outline-text-3" id="text-5-4">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">show_help</span>(<span style="color: #9cdcfe;">programname</span>: <span style="color: #4ec9b0;">String</span>) {
+    <span style="color: #569cd6;">if</span> <span style="color: #4ec9b0;">VERSION</span> == <span style="color: #ce9178;">""</span> {
+        <span style="color: #c586c0;">println!</span>(<span style="color: #ce9178;">"Built at </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, <span style="color: #4ec9b0;">TIMESTAMP</span>);
+    }
+    <span style="color: #c586c0;">println!</span>(<span style="color: #ce9178;">"Usage: </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;"> [options]</span>
+<span style="color: #ce9178;">Options:</span>
+<span style="color: #ce9178;">\t-l, --load [file]   Load and execute contents of file</span>
+<span style="color: #ce9178;">\t-s, --silent        Do not show ribbon nor REPL prompt</span>
+<span style="color: #ce9178;">\t-q, --quit          Halt interpreter execution after executing</span>
+<span style="color: #ce9178;">\t                    commands given through arguments</span>
+<span style="color: #ce9178;">\t-e, --eval [text]   Evaluate given string of text</span>
+<span style="color: #ce9178;">\t-h, -?, --help      Show this help text</span>
+<span style="color: #ce9178;">\t--script [file]     Same as --silent --quit --load [file]"</span>,
+             programname);
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org79a797c" class="outline-2">
+<h2 id="org79a797c"><span class="section-number-2">6.</span> Função <code>main</code></h2>
+<div class="outline-text-2" id="text-6">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">main</span>() {
+    <span style="color: #569cd6;">match</span> <span style="color: #4ec9b0;">ArgsOptions</span>::new() {
+        <span style="color: #4ec9b0;">Ok</span>(options) =&gt; {
+            <span style="color: #569cd6;">if</span> !options.silent {
+                <span style="color: #c586c0;">println!</span>(<span style="color: #ce9178;">"Majestic Lisp v</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;"> </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>,
+                         <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}{}</span><span style="color: #ce9178;">"</span>,
+                                 <span style="color: #c586c0;">env!</span>(<span style="color: #ce9178;">"CARGO_PKG_VERSION"</span>),
+                                 <span style="color: #569cd6;">if</span> <span style="color: #4ec9b0;">VERSION</span> != <span style="color: #ce9178;">""</span> { <span style="color: #ce9178;">" nightly"</span> }
+                                 <span style="color: #569cd6;">else</span> { <span style="color: #ce9178;">""</span> }),
+                         <span style="color: #4ec9b0;">TARGET</span>);
+                <span style="color: #569cd6;">if</span> <span style="color: #4ec9b0;">VERSION</span> != <span style="color: #ce9178;">""</span> {
+                    <span style="color: #c586c0;">println!</span>(<span style="color: #ce9178;">"Build </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;"> </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, <span style="color: #4ec9b0;">VERSION</span>, <span style="color: #4ec9b0;">TIMESTAMP</span>);
+                }
+                <span style="color: #c586c0;">println!</span>(<span style="color: #ce9178;">"Copyright (c) 2020-2021 Lucas S. Vieira"</span>);
+            }
+
+            <span style="color: #569cd6;">if</span> options.showhelp {
+                show_help(options.programname);
+                <span style="color: #569cd6;">process</span>::exit(0);
+            }
+
+            <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">state</span> = <span style="color: #4ec9b0;">MajState</span>::new();
+
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Load files</span>
+            handle_load_file(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>options, <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state);
+
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Execute code from console</span>
+            handle_exec_evals(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>options, <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state);
+
+            <span style="color: #569cd6;">if</span> !options.quit {
+                repl(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>options);
+            }
+        },
+        <span style="color: #4ec9b0;">Err</span>(error) =&gt; {
+            <span style="color: #c586c0;">eprintln!</span>(<span style="color: #ce9178;">"Arguments error: </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, error);
+            show_help(<span style="color: #4ec9b0;">String</span>::from(<span style="color: #ce9178;">"majestic"</span>));
+            <span style="color: #569cd6;">process</span>::exit(1);
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Lucas S. Vieira</p>
+<p class="date">Created: 2022-10-23 dom 23:55</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

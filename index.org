@@ -56,7 +56,8 @@ Este projeto utiliza a licença MIT.
 8. [[./08-interpretador.org][Interpretador]]
    - [[./08-01-interpretacao.org][Interpretação]]
    - [[./08-02-aplicacao.org][Aplicação]]
-9. Ponto de entrada
+9. [[./09-ponto-de-entrada.org][Ponto de entrada]]
+   - [[./09-01-script-de-compilacao.org][Script de compilação]]
 10. Testes
 
 * Apêndices
