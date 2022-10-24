@@ -1,0 +1,1371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+<head>
+<!-- 2022-10-23 dom 22:47 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tipos de dados fundamentais</title>
+<meta name="author" content="Lucas S. Vieira" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="./main.css" />
+<link rel="stylesheet" type="text/css" href="./syntax.css" />
+<link id="theme-css" rel="stylesheet" type="text/css" href="./dark-theme.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="../img/cat-i-mage.jpg">
+<meta name="theme-color" content="#14171e">
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="04-nucleo.html"> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Tipos de dados fundamentais</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgaa6a914">1. Importações</a></li>
+<li><a href="#org765b57d">2. A estrutura <code>Maj</code>: Objetos fundamentais</a></li>
+<li><a href="#orgd47cf98">3. <span class="todo TODO">TODO</span> Construtores de alguns tipos fundamentais</a></li>
+<li><a href="#orgbcc78d3">4. Construtores de strings</a></li>
+<li><a href="#org7c1f079">5. Conversão booleana</a></li>
+<li><a href="#org6814d04">6. Macro Rust para listas adequadas</a></li>
+<li><a href="#org2323be0">7. Macro Rust para listas pontuadas</a></li>
+<li><a href="#org232d99b">8. Números</a></li>
+<li><a href="#org21695d9">9. Construtores de números</a></li>
+<li><a href="#org004cd7b">10. Conversões para tipos numéricos</a></li>
+<li><a href="#org2a3a403">11. Conversão para string</a></li>
+<li><a href="#orgf5a10c7">12. <span class="todo TODO">TODO</span> Conversão para caractere</a></li>
+<li><a href="#org3f0ea66">13. Recuperação de símbolo cru</a></li>
+<li><a href="#orgeae756c">14. <span class="todo TODO">TODO</span> Streams</a></li>
+<li><a href="#org0f30903">15. Impressão simples</a>
+<ul>
+<li><a href="#org0975106">15.1. Impressão simples de objetos</a></li>
+<li><a href="#orged1a990">15.2. Impressão de números</a></li>
+</ul>
+</li>
+<li><a href="#org3b7986d">16. Construtores de símbolos constantes</a></li>
+</ul>
+</div>
+</div>
+<p>
+O próximo submódulo trata dos  tipos de dados fundamentais de Majestic
+Lisp. Em suma, estamos tratando  dos cinco tipos fundamentais tratados
+na especificação da linguagem.
+</p>
+
+<p>
+A maior  parte do código  do arquivo <code>src/core/types.rs</code>  corresponde ao
+código nesta seção.
+</p>
+
+<div id="outline-container-orgaa6a914" class="outline-2">
+<h2 id="orgaa6a914"><span class="section-number-2">1.</span> Importações</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Nosso  primeiro  passo  é  importar  algumas  dependências  de  outros
+lugares. Importamos, inicialmente, o genérico  <code>Gc</code> e os <i>traits</i> <code>Finalize</code>
+e <code>Trace</code>  da nossa biblioteca  de coletor de  lixo. Isso nos  ajudará a
+garantir  que não  teremos  problemas  de coleta  de  lixo na  memória
+automaticamente gerenciada para alocar nossos objetos. da linguagem.
+</p>
+
+<p>
+Também utilizaremos o objeto  <code>MajState</code> para criarmos alguns ajudantes,
+que nos levarão a algumas  facilidades ao instanciarmos nossos objetos
+da linguagem.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">use</span> <span style="color: #569cd6;">gc</span>::{<span style="color: #4ec9b0;">Finalize</span>, <span style="color: #4ec9b0;">Gc</span>, <span style="color: #4ec9b0;">GcCell</span>, <span style="color: #4ec9b0;">Trace</span>};
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">super</span>::<span style="color: #4ec9b0;">MajState</span>;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org765b57d" class="outline-2">
+<h2 id="org765b57d"><span class="section-number-2">2.</span> A estrutura <code>Maj</code>: Objetos fundamentais</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+O  objeto principal  (do  ponto de  vista da  linguagem  Rust) para  o
+interpretador  é a  enumeração chamada  <code>Maj</code>, utilizada  extensivamente
+durante a implementação.
+</p>
+
+<p>
+Em Rust,  enumerações possuem  a propriedade  especial de  agirem como
+<i>estruturas  de  dados  polimórficas</i>:  para cada  caso  da  enumeração,
+podemos ter um tipo de dados associado.
+</p>
+
+<p>
+Os tipos de dados com enumeração associados são:
+</p>
+
+<ul class="org-ul">
+<li><i>Symbol</i>  (<code>Maj::Sym</code>): Possui  um número  de tipo  <code>u64</code> associado,  para
+armazenar um símbolo;</li>
+<li><i>Cons</i>  (<code>Maj::Cons</code>):  Possui uma  estrutura  de  dados associada  para
+armazenar uma  célula <i>cons</i>.  O <i>cons</i>  possui dois  componentes, sendo
+estes  objetos  <code>Maj</code>,  que  sejam  necessariamente  gerenciados  pelo
+coletor de lixo.  Isto torna o <i>cons</i> um objeto  recursivo. Por razões
+históricas, chamamos esses componentes de <code>car</code> e <code>cdr</code>;</li>
+<li><i>Char</i> (<code>Maj::Char</code>): Possui um caractere de tipo <code>char</code> associado;</li>
+<li><i>Stream</i>  (<code>Maj::Stream</code>):  Possui  uma   estrutura  de  tipo  <code>MajStream</code>
+associada, correspondendo  a um <i>stream</i>. Essa  estrutura será tratada
+posteriormente;</li>
+<li><i>Number</i>  (<code>Maj::Number</code>):  Possui  uma   estrutura  de  tipo  <code>MajNumber</code>
+associada, correspondendo  a um <i>número</i>. Essa  estrutura será tratada
+posteriormente.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #c586c0;">#[derive(Debug, Trace, Finalize, Clone)]</span>
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">enum</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #4ec9b0;">Sym</span>(<span style="color: #4ec9b0;">u64</span>),
+    <span style="color: #4ec9b0;">Cons</span> {
+        <span style="color: #9cdcfe;">car</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+        <span style="color: #9cdcfe;">cdr</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;
+    },
+    <span style="color: #4ec9b0;">Char</span>(<span style="color: #4ec9b0;">char</span>),
+    <span style="color: #4ec9b0;">Stream</span>(<span style="color: #4ec9b0;">MajStream</span>),
+    <span style="color: #4ec9b0;">Number</span>(<span style="color: #4ec9b0;">MajNumber</span>),
+    <span style="color: #4ec9b0;">Vector</span>(<span style="color: #4ec9b0;">MajVector</span>)
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd47cf98" class="outline-2">
+<h2 id="orgd47cf98"><span class="section-number-2">3.</span> <span class="todo TODO">TODO</span> Construtores de alguns tipos fundamentais</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Podemos  criar alguns  métodos estáticos  para <code>Maj</code>,  que nos  ajudem a
+gerar objetos gerenciados por coletor de lixo sem muito esforço.
+</p>
+
+<p>
+Para construirmos símbolos, é  obrigatório que tenhamos uma referência
+mutável  a um  <code>MajState</code>  sendo  passada, pois  símbolos  só podem  ter
+significado apropriado quando em associação à tabela de símbolos. Essa
+prática também garante que não  dupliquemos um certo símbolo na tabela
+de símbolos.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">symbol</span>(<span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #4ec9b0;">MajState</span>, <span style="color: #4ec9b0;">str</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">str</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(state.gen_symbol(<span style="color: #4ec9b0;">str</span>)))
+    }
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">gensym</span>(<span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #4ec9b0;">MajState</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(state.gen_random_symbol()))
+    }
+}
+</pre>
+</div>
+
+<p>
+Construir um  <i>cons</i> também é  simples, uma  vez que assumimos  que seus
+componentes  <code>car</code> e  <code>cdr</code>  já  sejam elementos  alocados  no coletor  de
+lixo. Basta então associá-los  para que tomem a forma de  um par sob a
+mesma estrutura de dados.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">cons</span>(<span style="color: #9cdcfe;">car</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;, <span style="color: #9cdcfe;">cdr</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Cons</span> { car, cdr })
+    }
+}
+</pre>
+</div>
+
+<p>
+Caracteres são tipos ainda mais simplificados: aqui, apenas utilizamos
+o tipo <code>char</code>  subjacente de Rust para representar  nossos caracteres na
+linguagem, e isso será tudo o que é necessário.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">character</span>(<span style="color: #9cdcfe;">chr</span>: <span style="color: #4ec9b0;">char</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Char</span>(chr))
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbcc78d3" class="outline-2">
+<h2 id="orgbcc78d3"><span class="section-number-2">4.</span> Construtores de strings</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Poderemos converter strings de Rust  para strings de Majestic Lisp.  O
+processo envolve  a criação  recursiva de um  vetor da  linguagem, que
+envolve criar uma <code>String</code> por baixo dos panos.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">string</span>(<span style="color: #9cdcfe;">string</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">str</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(<span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Char</span>(
+            <span style="color: #4ec9b0;">GcCell</span>::new(<span style="color: #4ec9b0;">String</span>::from(string)))))
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7c1f079" class="outline-2">
+<h2 id="org7c1f079"><span class="section-number-2">5.</span> Conversão booleana</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Podemos abusar  um pouco da  especificação de Majestic Lisp  e definir
+alguns outros métodos  que nos auxiliem a efetuar  lógica booleana com
+objetos <code>Maj</code>,  diretamente na  linguagem Rust.  Essa ideia  permite que
+criemos predicados que funcionem tanto  em Majestic Lisp quanto em seu
+ambiente de programação em Rust.
+</p>
+
+<p>
+Os métodos estáticos <code>Maj::nil</code> e <code>Maj::t</code> criam, respectivamente, objetos
+que  representem os  símbolos  <code>nil</code> e  <code>t</code>. Como  pode  ser observado,  a
+criação desses símbolos <b>não depende de um estado do interpretador</b>, uma
+vez  que, pela  nossa implementação,  é <b>garantido</b>  que estes  símbolos
+assumam   os  índices   <code>0</code>  e   <code>1</code>   na  tabela   de  símbolos,   também
+respectivamente.  Isso  será  melhor  visto na  seção  de  <i>axiomas</i>  da
+linguagem, discutidos posteriormente.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">nil</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(0))
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">t</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(1))
+    }
+}
+</pre>
+</div>
+
+<p>
+Podemos, agora,  criar um método  <code>Maj::to_bool</code>, que converte  um certo
+objeto para um valor booleano em Rust, correspondente a <code>true</code> ou <code>false</code>.
+</p>
+
+<p>
+Essa conversão  é feita  de acordo com  a especificação  da linguagem:
+este  método só  retornará <code>false</code>  quando o  objeto em  questão for  um
+símbolo, e for idêntico ao  símbolo <code>nil</code>. Para demais casos, retorna-se
+sempre <code>true</code>.
+</p>
+
+<p>
+Podemos  tornar  a  implementação   desse  método  mais  eficiente  ao
+valermo-nos do  mesmo princípio  dos métodos estáticos  anteriores, de
+que  alguns  símbolos possuem  valores  sempre  específicos por  serem
+<i>axiomas</i>  da linguagem.  Assim, uma  falsidade será  indicada quando  o
+símbolo que o objeto atual representa possuir um índice igual a <code>0</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">to_bool</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">bool</span> {
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(idx) = <span style="color: #569cd6;">self</span> {
+            !(*idx == 0)
+        } <span style="color: #569cd6;">else</span> {
+            <span style="color: #569cd6;">true</span>
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6814d04" class="outline-2">
+<h2 id="org6814d04"><span class="section-number-2">6.</span> Macro Rust para listas adequadas</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Um  aspecto interessante  de  um  <code>Maj::Cons</code> é  que  o  mesmo pode  ser
+utilizado para compor listas, de acordo com a especificação.
+</p>
+
+<p>
+Listas <i>adequadas</i> são, de acordo  com a especificação, aquelas formadas
+por encadeamento  de células <i>cons</i>,  de forma que  o <code>cdr</code> de  uma célula
+seja <code>nil</code> ou  outra célula <i>cons</i>, que recursivamente  deverá obedecer ao
+mesmo princípio. Assim, a lista
+</p>
+
+<pre class="example" id="orgefba0bc">
+(a . (b . (c . nil)))
+</pre>
+
+<p>
+poderá ser  criada, em  Rust, da seguinte  forma (assumindo  um estado
+global mutável <code>state</code>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #6a9955;">// </span><span style="color: #6a9955;">Exemplo</span>
+<span style="color: #4ec9b0;">Maj</span>::cons(
+    <span style="color: #4ec9b0;">Maj</span>::symbol(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, <span style="color: #ce9178;">"a"</span>),
+    <span style="color: #4ec9b0;">Maj</span>::cons(
+        <span style="color: #4ec9b0;">Maj</span>::symbol(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, <span style="color: #ce9178;">"b"</span>),
+        <span style="color: #4ec9b0;">Maj</span>::cons(
+            <span style="color: #4ec9b0;">Maj</span>::symbol(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, <span style="color: #ce9178;">"c"</span>),
+            <span style="color: #4ec9b0;">Maj</span>::nil())));
+</pre>
+</div>
+
+<p>
+Ainda que  essa forma de  construição já  mostre o poder  recursivo da
+estrutura,  ela  é  inadequada  para   uso  imediato:  sua  escrita  é
+trabalhosa e ocupa espaço desnecessário.
+</p>
+
+<p>
+Assim, poderemos  criar um <i>macro</i>,  na linguagem Rust, que  <b>escreva por
+nós</b> toda essa estrutura, eliminando sintaxe desnecessária.
+</p>
+
+<p>
+Macros de Rust  têm uma sintaxe peculiar, portanto  vale aqui abreviar
+rapidamente o que o mesmo  faz. Primeiramente, devemos identificar que
+nosso  macro deverá  funcionar <i>recursivamente</i>,  e que  deverá observar
+duas situações de escrita:
+</p>
+
+<ol class="org-ol">
+<li>Estamos  descrevendo o  último elemento de  uma lista:  nesse caso,
+basta utilizar <code>Maj::cons</code>  e especificar <code>car</code> como  sendo este último
+elemento, e <code>cdr</code> como sendo o símbolo <code>nil</code>;</li>
+<li>Estamos descrevendo um elemento em qualquer outra posição da lista:
+nesse caso, basta  utilizar <code>Maj::cons</code> e especificar  <code>car</code> como sendo
+este  elemento.  Os  próximos   elementos  serão  então  atribuídos
+recursivamente ao <code>cdr</code>, através do mesmo macro.</li>
+</ol>
+
+<p>
+Se nosso macro  se chama <code>maj_list!</code>, então podemos  identificar as duas
+situações dessa forma, sintaticamente:
+</p>
+
+<pre class="example" id="orga433e78">
+1. maj_list!(x)       =&gt; Maj::cons(x, Maj::nil())
+2. maj_list!(x, r...) =&gt; Maj::cons(x, maj_list!(r...))
+</pre>
+
+<p>
+Basta  agora identificarmos  as situações  e escrevermo-nas  como duas
+regras  sintáticas do  macro em  questão.  O elemento  atual é  sempre
+escrito como uma  <i>expressão</i> da linguagem Rust; se tivermos  mais de um
+elemento passado a <code>maj_list!</code>, então  isso significa que precisamos nos
+adequar à  segunda regra,  que chamará o  macro recursivamente  para o
+<code>cdr</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #c586c0;">#[macro_export]</span>
+<span style="color: #c586c0;">macro_rules!</span> maj_list {
+    (<span style="color: #9cdcfe;">$x</span>:expr) =&gt; (<span style="color: #4ec9b0;">Maj</span>::cons($x, <span style="color: #4ec9b0;">Maj</span>::nil()));
+
+    (<span style="color: #9cdcfe;">$x</span>:expr, $(<span style="color: #9cdcfe;">$y</span>:expr),+) =&gt; (
+            <span style="color: #4ec9b0;">Maj</span>::cons($x, <span style="color: #c586c0;">maj_list!</span>($($y),+))
+    )
+}
+</pre>
+</div>
+
+<p>
+Munidos dessa nova  notação, podemos reescrever o  exemplo anterior de
+forma simplificada e muito mais didática:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #6a9955;">// </span><span style="color: #6a9955;">Exemplo</span>
+<span style="color: #c586c0;">maj_list!</span>(<span style="color: #4ec9b0;">Maj</span>::symbol(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, <span style="color: #ce9178;">"a"</span>),
+          <span style="color: #4ec9b0;">Maj</span>::symbol(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, <span style="color: #ce9178;">"b"</span>),
+          <span style="color: #4ec9b0;">Maj</span>::symbol(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, <span style="color: #ce9178;">"c"</span>));
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2323be0" class="outline-2">
+<h2 id="org2323be0"><span class="section-number-2">7.</span> Macro Rust para listas pontuadas</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+Outra  ideia interessante  é termos  macros para  listas pontuadas  de
+objetos &#x2013; em  outras palavras, listas que não terminam  com o símbolo
+<code>nil</code>:
+</p>
+
+<pre class="example" id="org8001602">
+(a . (b . (c . d)))
+</pre>
+
+<p>
+Esse tipo de lista pode  ser escrita utilizando uma sintaxe abreviada,
+da seguinte forma:
+</p>
+
+<pre class="example" id="org8549ccc">
+(a b c . d)
+</pre>
+
+<p>
+Veja que esse tipo de lista difere-se da anterior pelo fato de não ser
+uma  lista adequada,  ou seja,  não  ter seu  último <i>cons</i>  com um  <code>cdr</code>
+equivalente a <code>nil</code>.
+</p>
+
+<p>
+Para criar  um macro capaz  de gerar  esse tipo de  estrutura, podemos
+basear-nos no  macro para  listas adequadas  e descrever  as seguintes
+regras:
+</p>
+
+<ol class="org-ol">
+<li>Estamos  tratando, dessa vez, de  uma lista formada por  <i>pelo menos</i>
+dois  elementos. No  caso de  lidarmos com  apenas dois  elementos,
+faremos um par com eles, através de uma célula <i>cons</i>;</li>
+<li>Caso estejamos  tratando de mais de dois  elementos, basta criarmos
+uma célula <i>cons</i>  tal que seu <code>car</code> seja o  primeiro elemento da lista
+dada, e  o <code>cdr</code> seja  tratado recursivamente pelo nosso  macro, como
+feito no anterior;</li>
+<li>Não  há tratamento  válido para apenas  um elemento;  tal tentativa
+constitui sintaxe inválida.</li>
+</ol>
+
+<p>
+Expostas  essas considerações,  a implementação  do macro  para listas
+pontuadas passa a ser trivial:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #c586c0;">#[macro_export]</span>
+<span style="color: #c586c0;">macro_rules!</span> maj_dotted_list {
+    (<span style="color: #9cdcfe;">$x</span>:expr, <span style="color: #9cdcfe;">$y</span>:expr) =&gt; (<span style="color: #4ec9b0;">Maj</span>::cons($x, $y));
+
+    (<span style="color: #9cdcfe;">$x</span>:expr, <span style="color: #9cdcfe;">$y</span>:expr, $(<span style="color: #9cdcfe;">$z</span>:expr),+) =&gt; (
+            <span style="color: #4ec9b0;">Maj</span>::cons($x, <span style="color: #c586c0;">maj_dotted_list!</span>($y, $($z),+))
+    )
+}
+</pre>
+</div>
+
+<p>
+O aspecto mais interessante da  criação de uma lista pontuada, através
+do nosso macro recém-criado <code>maj_dotted_list!</code>, é que esse macro auxilia
+no processo de <i>anexação</i> de listas a outras.
+</p>
+
+<p>
+Por exemplo, suponhamos a função <code>err</code>.  O retorno dessa função pode ser
+visto como adequando-se ao formato
+</p>
+
+<pre class="example" id="org4b9e752">
+(lit error fmt . rest)
+</pre>
+
+<p>
+em outras palavras,  a lista inicia-se com os símbolos  <code>lit</code> e <code>error</code>, e
+então com  uma string  de formato chamada  <code>fmt</code>. Após  esses elementos,
+podem vir nenhum  ou mais elementos, que serão  utiizados na impressão
+da mensagem de erro, sendo estes relacionados à string <code>fmt</code>.
+</p>
+
+<p>
+Em  Rust, a  implementação da  função <code>err</code>  (a ser  discutida em  outro
+lugar)  envolve receber  os objetos  <code>fmt</code>  e <code>rest</code>  como parâmetro.  <code>fmt</code>
+deverá ser obrigatoriamente  uma string, mas <code>rest</code> nada mais  é que uma
+lista de outros objetos quaisquer, que será <i>anexada</i> ao fim do literal.
+</p>
+
+<p>
+Essa  operação de  <i>anexação</i> poderá  ser feita  com extrema  facilidade
+usando nosso novo macro:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #6a9955;">// </span><span style="color: #6a9955;">Exemplo</span>
+<span style="color: #c586c0;">maj_dotted_list!</span>(<span style="color: #4ec9b0;">Maj</span>::lit(),
+                 <span style="color: #4ec9b0;">Maj</span>::error(),
+                 fmt,
+                 rest);
+</pre>
+</div>
+
+<p>
+Suponhamos que <code>fmt</code>  seja um texto qualquer como <code>"foo"</code>  e que <code>rest</code> seja
+uma  lista  <code>(a b c)</code>.  Esta operação  produzirá,  então,  o  seguinte
+resultado:
+</p>
+
+<pre class="example" id="org4a20bc9">
+(lit error "foo" . (a b c))
+</pre>
+
+<p>
+Pela regra de confecção de listas, como o último par colocado na lista
+pontuada também é uma lista,  podemos reescrever a lista pontuada como
+a lista adequada que acabou por tornar-se:
+</p>
+
+<pre class="example" id="org774cba3">
+(lit error "foo" a b c)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org232d99b" class="outline-2">
+<h2 id="org232d99b"><span class="section-number-2">8.</span> Números</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+Em Majestic  Lisp, o número é  um tipo <i>opaco</i>, a  princípio. Porém, sua
+implementação envolve um sistema elaborado  de subtipos, que podem ser
+fabricados com  o mesmo  sistema de estruturas  de dados  associadas a
+elementos de uma enumeração.  Aqui, escolhemos implementá-los seguindo
+as regras abaixo:
+</p>
+
+<ul class="org-ul">
+<li>Um  número  <i>inteiro</i>  (<code>MajNumber::Integer</code>) constitui-se  de  um  mero
+número inteiro, com sinal, de 64 bits;</li>
+<li>Um <i>ponto flutuante</i> (<code>MajNumber::Float</code>)  constitui-se de um mero ponto
+flutuante de 64 bits;</li>
+<li>Uma  <i>fração</i>  (<code>MajNumber::Fraction</code>)   constitui-se  de  dois  números
+inteiros, com sinal, de 64 bits;</li>
+<li>Um   número  <i>complexo</i>   (<code>MajNumber::Complex</code>)  constitui-se   de  uma
+estrutura de  dados, que  armazena recursivamente  outros <code>MajNumber</code>,
+gerenciados pelo coletor de lixo.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #c586c0;">#[derive(Debug, Trace, Finalize, Clone)]</span>
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">enum</span> <span style="color: #4ec9b0;">MajNumber</span> {
+    <span style="color: #4ec9b0;">Integer</span>(<span style="color: #4ec9b0;">i64</span>),
+    <span style="color: #4ec9b0;">Float</span>(<span style="color: #4ec9b0;">f64</span>),
+    <span style="color: #4ec9b0;">Fraction</span>(<span style="color: #4ec9b0;">i64</span>, <span style="color: #4ec9b0;">i64</span>),
+    <span style="color: #4ec9b0;">Complex</span> {
+        <span style="color: #9cdcfe;">real</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">MajNumber</span>&gt;,
+        <span style="color: #9cdcfe;">imag</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">MajNumber</span>&gt;
+    }
+}
+</pre>
+</div>
+
+<p>
+Todos os subtipos enumerados possuem implementação trivial do ponto de
+vista de dados. Todavia, <code>MajNumber::Complex</code> requererá um pouco mais de
+cuidado durante  sua fabricação,  uma vez que  <b>um número  complexo não
+pode</b> ser constituído recursivamente de outros números complexos.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org21695d9" class="outline-2">
+<h2 id="org21695d9"><span class="section-number-2">9.</span> Construtores de números</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+À exceção de <code>MajNumber::Complex</code>, a  construção dos subtipos de números
+é trivial.
+</p>
+
+<p>
+Podemos adicionar diretamente a <code>Maj</code> mais alguns métodos estáticos para
+a  construção desses  elementos. Começaremos  com a  construção de  um
+número inteiro, que é trivial.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">integer</span>(<span style="color: #9cdcfe;">num</span>: <span style="color: #4ec9b0;">i64</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Number</span>(<span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Integer</span>(num)))
+    }
+}
+</pre>
+</div>
+
+<p>
+O segundo método  estático de construção será o de  um ponto flutuante
+que, assim como no caso dos inteiros, também é trivial.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">float</span>(<span style="color: #9cdcfe;">num</span>: <span style="color: #4ec9b0;">f64</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Number</span>(<span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Float</span>(num)))
+    }
+}
+</pre>
+</div>
+
+<p>
+A  fração requer  um  pouco mais  de  escrita, mas  não  deixa de  ser
+igualmente simples. Aqui, tomamos numerador e denominador como números
+inteiros simples.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">fraction</span>(<span style="color: #9cdcfe;">numer</span>: <span style="color: #4ec9b0;">i64</span>, <span style="color: #9cdcfe;">denom</span>: <span style="color: #4ec9b0;">i64</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Number</span>(<span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Fraction</span>(numer, denom)))
+    }
+}
+</pre>
+</div>
+
+<p>
+Já  no caso  dos números  complexos,  precisaremos tomar  um pouco  de
+cuidado. Se alguma das partes informadas (<i>real</i> ou <i>imaginária</i>) for, por
+si, um outro número complexo, <b>a aplicação entrará em pânico</b>, pois este
+será   um   indicativo   de    construção   absurda   de   um   número
+complexo. Ademais,  o mesmo deverá  ocorrer quando um  número complexo
+for construído a partir de elementos que não sejam números.
+</p>
+
+<p>
+Caso as componentes  do número complexo sejam  elementos válidos, será
+criado  um novo  número  complexo, usando  os  números fornecidos  <i>por
+referência</i>:   ou  seja,   os   valores   fornecidos  são   diretamente
+reutilizados, do ponto de vista do coletor de lixo, e não copiados.
+</p>
+
+<p>
+A aplicação entra  em pânico nos casos supracitados  por constituir um
+erro vindo  do programador em  si, através de construção  incorreta do
+programa,  e  não  do  usuário da  linguagem:  qualquer  tentativa  de
+construir   números   complexos   usando  objetos   não-numéricos   ou
+componentes  complexos   será  interpretado  como  erro   de  sintaxe,
+portanto, essas situações nunca deverão  ocorrer em tempo de execução,
+a não ser de forma proposital.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">complex</span>(<span style="color: #9cdcfe;">r</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;, <span style="color: #9cdcfe;">i</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">predicates</span>::maj_complexp;
+
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">r_complexp</span> = maj_complexp(r.clone()).to_bool();
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">i_complexp</span> = maj_complexp(i.clone()).to_bool();
+
+        <span style="color: #569cd6;">if</span> r_complexp || i_complexp {
+            <span style="color: #c586c0;">panic!</span>(<span style="color: #ce9178;">"Complex cannot have complex parts"</span>);
+        }
+
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Number</span>(rc) = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*r.clone() {
+            <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Number</span>(ic) = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*i.clone() {
+                <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Gc</span>::new(
+                    <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Number</span>(<span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Complex</span> {
+                        <span style="color: #9cdcfe;">real</span>: <span style="color: #4ec9b0;">Gc</span>::new(rc.clone()),
+                        <span style="color: #9cdcfe;">imag</span>: <span style="color: #4ec9b0;">Gc</span>::new(ic.clone())
+                    }));
+            } <span style="color: #569cd6;">else</span> {};
+        } <span style="color: #569cd6;">else</span> {};
+
+        <span style="color: #c586c0;">panic!</span>(<span style="color: #ce9178;">"Complex cannot have non-numeric parts"</span>);
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org004cd7b" class="outline-2">
+<h2 id="org004cd7b"><span class="section-number-2">10.</span> Conversões para tipos numéricos</h2>
+<div class="outline-text-2" id="text-10">
+<p>
+Outra coisa  interessante a se  ter na interface de  comunicação entre
+objetos Majestic Lisp e Rust são funções que convertam automaticamente
+alguns objetos para valores nativos de Rust.
+</p>
+
+<p>
+Algo   extremamente    valoroso   de   se   tratar    são   os   tipos
+numéricos.  Primeiramente,  criemos  uma função,  visível  apenas  aos
+métodos de <code>Maj</code>, que converta um objeto <code>Maj</code> para um <code>MajNumber</code>; todavia,
+isso só será  feito caso for possível, como sugere  o retorno do valor
+dentro de um <code>Option</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">to_maj_number</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">Maj</span>) -&gt; <span style="color: #4ec9b0;">Option</span>&lt;<span style="color: #4ec9b0;">MajNumber</span>&gt; {
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Number</span>(num) = x {
+            <span style="color: #4ec9b0;">Some</span>(num.clone())
+        } <span style="color: #569cd6;">else</span> {
+            <span style="color: #4ec9b0;">None</span>
+        }
+    }
+}
+</pre>
+</div>
+
+<p>
+A  conversão de  <code>Maj</code>  para inteiro  (<code>i64</code>) e  ponto  flutuante (<code>f64</code>)  é
+trivial. Usamos  o método definido  previamente, e retornamos  o valor
+associado, mas apenas se for possível; novamente, temos aqui o retorno
+de um <code>Option</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">to_integer</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">Option</span>&lt;<span style="color: #4ec9b0;">i64</span>&gt; {
+        <span style="color: #569cd6;">match</span> <span style="color: #4ec9b0;">Maj</span>::to_maj_number(<span style="color: #569cd6;">self</span>) {
+            <span style="color: #4ec9b0;">Some</span>(num) =&gt; {
+                <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Integer</span>(n) = num {
+                    <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Some</span>(n);
+                } <span style="color: #569cd6;">else</span> {};
+            }
+            <span style="color: #4ec9b0;">None</span> =&gt; {},
+        };
+        <span style="color: #4ec9b0;">None</span>
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">to_float</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">Option</span>&lt;<span style="color: #4ec9b0;">f64</span>&gt; {
+        <span style="color: #569cd6;">match</span> <span style="color: #4ec9b0;">Maj</span>::to_maj_number(<span style="color: #569cd6;">self</span>) {
+            <span style="color: #4ec9b0;">Some</span>(num) =&gt; {
+                <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Float</span>(n) = num {
+                    <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Some</span>(n);
+                } <span style="color: #569cd6;">else</span> {};
+            },
+            <span style="color: #4ec9b0;">None</span> =&gt; {},
+        };
+        <span style="color: #4ec9b0;">None</span>
+    }
+}
+</pre>
+</div>
+
+<p>
+No caso das frações, que são compostas unicamente de um <i>numerador</i> e um
+<i>denominador</i>, cada qual sendo um  número <i>inteiro</i> (<code>i64</code>), convém retornar
+um par (tupla  de dois elementos) &#x2013; novamente, isso  só será feito se
+for possível, portanto retornamos um <code>Option</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">to_fraction</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">Option</span>&lt;(<span style="color: #4ec9b0;">i64</span>, <span style="color: #4ec9b0;">i64</span>)&gt; {
+        <span style="color: #569cd6;">match</span> <span style="color: #4ec9b0;">Maj</span>::to_maj_number(<span style="color: #569cd6;">self</span>) {
+            <span style="color: #4ec9b0;">Some</span>(num) =&gt; {
+                <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Fraction</span>(n, d) = num {
+                    <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Some</span>((n, d));
+                } <span style="color: #569cd6;">else</span> {};
+            },
+            <span style="color: #4ec9b0;">None</span> =&gt; {},
+        };
+        <span style="color: #4ec9b0;">None</span>
+    }
+}
+</pre>
+</div>
+
+<p>
+Podemos  também  <i>forçar</i>  a  conversão  de uma  fração  para  um  ponto
+flutuante. Para tanto, basta que realizemos coerções de tipos.
+</p>
+
+<p>
+Por conveniência, faremos com que esse método realize conversão para
+ponto flutuante a  partir de todos os outros tipos  de números (exceto
+para  números   complexos,  pois  essa  manipulação   não  fará  muito
+sentido).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajNumber</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">into_float</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">f64</span> {
+        <span style="color: #569cd6;">match</span> <span style="color: #569cd6;">self</span> {
+            <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Integer</span>(n) =&gt; {
+                *n <span style="color: #569cd6;">as</span> <span style="color: #4ec9b0;">f64</span>
+            },
+            <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Float</span>(n) =&gt; {
+                *n
+            },
+            <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Fraction</span>(n, d) =&gt; {
+                *n <span style="color: #569cd6;">as</span> <span style="color: #4ec9b0;">f64</span> / *d <span style="color: #569cd6;">as</span> <span style="color: #4ec9b0;">f64</span>
+            },
+            <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Complex</span> {
+                <span style="color: #9cdcfe;">real</span>: _,
+                <span style="color: #9cdcfe;">imag</span>: _
+            } =&gt; {
+                <span style="color: #c586c0;">panic!</span>(<span style="color: #ce9178;">"Cannot convert complex to float"</span>);
+            }
+        }
+    }
+}
+
+<span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">to_forced_float</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">Option</span>&lt;<span style="color: #4ec9b0;">f64</span>&gt; {
+        <span style="color: #569cd6;">match</span> <span style="color: #4ec9b0;">Maj</span>::to_maj_number(<span style="color: #569cd6;">self</span>) {
+            <span style="color: #4ec9b0;">Some</span>(num) =&gt; <span style="color: #4ec9b0;">Some</span>(num.into_float()),
+            <span style="color: #4ec9b0;">None</span> =&gt; <span style="color: #4ec9b0;">None</span>,
+        }
+    }
+}
+</pre>
+</div>
+
+<p>
+Finalmente,  faremos a  conversão  de um  número  complexo para  algum
+objeto  de Rust  que  possa carregá-lo.  Aqui,  optamos por  converter
+forçadamente cada  uma de suas partes  em <i>floats</i>. Isso pode  ser feito
+com o método anteriormente definido.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">to_complex</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">Option</span>&lt;(<span style="color: #4ec9b0;">f64</span>, <span style="color: #4ec9b0;">f64</span>)&gt; {
+        <span style="color: #569cd6;">match</span> <span style="color: #4ec9b0;">Maj</span>::to_maj_number(<span style="color: #569cd6;">self</span>) {
+            <span style="color: #4ec9b0;">Some</span>(num) =&gt; {
+                <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">num</span> = num.clone();
+                <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Complex</span> {
+                    real, imag
+                } = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>num {
+                    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">rreal</span> = (*real.clone()).into_float();
+                    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">rimag</span> = (*imag.clone()).into_float();
+                    <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Some</span>((rreal, rimag));
+                } <span style="color: #569cd6;">else</span> {};
+            },
+            <span style="color: #4ec9b0;">None</span> =&gt; {},
+        }
+        <span style="color: #4ec9b0;">None</span>
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2a3a403" class="outline-2">
+<h2 id="org2a3a403"><span class="section-number-2">11.</span> Conversão para string</h2>
+<div class="outline-text-2" id="text-11">
+<p>
+É igualmente conveniente que tenhamos alguns recursos para transformar
+um objeto <code>Maj</code> para strings de Rust propriamente ditas.
+</p>
+
+<p>
+Strings nada mais são que vetores de caracteres. Em sua implementação,
+armazenamo-nas utilizando a estrutura <code>String</code> de Rust.
+</p>
+
+<p>
+Caso o  objeto <code>x</code> em  questão seja exatamente  um <code>vector</code> cujo  tipo dos
+elementos seja  uniformemente <code>char</code>,  retornaremos <code>Some</code> associado  a um
+clone da <code>String</code>  utilizada na implementação. Caso  esta comparação não
+se enquadre, retornamos <code>None</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_to_string</span>(<span style="color: #9cdcfe;">x</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Option</span>&lt;<span style="color: #4ec9b0;">String</span>&gt; {
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(vv) = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*x {
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Char</span>(s) = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>vv {
+            <span style="color: #4ec9b0;">Some</span>(s.borrow().clone())
+        } <span style="color: #569cd6;">else</span> {
+            <span style="color: #4ec9b0;">None</span>
+        }
+    } <span style="color: #569cd6;">else</span> {
+        <span style="color: #4ec9b0;">None</span>
+    }
+}
+</pre>
+</div>
+
+<p>
+Finalmente, o método <code>Maj::stringify</code>  (diferente de <code>Maj::to_string</code>, que
+é automaticamente implementado com a  formatação simples de objetos, a
+ser discutida em outra seção) clona <code>self</code> para que seja gerenciado pelo
+coletor  de lixo,  e então  invoca <code>maj_to_string</code>  para que  o trabalho
+pesado seja feito.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">stringify</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">Option</span>&lt;<span style="color: #4ec9b0;">String</span>&gt; {
+        maj_to_string(<span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #569cd6;">self</span>.clone()))
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf5a10c7" class="outline-2">
+<h2 id="orgf5a10c7"><span class="section-number-2">12.</span> <span class="todo TODO">TODO</span> Conversão para caractere</h2>
+<div class="outline-text-2" id="text-12">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">to_char</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">Option</span>&lt;<span style="color: #4ec9b0;">char</span>&gt; {
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Char</span>(c) = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*<span style="color: #569cd6;">self</span> {
+            <span style="color: #4ec9b0;">Some</span>(*c)
+        } <span style="color: #569cd6;">else</span> {
+            <span style="color: #4ec9b0;">None</span>
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3f0ea66" class="outline-2">
+<h2 id="org3f0ea66"><span class="section-number-2">13.</span> Recuperação de símbolo cru</h2>
+<div class="outline-text-2" id="text-13">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">to_raw_sym</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">Option</span>&lt;<span style="color: #4ec9b0;">u64</span>&gt; {
+        <span style="color: #569cd6;">match</span> *<span style="color: #569cd6;">self</span> {
+            <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(n) =&gt; <span style="color: #4ec9b0;">Some</span>(n),
+            _ =&gt; <span style="color: #4ec9b0;">None</span>
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgeae756c" class="outline-2">
+<h2 id="orgeae756c"><span class="section-number-2">14.</span> <span class="todo TODO">TODO</span> Streams</h2>
+<div class="outline-text-2" id="text-14">
+<p>
+<i>Streams</i> são um tipo de objeto em construção. Mais será dito a respeito
+deles  no   futuro,  quando  forem  efetivamente   implementados.  Por
+enquanto, o código a seguir serve de espaço reservado.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #c586c0;">#[derive(Trace, Finalize, Debug, Clone, PartialEq)]</span>
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">enum</span> <span style="color: #4ec9b0;">MajStreamDirection</span> {
+    <span style="color: #4ec9b0;">In</span>,
+    <span style="color: #4ec9b0;">Out</span>
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #c586c0;">#[derive(Trace, Finalize, Debug, Clone, PartialEq)]</span>
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">enum</span> <span style="color: #4ec9b0;">MajStreamType</span> {
+    <span style="color: #4ec9b0;">File</span>,
+    <span style="color: #4ec9b0;">Stdin</span>,
+    <span style="color: #4ec9b0;">Stdout</span>,
+    <span style="color: #4ec9b0;">Stderr</span>
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #c586c0;">#[derive(Debug, Trace, Finalize, Clone)]</span>
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">struct</span> <span style="color: #4ec9b0;">MajStream</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #9cdcfe;">direction</span>: <span style="color: #4ec9b0;">MajStreamDirection</span>,
+    <span style="color: #569cd6;">pub</span> <span style="color: #9cdcfe;">handle</span>:    <span style="color: #4ec9b0;">usize</span>,
+    <span style="color: #569cd6;">pub</span> <span style="color: #9cdcfe;">stype</span>:     <span style="color: #4ec9b0;">MajStreamType</span>
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">MajStream</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">is_internal</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>) -&gt; <span style="color: #4ec9b0;">bool</span> {
+        <span style="color: #569cd6;">self</span>.stype != <span style="color: #4ec9b0;">MajStreamType</span>::<span style="color: #4ec9b0;">File</span>
+    }
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #6a9955;">// </span><span style="color: #6a9955;">Para refer&#234;ncia futura</span>
+<span style="color: #c586c0;">#[derive(Trace, Finalize)]</span>
+<span style="color: #569cd6;">struct</span> <span style="color: #4ec9b0;">MeuArquivo</span> {
+    <span style="color: #c586c0;">#[unsafe_ignore_trace]</span>
+    <span style="color: #9cdcfe;">inner</span>: <span style="color: #569cd6;">std</span>::<span style="color: #569cd6;">fs</span>::<span style="color: #4ec9b0;">File</span>,
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">stream</span>(<span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #4ec9b0;">MajState</span>,
+                  <span style="color: #9cdcfe;">file</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">str</span>,
+                  <span style="color: #9cdcfe;">dir</span>: <span style="color: #4ec9b0;">MajStreamDirection</span>
+    ) -&gt; <span style="color: #4ec9b0;">Option</span>&lt;<span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;&gt; {
+        state.make_stream(file, dir)
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org0f30903" class="outline-2">
+<h2 id="org0f30903"><span class="section-number-2">15.</span> Impressão simples</h2>
+<div class="outline-text-2" id="text-15">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">use</span> <span style="color: #569cd6;">std</span>::fmt;
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org0975106" class="outline-3">
+<h3 id="org0975106"><span class="section-number-3">15.1.</span> Impressão simples de objetos</h3>
+<div class="outline-text-3" id="text-15-1">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Display</span> <span style="color: #569cd6;">for</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">fmt</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">f</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Formatter</span>&lt;'<span style="color: #9cdcfe;">_</span>&gt;) -&gt; <span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Result</span> {
+        <span style="color: #569cd6;">match</span> <span style="color: #569cd6;">self</span> {
+            <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(idx) =&gt; {
+                <span style="color: #c586c0;">write!</span>(f, <span style="color: #ce9178;">"~sym#</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, idx)
+            },
+            <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Cons</span> { car, cdr } =&gt; {
+                <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Temporary cons cell display</span>
+                <span style="color: #c586c0;">write!</span>(f, <span style="color: #ce9178;">"(</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;"> . </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">)"</span>, car, cdr)
+            },
+            <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Char</span>(chr) =&gt;
+                <span style="color: #c586c0;">write!</span>(f, <span style="color: #ce9178;">"~char##</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, *chr),
+            <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Stream</span>(_) =&gt; <span style="color: #c586c0;">write!</span>(f, <span style="color: #ce9178;">"~stream"</span>),
+            <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Number</span>(num) =&gt; <span style="color: #c586c0;">write!</span>(f, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, num),
+            <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(_) =&gt; <span style="color: #c586c0;">write!</span>(f, <span style="color: #ce9178;">"~vector"</span>),
+        }
+    }
+}
+</pre>
+</div>
+
+<p>
+Para símbolos, também é válido apontar  que sua forma textual pode ser
+verificada sob um contexto.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">symbol_name</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">MajState</span>) -&gt; <span style="color: #4ec9b0;">String</span> {
+        <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(idx) = <span style="color: #569cd6;">self</span> {
+            state.symbol_name(idx)
+        } <span style="color: #569cd6;">else</span> {
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Cannot give a symbol name to something</span>
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">that is not a symbol... but..</span>
+            <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"~maj#</span><span style="color: #ce9178; font-style: italic;">{:?}</span><span style="color: #ce9178;">"</span>, <span style="color: #569cd6;">self</span>)
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orged1a990" class="outline-3">
+<h3 id="orged1a990"><span class="section-number-3">15.2.</span> Impressão de números</h3>
+<div class="outline-text-3" id="text-15-2">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Display</span> <span style="color: #569cd6;">for</span> <span style="color: #4ec9b0;">MajNumber</span> {
+    <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">fmt</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">f</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Formatter</span>&lt;'<span style="color: #9cdcfe;">_</span>&gt;) -&gt; <span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Result</span> {
+        <span style="color: #569cd6;">match</span> <span style="color: #569cd6;">self</span> {
+            <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Integer</span>(num) =&gt; <span style="color: #c586c0;">write!</span>(f, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, num),
+            <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Float</span>(num) =&gt; {
+                <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">utils</span>::format_raw_float;
+                <span style="color: #c586c0;">write!</span>(f, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, format_raw_float(*num))
+            },
+            <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Fraction</span>(numer, denom) =&gt; {
+                <span style="color: #c586c0;">write!</span>(f, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">/</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, numer, denom)
+            },
+            <span style="color: #4ec9b0;">MajNumber</span>::<span style="color: #4ec9b0;">Complex</span> { real, imag } =&gt; {
+                <span style="color: #c586c0;">write!</span>(f, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">J</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, real, imag)
+            }
+        }
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3b7986d" class="outline-2">
+<h2 id="org3b7986d"><span class="section-number-2">16.</span> Construtores de símbolos constantes</h2>
+<div class="outline-text-2" id="text-16">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #4ec9b0;">MajRawSym</span>;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">utils</span>::sym_from_raw;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">prim</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        sym_from_raw(<span style="color: #4ec9b0;">MajRawSym</span>::<span style="color: #4ec9b0;">Prim</span>)
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">lit</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        sym_from_raw(<span style="color: #4ec9b0;">MajRawSym</span>::<span style="color: #4ec9b0;">Lit</span>)
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">closure</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        sym_from_raw(<span style="color: #4ec9b0;">MajRawSym</span>::<span style="color: #4ec9b0;">Closure</span>)
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">error</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        sym_from_raw(<span style="color: #4ec9b0;">MajRawSym</span>::<span style="color: #4ec9b0;">Error</span>)
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">fn_sym</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        sym_from_raw(<span style="color: #4ec9b0;">MajRawSym</span>::<span style="color: #4ec9b0;">Fn</span>)
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">ampersand</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        sym_from_raw(<span style="color: #4ec9b0;">MajRawSym</span>::<span style="color: #4ec9b0;">Ampersand</span>)
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">apply</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        sym_from_raw(<span style="color: #4ec9b0;">MajRawSym</span>::<span style="color: #4ec9b0;">Apply</span>)
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">macro_sym</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        sym_from_raw(<span style="color: #4ec9b0;">MajRawSym</span>::<span style="color: #4ec9b0;">Macro</span>)
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">mac</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        sym_from_raw(<span style="color: #4ec9b0;">MajRawSym</span>::<span style="color: #4ec9b0;">Mac</span>)
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">quote</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        sym_from_raw(<span style="color: #4ec9b0;">MajRawSym</span>::<span style="color: #4ec9b0;">Quote</span>)
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">unquote</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        sym_from_raw(<span style="color: #4ec9b0;">MajRawSym</span>::<span style="color: #4ec9b0;">Unquote</span>)
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">unquote_splice</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        sym_from_raw(<span style="color: #4ec9b0;">MajRawSym</span>::<span style="color: #4ec9b0;">UnquoteSplice</span>)
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">quasiquote</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        sym_from_raw(<span style="color: #4ec9b0;">MajRawSym</span>::<span style="color: #4ec9b0;">Quasiquote</span>)
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">do_sym</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        sym_from_raw(<span style="color: #4ec9b0;">MajRawSym</span>::<span style="color: #4ec9b0;">Do</span>)
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">vector_sym</span>() -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        sym_from_raw(<span style="color: #4ec9b0;">MajRawSym</span>::<span style="color: #4ec9b0;">Vector</span>)
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Lucas S. Vieira</p>
+<p class="date">Created: 2022-10-23 dom 22:47</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
