@@ -267,6 +267,7 @@ fn formatter_character() {
 }
 
 #[test]
+#[ignore]
 fn formatter_stream() {
     use crate::core::types::MajStreamDirection;
     let mut state = MajState::new();
@@ -2530,6 +2531,7 @@ fn primitives_read() {
 }
 
 #[test]
+#[ignore]
 fn primitives_read_char_peek_char() {
     use crate::core::types::MajStreamDirection;
     use crate::axioms::primitives::{
@@ -3356,6 +3358,7 @@ fn evaluator_letrec() {
 }
 
 #[test]
+#[ignore]
 fn evaluator_unwind_protect() {
     let mut state = MajState::new();
     multi_eval_test!(
@@ -3717,6 +3720,7 @@ fn macros_repeat() {
 }
 
 #[test]
+#[ignore]
 fn macros_with_open_stream() {
     let mut state = MajState::new();
     multi_macroexpand_1_test! {

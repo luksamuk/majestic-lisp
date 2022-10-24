@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
 <head>
-<!-- 2022-10-24 seg 00:27 -->
+<!-- 2022-10-24 seg 09:58 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Testes</title>
@@ -684,6 +684,7 @@ testes tentam seguir as orientações e exemplos da especificação ao máximo.
 <div class="outline-text-3" id="text-4-4">
 <div class="org-src-container">
 <pre class="src src-rust"><span style="color: #c586c0;">#[test]</span>
+<span style="color: #c586c0;">#[ignore]</span>
 <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">formatter_stream</span>() {
     <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #569cd6;">types</span>::<span style="color: #4ec9b0;">MajStreamDirection</span>;
     <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">state</span> = <span style="color: #4ec9b0;">MajState</span>::new();
@@ -714,8 +715,8 @@ testes tentam seguir as orientações e exemplos da especificação ao máximo.
 </div>
 </div>
 
-<div id="outline-container-org51199f2" class="outline-3">
-<h3 id="org51199f2"><span class="section-number-3">4.5.</span> Números</h3>
+<div id="outline-container-orgfee225f" class="outline-3">
+<h3 id="orgfee225f"><span class="section-number-3">4.5.</span> Números</h3>
 <div class="outline-text-3" id="text-4-5">
 </div>
 <div id="outline-container-org3969f11" class="outline-4">
@@ -947,8 +948,8 @@ complicações em tipos esperados. Então, ignoramos simplificações.
 </div>
 </div>
 
-<div id="outline-container-org15bfa2a" class="outline-4">
-<h4 id="org15bfa2a"><span class="section-number-4">4.7.3.</span> Strings</h4>
+<div id="outline-container-org68ea48f" class="outline-4">
+<h4 id="org68ea48f"><span class="section-number-4">4.7.3.</span> Strings</h4>
 <div class="outline-text-4" id="text-4-7-3">
 <div class="org-src-container">
 <pre class="src src-rust"><span style="color: #c586c0;">#[test]</span>
@@ -3774,6 +3775,7 @@ clausuras, mas com algumas modificações.
 <div class="outline-text-4" id="text-6-6-5">
 <div class="org-src-container">
 <pre class="src src-rust"><span style="color: #c586c0;">#[test]</span>
+<span style="color: #c586c0;">#[ignore]</span>
 <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">primitives_read_char_peek_char</span>() {
     <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #569cd6;">types</span>::<span style="color: #4ec9b0;">MajStreamDirection</span>;
     <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">primitives</span>::{
@@ -4268,8 +4270,8 @@ clausuras, mas com algumas modificações.
 </div>
 </div>
 
-<div id="outline-container-orgfee225f" class="outline-3">
-<h3 id="orgfee225f"><span class="section-number-3">8.2.</span> Números</h3>
+<div id="outline-container-orgc1e8b43" class="outline-3">
+<h3 id="orgc1e8b43"><span class="section-number-3">8.2.</span> Números</h3>
 <div class="outline-text-3" id="text-8-2">
 <div class="org-src-container">
 <pre class="src src-rust"><span style="color: #c586c0;">#[test]</span>
@@ -4293,8 +4295,8 @@ clausuras, mas com algumas modificações.
 </div>
 </div>
 
-<div id="outline-container-org68ea48f" class="outline-3">
-<h3 id="org68ea48f"><span class="section-number-3">8.3.</span> Strings</h3>
+<div id="outline-container-org75cc5f9" class="outline-3">
+<h3 id="org75cc5f9"><span class="section-number-3">8.3.</span> Strings</h3>
 <div class="outline-text-3" id="text-8-3">
 <div class="org-src-container">
 <pre class="src src-rust"><span style="color: #c586c0;">#[test]</span>
@@ -4852,6 +4854,7 @@ clausuras, mas com algumas modificações.
 <div class="outline-text-4" id="text-9-1-16">
 <div class="org-src-container">
 <pre class="src src-rust"><span style="color: #c586c0;">#[test]</span>
+<span style="color: #c586c0;">#[ignore]</span>
 <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">evaluator_unwind_protect</span>() {
     <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">state</span> = <span style="color: #4ec9b0;">MajState</span>::new();
     <span style="color: #c586c0;">multi_eval_test!</span>(
@@ -5388,6 +5391,7 @@ clausuras, mas com algumas modificações.
 <div class="outline-text-4" id="text-9-5-9">
 <div class="org-src-container">
 <pre class="src src-rust"><span style="color: #c586c0;">#[test]</span>
+<span style="color: #c586c0;">#[ignore]</span>
 <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">macros_with_open_stream</span>() {
     <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">state</span> = <span style="color: #4ec9b0;">MajState</span>::new();
     <span style="color: #c586c0;">multi_macroexpand_1_test!</span> {
@@ -5412,7 +5416,7 @@ clausuras, mas com algumas modificações.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Lucas S. Vieira</p>
-<p class="date">Created: 2022-10-24 seg 00:27</p>
+<p class="date">Created: 2022-10-24 seg 09:58</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

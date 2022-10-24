@@ -20,7 +20,7 @@ jobs:
           toolchain: nightly
       - name: Checkout Repo
         uses: actions/checkout@v3
-      # TODO: Tangle .org files using Emacs        
+      # TODO: Tangle .org files using Emacs
       - name: Run unit tests
         uses: actions-rs/cargo@v1
         with:
@@ -43,7 +43,7 @@ jobs:
           override: true
       - name: Checkout Repo
         uses: actions/checkout@v3
-      # TODO: Tangle .org files using Emacs        
+      # TODO: Tangle .org files using Emacs
       - name: Build
         uses: actions-rs/cargo@v1
         with:
@@ -82,7 +82,7 @@ jobs:
           override: true
       - name: Checkout Repo
         uses: actions/checkout@v3
-      # TODO: Tangle .org files using Emacs        
+      # TODO: Tangle .org files using Emacs
       - name: Build
         uses: actions-rs/cargo@v1
         with:
