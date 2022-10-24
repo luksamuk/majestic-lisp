@@ -815,7 +815,7 @@ fn main() {
                 if VERSION != "" {
                     println!("Build {} {}", VERSION, TIMESTAMP);
                 }
-                println!("Copyright (c) 2020-2021 Lucas S. Vieira");
+                println!("Copyright (c) 2020-2022 Lucas S. Vieira");
             }
 
             if options.showhelp {
