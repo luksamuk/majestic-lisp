@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
 <head>
-<!-- 2022-10-23 dom 23:28 -->
+<!-- 2022-10-24 seg 00:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Estado global</title>
@@ -222,11 +222,6 @@
 <li><a href="#orgc85ab86">5.3. Status do stream</a></li>
 <li><a href="#org38a0205">5.4. Empréstimo do stream</a></li>
 <li><a href="#org351687e">5.5. Caractere espionado em <code>*stdin*</code></a></li>
-<li><a href="#orgce73668">5.6. <span class="todo TODO">TODO</span> Vetores</a>
-<ul>
-<li><a href="#org6767e4a">5.6.1. Criação de vetores</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li><a href="#orgcdfade9">6. <span class="todo TODO">TODO</span> Contexto global</a></li>
@@ -795,88 +790,6 @@ adequadamente compreendido pelo usuário, como <code>~uninterned##5</code>.
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgce73668" class="outline-3">
-<h3 id="orgce73668"><span class="section-number-3">5.6.</span> <span class="todo TODO">TODO</span> Vetores</h3>
-<div class="outline-text-3" id="text-5-6">
-<div class="org-src-container">
-<pre class="src src-rust"><span style="color: #c586c0;">#[derive(Debug, Trace, Finalize, Clone)]</span>
-<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">enum</span> <span style="color: #4ec9b0;">MajVector</span> {
-    <span style="color: #4ec9b0;">Integer</span>(<span style="color: #4ec9b0;">GcCell</span>&lt;<span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">i64</span>&gt;&gt;),
-    <span style="color: #4ec9b0;">Float</span>(<span style="color: #4ec9b0;">GcCell</span>&lt;<span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">f64</span>&gt;&gt;),
-    <span style="color: #4ec9b0;">Char</span>(<span style="color: #4ec9b0;">GcCell</span>&lt;<span style="color: #4ec9b0;">String</span>&gt;),
-    <span style="color: #4ec9b0;">Any</span>(<span style="color: #4ec9b0;">GcCell</span>&lt;<span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;&gt;&gt;)
-}
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-rust"><span style="color: #c586c0;">#[derive(Debug, PartialEq)]</span>
-<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">enum</span> <span style="color: #4ec9b0;">MajVectorType</span> {
-    <span style="color: #4ec9b0;">Integer</span>,
-    <span style="color: #4ec9b0;">Float</span>,
-    <span style="color: #4ec9b0;">Char</span>,
-    <span style="color: #4ec9b0;">Any</span>
-}
-</pre>
-</div>
-</div>
-
-<div id="outline-container-org6767e4a" class="outline-4">
-<h4 id="org6767e4a"><span class="section-number-4">5.6.1.</span> Criação de vetores</h4>
-<div class="outline-text-4" id="text-5-6-1">
-<div class="org-src-container">
-<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
-    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">vector</span>(<span style="color: #9cdcfe;">vtype</span>: <span style="color: #4ec9b0;">MajVectorType</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
-        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(
-            <span style="color: #569cd6;">match</span> vtype {
-                <span style="color: #4ec9b0;">MajVectorType</span>::<span style="color: #4ec9b0;">Integer</span> =&gt; {
-                    <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Integer</span>(
-                        <span style="color: #4ec9b0;">GcCell</span>::new(<span style="color: #4ec9b0;">Vec</span>::new()))
-                },
-                <span style="color: #4ec9b0;">MajVectorType</span>::<span style="color: #4ec9b0;">Float</span> =&gt; {
-                    <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Float</span>(
-                        <span style="color: #4ec9b0;">GcCell</span>::new(<span style="color: #4ec9b0;">Vec</span>::new()))
-                },
-                <span style="color: #4ec9b0;">MajVectorType</span>::<span style="color: #4ec9b0;">Char</span> =&gt; {
-                    <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Char</span>(
-                        <span style="color: #4ec9b0;">GcCell</span>::new(<span style="color: #4ec9b0;">String</span>::new()))
-                },
-                <span style="color: #4ec9b0;">MajVectorType</span>::<span style="color: #4ec9b0;">Any</span> =&gt; {
-                    <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Any</span>(
-                        <span style="color: #4ec9b0;">GcCell</span>::new(<span style="color: #4ec9b0;">Vec</span>::new()))
-                },
-            }))
-    }
-}
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
-    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">vector_integer</span>(<span style="color: #9cdcfe;">vec</span>: <span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">i64</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
-        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(
-            <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Integer</span>(
-                <span style="color: #4ec9b0;">GcCell</span>::new(vec.clone()))))
-    }
-    
-    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">vector_float</span>(<span style="color: #9cdcfe;">vec</span>: <span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">f64</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
-        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(
-            <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Float</span>(
-                <span style="color: #4ec9b0;">GcCell</span>::new(vec.clone()))))
-    }
-
-    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">vector_any</span>(<span style="color: #9cdcfe;">vec</span>: <span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
-        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(
-            <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Any</span>(
-                <span style="color: #4ec9b0;">GcCell</span>::new(vec.clone()))))
-    }
-}
-</pre>
-</div>
-</div>
-</div>
-</div>
 </div>
 
 <div id="outline-container-orgcdfade9" class="outline-2">
@@ -893,7 +806,7 @@ O  contexto  <i>léxico</i>  é  aquele  produzido  especificamente  durante  a
 aplicação de funções. Seja a função
 </p>
 
-<pre class="example" id="orgcf0d57d">
+<pre class="example" id="orgb458060">
 (fn (x y) (+ x y))
 </pre>
 
@@ -916,7 +829,7 @@ Uma função como  a anterior, quando interpretada  no chamado <i>top-level</i>
 da aplicação, poderá ser representada internamente da seguinte forma:
 </p>
 
-<pre class="example" id="org9d3cfb4">
+<pre class="example" id="org939c972">
 (lit closure nil (x y) (+ x y))
 </pre>
 
@@ -1029,7 +942,7 @@ global.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Lucas S. Vieira</p>
-<p class="date">Created: 2022-10-23 dom 23:28</p>
+<p class="date">Created: 2022-10-24 seg 00:27</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

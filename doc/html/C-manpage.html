@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+<head>
+<!-- 2022-10-24 seg 00:27 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Apêndice C: Manpage</title>
+<meta name="author" content="Lucas S. Vieira" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="./main.css" />
+<link rel="stylesheet" type="text/css" href="./syntax.css" />
+<link id="theme-css" rel="stylesheet" type="text/css" href="./dark-theme.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="../img/cat-i-mage.jpg">
+<meta name="theme-color" content="#14171e">
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Apêndice C: Manpage</h1>
+<p>
+Arquivo: <code>man/man1/majestic.1</code>
+</p>
+
+<p>
+Sem linhas entre os elementos.
+</p>
+
+<p>
+Manual do <code>troff</code><sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>.
+</p>
+
+<div id="outline-container-org2e5433e" class="outline-2">
+<h2 id="org2e5433e"><span class="section-number-2">1.</span> Seções</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orged53275" class="outline-3">
+<h3 id="orged53275"><span class="section-number-3">1.1.</span> Cabeçalho</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+<pre class="src src-nroff">.<span style="color: #6a9955;">\" </span><span style="color: #6a9955;">Majestic Lisp manpage</span>
+.<span style="color: #6a9955;">\" </span><span style="color: #6a9955;">Copyright (c) 2020-2021 Lucas S. Vieira</span>
+<span style="color: #569cd6;">.TH</span> majestic 1 <span style="color: #ce9178;">"Updated 2021-01-23"</span> <span style="color: #ce9178;">"majestic-0.3.9"</span> <span style="color: #ce9178;">"MAJESTIC"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org95e4ac1" class="outline-3">
+<h3 id="org95e4ac1"><span class="section-number-3">1.2.</span> Nome</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+<pre class="src src-nroff"><span style="color: #569cd6;">.SH</span> <span style="color: #ce9178;">"NAME"</span>
+<span style="color: #569cd6;">.P</span>
+majestic <span style="color: #569cd6;">\-</span> <span style="color: #569cd6;">\f</span>IMajestic Lisp Interpreter<span style="color: #569cd6;">\f</span>P
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdfae24a" class="outline-3">
+<h3 id="orgdfae24a"><span class="section-number-3">1.3.</span> Sinopse</h3>
+<div class="outline-text-3" id="text-1-3">
+<div class="org-src-container">
+<pre class="src src-nroff"><span style="color: #569cd6;">.SH</span> <span style="color: #ce9178;">"SYNOPSIS"</span>
+<span style="color: #569cd6;">.P</span>
+majestic [<span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-</span>l<span style="color: #569cd6;">\f</span>P | <span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-\-</span>load<span style="color: #569cd6;">\f</span>P <span style="color: #569cd6;">\f</span>Ifile<span style="color: #569cd6;">\f</span>P] [<span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-</span>e<span style="color: #569cd6;">\f</span>P | <span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-\-</span>eval<span style="color: #569cd6;">\f</span>P <span style="color: #569cd6;">\f</span>Icommand<span style="color: #569cd6;">\f</span>P]
+         [<span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-</span>s<span style="color: #569cd6;">\f</span>P | <span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-\-</span>silent<span style="color: #569cd6;">\f</span>P] [<span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-</span>q<span style="color: #569cd6;">\f</span>P | <span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-\-</span>quit<span style="color: #569cd6;">\f</span>P] [<span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-</span>h<span style="color: #569cd6;">\f</span>P | <span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-</span>?<span style="color: #569cd6;">\f</span>P | <span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-\-</span>help<span style="color: #569cd6;">\f</span>P]
+         [<span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-\-</span>script<span style="color: #569cd6;">\f</span>P <span style="color: #569cd6;">\f</span>Ifile<span style="color: #569cd6;">\f</span>P]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2751c55" class="outline-3">
+<h3 id="org2751c55"><span class="section-number-3">1.4.</span> Descrição</h3>
+<div class="outline-text-3" id="text-1-4">
+<div class="org-src-container">
+<pre class="src src-nroff"><span style="color: #569cd6;">.SH</span> <span style="color: #ce9178;">"DESCRIPTION"</span>
+<span style="color: #569cd6;">.P</span>
+<span style="color: #569cd6;">\f</span>IMajestic Lisp<span style="color: #569cd6;">\f</span>P is a programming language, a dialect of Lisp
+built mostly for educational purposes. It is inspired by Lisp
+dialects such as Bel, Common Lisp and Clojure. It also draws some
+inspiration from languages such as APL. It is written as a
+<span style="color: #569cd6;">\f</span>Iliterate program<span style="color: #569cd6;">\f</span>P in book form, so that readers can
+reimplement it and learn more about the implementation of Lisp
+languages.
+<span style="color: #569cd6;">.PP</span>
+The goals of <span style="color: #569cd6;">\f</span>IMajestic Lisp<span style="color: #569cd6;">\f</span>P are:
+<span style="color: #569cd6;">.TP</span> 2
+<span style="color: #569cd6;">\-</span>
+To provide a language which could have an educational purpose,
+through a didatic implementation.
+<span style="color: #569cd6;">.TP</span>
+<span style="color: #569cd6;">\-</span>
+To delegate performance favoring correctness, as performance is
+not a central topic, though it is desired at some points.
+<span style="color: #569cd6;">.TP</span>
+<span style="color: #569cd6;">\-</span>
+To provide a simple dialect of a Lisp language, so that veteran
+Lisp programmers could feel at home while using it.
+<span style="color: #569cd6;">.TP</span>
+<span style="color: #569cd6;">\-</span>
+To show that designing and implementing your own Lisp language is
+not an intangible task.
+<span style="color: #569cd6;">.TP</span>
+<span style="color: #569cd6;">\-</span>
+To provide a language simple enough so that even if the programmer
+is unable to execute its interpreter, he or she could still predict
+the outcome of an evaluation algebrically.
+<span style="color: #569cd6;">.PP</span>
+The program <span style="color: #569cd6;">\f</span>Imajestic<span style="color: #569cd6;">\f</span>P is the first implementation of <span style="color: #569cd6;">\f</span>IMajestic Lisp<span style="color: #569cd6;">\f</span>P, built using the Rust language. Its prose is written using Org on Emacs.
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9dd56ef" class="outline-3">
+<h3 id="org9dd56ef"><span class="section-number-3">1.5.</span> Uso geral</h3>
+<div class="outline-text-3" id="text-1-5">
+<div class="org-src-container">
+<pre class="src src-nroff"><span style="color: #569cd6;">.SH</span> <span style="color: #ce9178;">"GENERAL USAGE"</span>
+Most of <span style="color: #569cd6;">\f</span>Imajestic<span style="color: #569cd6;">\f</span>P's usage can be done through an interactive prompt,
+known as a <span style="color: #569cd6;">\f</span>BREPL<span style="color: #569cd6;">\f</span>P (Read-Evaluate-Print-Loop).
+The <span style="color: #569cd6;">\f</span>BREPL<span style="color: #569cd6;">\f</span>P starts expecting the user input with an angled bracket (<span style="color: #ce9178;">"&gt;"</span>).
+The user may then write a valid language command and press <span style="color: #569cd6;">\f</span>PEnter<span style="color: #569cd6;">\f</span>P.
+Afterwards, the interpreter will attempt to evaluate the expression and
+print its results. Should the process fail, the <span style="color: #569cd6;">\f</span>BREPL<span style="color: #569cd6;">\f</span>P will print an
+error message, then go back to the prompt which expects user input.
+<span style="color: #569cd6;">.PP</span>
+The user may exit the application anytime by typing Control-C or Control-D.
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org96712e4" class="outline-3">
+<h3 id="org96712e4"><span class="section-number-3">1.6.</span> Comandos de Debug</h3>
+<div class="outline-text-3" id="text-1-6">
+<div class="org-src-container">
+<pre class="src src-nroff"><span style="color: #569cd6;">.SS</span> <span style="color: #ce9178;">"DEBUG COMMANDS"</span>
+The user may debug the tokenization process by entering the command <span style="color: #569cd6;">\f</span>I#t<span style="color: #569cd6;">\f</span>P
+at the <span style="color: #569cd6;">\f</span>BREPL<span style="color: #569cd6;">\f</span>P.
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf7d200d" class="outline-3">
+<h3 id="orgf7d200d"><span class="section-number-3">1.7.</span> Opções de linha de comando</h3>
+<div class="outline-text-3" id="text-1-7">
+<div class="org-src-container">
+<pre class="src src-nroff"><span style="color: #569cd6;">.SH</span> <span style="color: #ce9178;">"COMMAND-LINE OPTIONS"</span>
+<span style="color: #569cd6;">.PP</span>
+<span style="color: #569cd6;">\f</span>Imajestic<span style="color: #569cd6;">\f</span>P recognizes the following command-line arguments:
+<span style="color: #569cd6;">.TP</span> 1i
+<span style="color: #569cd6;">.B</span> -l, --load <span style="color: #569cd6;">\f</span>Ifile<span style="color: #569cd6;">\f</span>P
+Load and evaluate the contents of <span style="color: #569cd6;">\f</span>Ifile<span style="color: #569cd6;">\f</span>P. This will leave a <span style="color: #569cd6;">\f</span>BREPL<span style="color: #569cd6;">\f</span>P
+prompt open afterwards so that the user can input commands, unless specified
+by the <span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-\-</span>quit<span style="color: #569cd6;">\f</span>P flag. This option may also be repeated; the files will
+be loaded in the order they are given. If the parsing or tokenization
+operations fail for a given file, the subsequent files will not be loaded.
+Loading of files take priority over execution of commands from command line.
+<span style="color: #569cd6;">.TP</span>
+<span style="color: #569cd6;">.B</span> -e, --eval <span style="color: #569cd6;">\f</span>Icommand<span style="color: #569cd6;">\f</span>P
+Evaluate the string <span style="color: #569cd6;">\f</span>Icommand<span style="color: #569cd6;">\f</span>P. This will leave a <span style="color: #569cd6;">\f</span>BREPL<span style="color: #569cd6;">\f</span>P prompt open
+afterwards so that the user can input commands, unless specified by the
+<span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-\-</span>quit<span style="color: #569cd6;">\f</span>P flag. This option may also be repeated; the commands will be
+evaluated in the order they are given. The evaluation of commands will not
+be interrupted by ordinary failures of any kind. Evaluation of commands
+will only happen after all files loaded are processed, and will carry on
+even when the file loading fails.
+<span style="color: #569cd6;">.TP</span>
+<span style="color: #569cd6;">.B</span> -s, --silent
+Inhibit output of greeting ribbon and prompt.
+<span style="color: #569cd6;">.TP</span>
+<span style="color: #569cd6;">.B</span> -q, --quit
+Suppress the <span style="color: #569cd6;">\f</span>BREPL<span style="color: #569cd6;">\f</span>P, exiting the application after all files and commands
+given through the command line are processed.
+<span style="color: #569cd6;">.TP</span>
+<span style="color: #569cd6;">.B</span> -h, -?, --help
+Shows a help prompt.
+<span style="color: #569cd6;">.TP</span>
+<span style="color: #569cd6;">.B</span> --script <span style="color: #569cd6;">\f</span>Ifile<span style="color: #569cd6;">\f</span>B
+Loads a file and bails out. Same as <span style="color: #569cd6;">\f</span>B--silent<span style="color: #569cd6;">\f</span>P <span style="color: #569cd6;">\f</span>B--quit<span style="color: #569cd6;">\f</span>P <span style="color: #569cd6;">\f</span>B--load<span style="color: #569cd6;">\f</span>P <span style="color: #569cd6;">\f</span>Ifile<span style="color: #569cd6;">\f</span>P.
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org38b913b" class="outline-3">
+<h3 id="org38b913b"><span class="section-number-3">1.8.</span> Scripts usando Majestic Lisp</h3>
+<div class="outline-text-3" id="text-1-8">
+<div class="org-src-container">
+<pre class="src src-nroff"><span style="color: #569cd6;">.SH</span> <span style="color: #ce9178;">"MAJESTIC LISP SCRIPTS"</span>
+Generally, <span style="color: #569cd6;">\f</span>Bmajestic<span style="color: #569cd6;">\f</span>P will attempt to ignore whenever the first line of a
+file is initialized with a shebang (<span style="color: #ce9178;">"#!"</span>). This means that, even when using
+<span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-\-</span>load<span style="color: #569cd6;">\f</span>P or <span style="color: #569cd6;">\f</span>B<span style="color: #569cd6;">\-\-</span>script<span style="color: #569cd6;">\f</span>P, the file will be loaded normally.
+<span style="color: #569cd6;">.PP</span>
+This enables for the possibility of using Majestic Lisp as a scripting
+language. But this will only happen if the exact two first characters of the
+given file are <span style="color: #ce9178;">"#!"</span>, which will be treated as a comment such as <span style="color: #ce9178;">";;"</span>.
+<span style="color: #569cd6;">.PP</span>
+The code below is an example of the contents of a script file for Majestic
+Lisp, assuming that <span style="color: #569cd6;">\f</span>Imajestic<span style="color: #569cd6;">\f</span>P is installed under <span style="color: #569cd6;">\f</span>I/usr/bin/majestic<span style="color: #569cd6;">\f</span>P.
+This script will create an output file <span style="color: #569cd6;">\f</span>Itestfile.txt<span style="color: #569cd6;">\f</span>P on the current
+directory for output, and then will close it immediately.
+
+<span style="color: #569cd6;">.br</span>
+<span style="color: #569cd6;">.EX</span>
+#!/usr/bin/majestic --script
+(cls (ops <span style="color: #ce9178;">"testfile.txt"</span> 'out))
+<span style="color: #569cd6;">.EE</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5776233" class="outline-3">
+<h3 id="org5776233"><span class="section-number-3">1.9.</span> Bugs conhecidos</h3>
+<div class="outline-text-3" id="text-1-9">
+<div class="org-src-container">
+<pre class="src src-nroff"><span style="color: #569cd6;">.SH</span> <span style="color: #ce9178;">"BUGS"</span>
+<span style="color: #569cd6;">.PP</span>
+<span style="color: #569cd6;">\f</span>Imajestic<span style="color: #569cd6;">\f</span>P is still beta quality, so it is possible that it does not
+fully comply with its specification or has some bugs. Here is a list of its
+known problematic bits.
+<span style="color: #569cd6;">.TP</span> 2
+<span style="color: #569cd6;">\-</span>
+There is currently no unicode support.
+<span style="color: #569cd6;">.TP</span>
+<span style="color: #569cd6;">\-</span>
+Partial application can be problematic on variadic arguments,
+specially on particular cases where all arguments are variadic.
+<span style="color: #569cd6;">.TP</span>
+<span style="color: #569cd6;">\-</span>
+Number arithmetic is not implemented or may not be fully implemented.
+<span style="color: #569cd6;">.TP</span>
+<span style="color: #569cd6;">\-</span>
+The codebase is still largely untested and may need refactoring for
+acceptable execution speeds.
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgad8bfe0" class="outline-3">
+<h3 id="orgad8bfe0"><span class="section-number-3">1.10.</span> Autor</h3>
+<div class="outline-text-3" id="text-1-10">
+<div class="org-src-container">
+<pre class="src src-nroff"><span style="color: #569cd6;">.SH</span> <span style="color: #ce9178;">"AUTHOR"</span>
+Copyright (c) 2020-2021 Lucas S. Vieira.
+<span style="color: #569cd6;">.br</span>
+Licensed under the MIT License.
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org18c2d6c" class="outline-2">
+<h2 id="org18c2d6c"><span class="section-number-2">2.</span> Testando a página de manual</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgf9ae7fc" class="outline-3">
+<h3 id="orgf9ae7fc"><span class="section-number-3">2.1.</span> Vendo a página de manual no console</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-bash">man -M man 1 majestic
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8c6eac4" class="outline-3">
+<h3 id="org8c6eac4"><span class="section-number-3">2.2.</span> Exportando o manual para PDF</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-bash">man -M man -Tpdf 1 majestic &gt;<span style="color: #ce9178;">"man/majestic(1).pdf"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc46b29b" class="outline-3">
+<h3 id="orgc46b29b"><span class="section-number-3">2.3.</span> Exportando o manual para PDF (via Plan 9)</h3>
+<div class="outline-text-3" id="text-2-3">
+<div class="org-src-container">
+<pre class="src src-bash">nroff -man man/man1/majestic.1 | lp -dstdout <span style="color: #ce9178;">\</span>
+                                    &gt;<span style="color: #ce9178;">'man/majestic(1)-verbatim.pdf'</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org093b148" class="outline-3">
+<h3 id="org093b148"><span class="section-number-3">2.4.</span> Exportando o manual para HTML</h3>
+<div class="outline-text-3" id="text-2-4">
+<div class="org-src-container">
+<pre class="src src-bash">man -M man -Thtml 1 majestic &gt;<span style="color: #ce9178;">"man/majestic-1.html"</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1" role="doc-backlink">1</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+<a href="https://www.gnu.org/software/groff/manual/html_node/index.html#SEC_Contents">https://www.gnu.org/software/groff/manual/html_node/index.html#SEC_Contents</a> 
+</p></div></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<p class="author">Author: Lucas S. Vieira</p>
+<p class="date">Created: 2022-10-24 seg 00:27</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

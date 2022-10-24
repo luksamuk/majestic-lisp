@@ -62,7 +62,7 @@ Este projeto utiliza a licença MIT.
 
 * Apêndices
 
-- A: Especificação
-- B: Mais exemplos de Majestic Lisp
-- E: Manpage
-
+- [[./A-especificacao.org][A: Especificação]]
+- [[./B-mais-exemplos.org][B: Mais exemplos de Majestic Lisp]]
+- [[./C-manpage.org][C: Manpage]]
+  

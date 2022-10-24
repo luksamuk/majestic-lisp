@@ -1,0 +1,104 @@
+#+setupfile: static/setupfile.org
+#+html_link_up: index.html
+#+title: Apêndice B: Mais Exemplos de Majestic Lisp
+#+startup: content
+
+Este apêndice reune alguns exemplos interessantes de código escrito em
+Majestic  Lisp, que  não  foram mostrados  anteriormente, em  especial
+exemplos  mais longos.
+
+A  maioria  do que  será  mostrado  a  seguir  é código,  sem  maiores
+explicações  acerca  dos   mesmos;  recomenda-se  verificar  quaisquer
+materiais ou referências assinaladas para maiores informações.
+
+* TODO Exemplo básico :noexport:
+
+# Esse exemplo básico não é tão básico assim. Melhorar?
+
+#+INCLUDE: "examples/basic.maj" src majestic
+
+* Bootstrapping
+
+O processo  de /boostrapping/  em Majestic Lisp  envolve a  definição de
+macros, funções e  variáveis do sistema diretamente  em Majestic Lisp,
+permitindo que não seja necessário  programá-las em Rust. Dessa forma,
+é  possível  testar  novos  conceitos de  Majestic  usando  a  própria
+linguagem, antes de alterar o interpretador.
+
+#+index: bootstrap
+#+INCLUDE: "examples/bootstrap.maj" src majestic
+
+* Lazy evaluation
+
+O exemplo a seguir reimplementa  ferramentas para /lazy evaluation/ como
+vistas  em  citet:sicp, realizando  uma  conversão  do código  de
+Scheme para Majestic.
+
+#+INCLUDE: "examples/lazy.maj" src majestic
+
+* Interpretador metacircular
+
+#+index: interpretador metacircular
+#+index: homoiconicidade
+Interpretadores  metacirculares  são  ferramentas  interessantes  para
+estudo  de  implementação   de  interpretadores,  porque  possibilitam
+experimentar com novas  ideias em uma linguagem de  forma rápida. Esse
+processo  é   especialmente  facilitado   ao  usarmos   uma  linguagem
+homoicônica, como  dialetos de  Lisp normalmente  são, e  difere-se do
+mero /bootstrap/  uma vez que  remove a necessidade da  especificação de
+uma semântica exata para alguns elementos.
+
+O  algoritmo a  seguir  é uma  adaptação do  algoritmo  como visto  em
+citet:sicp.  Em especial,  substitui-se  a  linguagem Scheme  por
+Majestic Lisp, e a implementação também envolve um dialeto de Majestic
+Lisp,  que  não  possui  todos  os  seus  recursos,  para  que  a  sua
+programação fosse mais simplificada.
+
+#+INCLUDE: "examples/metacircular.maj" src majestic
+
+#+begin_src bash :exports results :results verbatim :cache yes
+./target/debug/majestic-lisp --script examples/metacircular.maj \
+			     --eval "(metacircular-evaluator-test)"
+#+end_src
+
+#+RESULTS[8f91210d5f8bf4518e556a4ebdcfe00c082ffd87]:
+#+begin_example
+Metacircular evaluator test:
+> 1
+1
+> 'foo
+foo
+> (def *mynum* 7)
+,*mynum*
+> (def square (fn (x) (* x x)))
+square
+> (square 6)
+36
+> (cond ((nilp 1) 'nay) (t 'okay))
+okay
+> (cond ((eq (= 1 1) t) 'okay) (t 'nay))
+okay
+> ((fn (a b) (list a b)) 1 2)
+(1 2)
+> ((fn (x) (* x x)) 5)
+25
+> ((fn (x) (* x x)) *mynum*)
+49
+> (+ *mynum* *mynum*)
+14
+> (((fn (x) (fn (y) (+ x y))) 3) 4)
+7
+nil
+#+end_example
+
+* Interpretador de PROLOG
+
+O  próximo exemplo  é uma  implementação de  PROLOG em  Majestic Lisp,
+sendo   uma  reimplementação   da  proposta   em  citet:holm2019,
+igualmente traduzida da linguagem Scheme.
+
+A implementação de PROLOG em Majestic é especialmente útil para testes
+de performance.
+
+#+INCLUDE: "examples/prolog.maj" src majestic
+

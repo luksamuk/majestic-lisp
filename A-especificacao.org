@@ -1,0 +1,6196 @@
+#+setupfile: static/setupfile.org
+#+html_link_up: index.html
+#+TITLE: Apêndice A: Especificação do Majestic Lisp
+#+AUTHOR: Lucas S. Vieira
+#+EMAIL: lucasvieira@protonmail.com
+#+STARTUP: content latexpreview
+#+options: toc:t
+
+Este apêndice inclui  a especificação da linguagem  Majestic Lisp. Ele
+poderá  ser utilizado  para  consultas mais  profundas relacionadas  à
+implementação e execução de elementos da linguagem.
+
+- Data de criação: <2020-07-19 dom>
+- Última atualização: <2021-05-17 seg 23:41>
+
+* Introdução
+
+Majestic  Lisp é  uma linguagem  de  programação, um  dialeto de  Lisp
+construido   principalmente  para   propósitos  educacionais.   Ela  é
+inspirada em  dialetos Lisp  como Bel, Common  Lisp e  Clojure. Também
+recebe alguma  inspiração de outras  linguagens, como APL.  Majestic é
+escrita como um /programa instruído/[fn:1],  em forma de livro, de forma
+a possibilitar que leitores pudessem reimplementá-la e também aprender
+a respeito da implementação de linguagens Lisp.
+
+Os objetivos de Majestic Lisp são:
+
+- Prover  uma  linguagem  que  poderia  ter  propósitos  educacionais,
+  através de uma implementação didática.
+- Delegar performance em  favor de corretude, uma  vez que performance
+  não é um tópico central, ainda que desejada em alguns pontos.
+- Prover  um dialeto  simples  de  uma linguagem  Lisp,  de forma  que
+  programadores Lisp veteranos possam se sentir em casa ao usá-lo.
+- Mostrar que projetar e implementar  sua própria linguagem Lisp não é
+  uma tarefa intangível.
+- Prover uma linguagem  suficientemente simples para que,  mesmo que o
+  programador não possa  executar seu interpretador, ele  ou ela possa
+  ainda prever o resultado de uma interpretação algebricamente.
+
+A especificação de Majestic Lisp  é vagamente baseada na especificação
+de Bel, tomando  para si alguns fragmentos da  estrutura dessa segunda
+linguagem, em doses  moderadas. O motivo para tal  está na recuperação
+de um  modelo de interpretação primariamente  baseado no processamento
+de  listas, e  utilizando  predominantemente  listas para  representar
+alguns dos objetos complexos da linguagem.
+
+Adicionalmente,  pertinência de  conceitos durante  a implementação  é
+considerada  e, por  este motivo,  tem-se elementos  atômicos que  não
+sejam representados como  listas, mas sim a partir  de dados atômicos,
+como é o caso dos números.
+
+Esta  especificação não  determina  um modelo  de memória  específico,
+sendo  portanto  função do  programador  determinar  a pertinência  de
+ideias  na  implementação  da   linguagem,  desde  que  mantenham  sua
+corretude na execução.
+
+As seções a seguir procuram descrever Majestic Lisp em profundidade, e
+podem ser modificadas no curso de desenvolvimento da linguagem.
+
+** Como ler este documento
+
+Ao   longo  deste   documento,   toda  e   qualquer  demonstração   de
+interpretação  de  um bloco  será  feita  através  de duas  linhas  de
+exemplo:  na primeira,  prefixa-se o  bloco a  ser interpretado  com o
+caractere ~>~.  Logo abaixo  da linha  final do bloco  em questão  a ser
+interpretado, mostra-se o resultado esperado. Por exemplo:
+
+#+begin_example
+> (+ 2 3)
+5
+#+end_example
+
+Adicionalmente,  quando a  execução de  uma certa  expressão pressupõe
+saída de texto  para o console, tal saída será  inserida entre o valor
+de  retorno e  a  entrada do  usuário,  e prefixada  em  linhas com  o
+caractere ~;~, seguido de um espaço por linha de saída:
+
+#+begin_example
+> (display "Hello world")
+; Hello world
+nil
+#+end_example
+
+O  exemplo acima  demonstra uma  situação onde  a execução  do comando
+imprime ~Hello world~ na tela, sem  uma quebra de linha ao final. Quando
+ocorrer quebra  de linha,  esta será  indicada por  uma nova  linha de
+saída, sendo todavia vazia:
+
+#+begin_example
+> (print "Hello world")
+; Hello world
+;
+nil
+#+end_example
+
+* Dados
+
+Majestic  Lisp inicia  sua  construção  a partir  de  seus dados,  que
+dividem-se em  cinco tipos fundamentais: /símbolos/,  /conses/ (ou /células
+cons/), /caracteres/, /streams/ e /números/.
+
+** Símbolos
+
+Símbolos são  como palavras. Cada  símbolo representa um  elemento que
+atua como rótulo, e que tem valor por si mesmo:
+
+#+begin_example
+foo
+bar
+baz
+#+end_example
+
+Os nomes de  símbolos são sensíveis a maiúsculas  e minúsculas. Assim,
+~foo~ e ~Foo~ são símbolos distintos.
+
+Alguns símbolos são auto-interpretáveis, sendo portanto classificáveis
+como /rótulos para si mesmos/:
+
+#+begin_example
+t
+nil
+&
+apply
+#+end_example
+
+** Células /cons/
+
+Células  /cons/ são  pares  de quaisquer  duas  coisas, representando  a
+forma  mais  primitiva de  composição  de  elementos. Elas  podem  ser
+textualmente representadas dessa forma:
+
+#+begin_example
+(foo . bar)
+#+end_example
+
+Este é  um /cons/ de  dois símbolos, ~foo~  e ~bar~. Por  razões históricas,
+podemos chamar a primeira metade do /cons/ de /car/, e a segunda metade de
+/cdr/.
+
+As duas  metades dos pares  podem ser  quaisquer coisas, o  que também
+inclui outras células /cons/:
+
+#+begin_example
+(foo . (bar . baz))
+#+end_example
+
+Este é um /cons/ entre o símbolo ~foo~ e o /cons/ ~(bar . baz)~.
+
+** Caracteres
+
+Um   caractere  é   representado   sempre  tendo   os  caracteres   de
+/jogo-da-velha/  e  /backslash/   como  prefixos.  Assim,  a   letra  ~a~  é
+representada na forma:
+
+#+begin_example
+#\a
+#+end_example
+
+Caracteres que não  sejam letras podem possuir nomes  mais longos. Por
+exemplo, o caractere de alerta (/bell/) pode ser representado como
+
+#+begin_example
+#\bel
+#+end_example
+
+Outros exemplos de caracteres com formas longas são:
+
+#+begin_example
+#\tab
+#\space
+#\newline
+#+end_example
+
+** Streams
+
+# TODO: Citar Ballesteros, pp. 55-56
+
+/Streams/ são elementos primitivos  utilizados para interação envolvendo
+entrada/saída na linguagem Majestic Lisp. De certa forma, /streams/ agem
+como           descritores          de           arquivo          (ver
+[[citet:silberschatz2015][p. 445]]), no  âmbito do interpretador,
+podendo  ser representados  como um  valor inteiro  que identifica  um
+arquivo aberto pelo sistema.
+
+Sua  função  é  prover  uma   abstração  básica  para  manipulação  de
+informações  armazenadas em  memória  persistente, de  forma que  tais
+informações  não precisem  estar todo  o tempo  na memória  volátil da
+máquina.
+
+As  idiossincrasias   de  abertura  desse  arquivo   (como  o  formato
+identificador do caminho  para tal e outros  atributos) dizem respeito
+ao sistema em execução, sendo  imperativo que possam ser representados
+textualmente.  Por  exemplo,  em  um  sistema  Unix-like  onde  faz-se
+interface com um /sistema de arquivos/,  pode-se abrir um /stream/ para um
+arquivo  cujo  caminho   seja  ~/home/user/arquivo.txt~;  portanto,  tal
+caminho será a representação textual  para um arquivo a ser processado
+durante a criação, uso e fechamento de um objeto do tipo /stream/.
+
+Não  há forma  textual  para  representação de  um  /stream/. Assim,  se
+Majestic precisa exibir  um /stream/, será impresso na  tela algum texto
+que causaria um erro, caso esse mesmo texto fosse interpretado.
+
+/Streams/  podem estar  /abertos/ ou  /fechados/. Um  /stream/ aberto  permite
+operações de escrita ou recuperação  de informações; um /stream/ fechado
+não permite tal escrita ou recuperação.
+
+/Streams/ também podem ser de entrada  (~in~) ou saída (~out~). Um /stream/ de
+entrada permite que  dados sejam recuperados dele; um  /stream/ de saída
+permite que  dados sejam escritos  nele, sendo então inseridos  em sua
+devida abstração de destino. Não  é possível recuperar elementos de um
+/stream/  de saída,  bem como  não é  possível inserir  elementos em  um
+/stream/ de entrada.
+
+/Streams/ não podem ser de /saída/ e /entrada/ ao mesmo tempo. Ademais, dois
+ou mais  /streams/ não podem  modificar o  mesmo objeto no  sistema (por
+exemplo, em  sistemas Unix,  não se  pode abrir  dois /streams/  para um
+mesmo arquivo, independentemente da direção de tais /streams/).
+
+Um /stream/ possui também uma espécie  de cursor interno. Para um /stream/
+de saída,  este cursor  estará sempre  ao final  do mesmo,  onde novos
+dados  serão  inseridos;  para  um  /stream/  de  entrada,  este  cursor
+inicia-se no  início do /stream/, e  move-se ao longo do  mesmo à medida
+que  informações forem  sendo lidas  do  mesmo, até  que alcancem  seu
+final.
+
+Por padrão, os três primeiros /streams/ (idealmente de valores ~0~, ~1~ e ~2~,
+por exemplo)  são reservados, respectivamente, aos  /streams/ especiais
+~*stdin*~ (entrada  padrão), ~*stdout*~  (saída padrão) e  ~*stderr*~ (saída
+para erros). Assume-se  que tais /streams/ existem durante  todo o tempo
+de vida da execução do interpretador.
+
+** Números
+
+Números  são tratados  como apenas  um tipo  em Majestic.  Todavia, os
+mesmos desdobram-se  em quatro subtipos informais  de números, podendo
+então serem  interpretados como  números /inteiros/,  /pontos flutuantes/,
+/frações/ e /complexos/.
+
+A  forma  como  estes  números   são  armazenados  na  memória  não  é
+extremamente  relevante,  ficando a  cargo  do  programador caso  seja
+necessário garantir  alguma performance.
+
+Números são  primariamente elementos atômicos e,  ainda que constituam
+sua própria  classe de  elementos, assemelham-se ao  que compreendemos
+como  símbolos auto-interpretáveis;  a representação  simbólica de  um
+número é,  portanto, sempre  igual a si  mesma, com  algumas ressalvas
+quando for necessária a simplificação de tal número.
+
+*** Inteiros
+
+Números inteiros são números escritos  como algarismos, podendo ou não
+ser prefixados por um sinal negativo:
+
+#+begin_example
+1
+0
+-1
+50
+295
+#+end_example
+
+Números   inteiros  estão   relacionados  ao   conceito  homônimo   da
+matemática, que determina o conjunto $\mathbb{Z}$.
+
+*** Frações
+
+Números fracionários são um  tipo semi-recursivo, representados sempre
+através  de   números  /inteiros/  nos  seus   respectivos  numerador  e
+denominador. Podem  ser escritos  com um  /slash/ entre  seus elementos,
+que funciona como um separador:
+
+#+begin_example
+2/3
+3/4
+5/8
+99/100
+5/2
+-10/3
+#+end_example
+
+Estes  números correspondem  ao  conceito matemático  do conjunto  dos
+números /racionais/, podendo este ser representado como
+
+\begin{equation*}
+        \mathbb{Q} = \left\{\frac{p}{q}\, \mid \, p \in \mathbb{Z}, q \in \mathbb{Z}^{*} \right\}
+\end{equation*}
+
+Esta definição sugere, portanto, que quaisquer frações expressadas com
+denominador nulo constituirão erro de sintaxe.
+
+O uso de outros subtipos  (pontos flutuantes, outras frações e números
+complexos) como respectivos numeradores  e denominadores de uma fração
+é sintaticamente incorreto.
+
+As  frações  devem   sempre  ser  interpretadas  em   sua  forma  mais
+simplificada  possível,   inclusive  sofrendo  coerções   para  outros
+subtipos numéricos, caso seja necessário,  desde que não haja perda na
+precisão da informação.
+
+Por exemplo,  uma fração como  ~2/4~, durante  o processo de  leitura, é
+simplificada para ~1/2~.
+
+Igualmente, uma fração como ~5/1~ é diretamente convertida para o número
+inteiro ~5~, sendo portanto pertencente  ao subtipo numérico dos números
+inteiros; isto ocorrerá  sempre que o denominador da  fração for igual
+ao número ~1~.
+
+A   fração   pode  ser   precedida   pelo   sinal  /negativo/   em   seu
+numerador. Caso o sinal negativo  seja expressado no denominador, este
+sinal será repassado  ao numerador; caso numerado  e denominador sejam
+expressados com  sinal negativo,  então ambos numerador  e denominador
+tornar-se-ão positivos. Assim, ~4/-9~ torna-se ~-4/9~, e ~-4/-9~ torna-se ~4/9~.
+
+*** Pontos flutuantes
+
+Pontos flutuantes *emulam parcialmente* o conceito matemático de números
+reais  (conjunto $\mathbb{R}$),  e são  sempre escritos  utilizando uma
+notação com  *exatamente um  ponto* em algum  lugar do  número. Ademais,
+também podem ser prefixados por um sinal negativo:
+
+#+begin_example
+2.
+.5
+20.2
+-16.3
+-.9
+-7.
+#+end_example
+
+Os números acima  correspondem exatamente aos valores  ~2.0~, ~0.5~, ~20.2~,
+~-16.3~,  ~-0.9~ e  ~-7.0~. Para  facilitar a  implementação, estes  números
+podem ser  escritos pelo interpretador  sempre em sua  forma completa,
+onde os zeros poderiam ser ignorados.
+
+*** Complexos
+
+Números  complexos   são  outro  tipo  semi-recursivo,   e  devem  ser
+compreendidos  como dois  números, que  serão coeficientes  das partes
+real e imaginária do número, respectivamente.
+
+As  partes real  e imaginária  são descritas  através da  expressão de
+algum dos outros subtipos (inteiro,  ponto flutuante ou fração), sendo
+separadas ao meio pela letra ~j~ ou ~J~, dessa forma:
+
+#+begin_example
+0J5
+3j1
+2/3j.5
+-2J-1
+35.J-2/9
+#+end_example
+
+Matematicamente,  os números  acima podem  ser expressados  como $5i$,
+$3+i$,  $\frac{2}{3}+0.5i$, $-2-i$  e $35.0-\frac{2}{9}i$,  sendo este
+último número também dotado da informação de que sua parte /real/ é
+composta por um /ponto flutuante/, e não por um número /inteiro/.
+
+*** Coerções entre subtipos numéricos
+
+Os subtipos antes mencionados pertencem  à mesma classe dos números e,
+portanto, é inevitável que operações se realizem entre eles.
+
+Todavia, essas  operações geralmente demandem que  números de subtipos
+diferentes  sejam transformados  em  números do  mesmo subtipo.  Nesse
+caso, o  subtipo a  prevalecer precisa  ser aquele  onde haja  a menor
+perda de informação quanto for possível.
+
+A  tabela a  seguir  apresenta comparações  entre um  Subtipo  1 e  um
+Subtipo  2,  quando ambos  são  diferentes.  Para cada  comparação,  a
+terceira coluna apresenta o subtipo  mais rico em informação, ou seja,
+quando ambas  as variáveis forem  convertidas para este  subtipo "mais
+rico", não ocorrerá perda de informação de maneira prática.
+
+|-----------+-----------+-------------------|
+| Subtipo 1 | Subtipo 2 | Subtipo mais rico |
+|-----------+-----------+-------------------|
+| ~integer~   | ~float~     | ~float~             |
+|           | ~fraction~  | ~fraction~          |
+|           | ~complex~   | ~complex~           |
+|-----------+-----------+-------------------|
+| ~float~     | ~integer~   | ~float~             |
+|           | ~fraction~  | ~fraction~          |
+|           | ~complex~   | ~complex~           |
+|-----------+-----------+-------------------|
+| ~fraction~  | ~integer~   | ~fraction~          |
+|           | ~float~     | ~fraction~          |
+|           | ~complex~   | ~complex~           |
+|-----------+-----------+-------------------|
+| ~complex~   | ~integer~   | ~complex~           |
+|           | ~float~     | ~complex~           |
+|           | ~fraction~  | ~complex~           |
+|-----------+-----------+-------------------|
+
+A  tabela pode  ser abstraída  para  uma segunda  tabela de  propósito
+geral, onde  possamos estipular um  subtipo $x$ que  possa representar
+qualquer subtipo não anteriormente listado.
+
+|-----------+-----------+-------------------|
+| Subtipo 1 | Subtipo 2 | Subtipo mais rico |
+|-----------+-----------+-------------------|
+| ~integer~   | $x$       | $x$               |
+|-----------+-----------+-------------------|
+| ~float~     | ~integer~   | ~float~             |
+|           | ~fraction~  | ~fraction~          |
+|           | $x$       | $x$               |
+|-----------+-----------+-------------------|
+| ~fraction~  | ~complex~   | ~complex~           |
+|           | $x$       | ~fraction~          |
+|-----------+-----------+-------------------|
+| ~complex~   | $x$       | ~complex~           |
+|-----------+-----------+-------------------|
+
+Algumas conclusões podem ser tiradas dessa segunda tabela:
+
+- ~integer~ é o subtipo mais fraco em termos de informação carregada;
+- ~float~ é  um subtipo  mais forte  que ~integer~,  porém mais  fraco que
+  ~fraction~: como  implementações de  pontos flutuantes  geralmente são
+  limitadas,  estes tendem  a  serem mais  inexatos  que ~fraction~,  em
+  implementações reais;
+- ~fraction~ é o subtipo mais forte depois de ~complex~;
+- ~complex~ é o subtipo mais forte de todos os anteriores.
+
+Todavia, o caso de ~complex~ merece  uma melhor análise, já que trata-se
+de um  subtipo que depende  de outros  subtipos diferentes de  si. Por
+isso, quando  ~complex~ possui  parte imaginária  /nula/, ele  torna-se um
+número *com o mesmo subtipo de sua parte real*.
+
+Com relação  ao subtipo ~fraction~,  é trivial imaginar que  frações com
+denominador   ~1~   possam    ser   automaticamente   transformadas   em
+~integer~.  Todavia,  por  facilidade  de  manipulação,  ~fraction~'s  não
+precisam  ser transformados  em  em  ~integer~'s automaticamente.  Sendo
+assim, ~2/1~ e ~2~ serão dois  números de Majestic Lisp com representações
+e subtipos diferentes, mas que representam o mesmo valor.
+
+**** *Da nulidade numérica.*
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+Devido à natureza das informações contidas em ~complex~, por ser um tipo
+primariamente recursivo,  sua conversão para  um valor /real/  (quando o
+valor /imaginário/ é nulo) envolve um  teste de nulidade com a sua parte
+imaginária.
+
+Tal  teste é  efetuado  utilizando-se a  função  ~zerop~. Todavia,  como
+comparações  envolvendo  igualdade em  números  de  subtipo ~float~  nem
+sempre  resultam  em  uma  comparação  correta,  Majestic  Lisp  torna
+impossível  saber  da  nulidade  de  um  número  ~float~  através  dessa
+função[fn:2].  Assim, um número ~complex~ cuja parte imaginária seja
+igual a  ~0.0~, por  exemplo, não  será transformado  no subtipo  de sua
+parte real.
+
+**** *Das coerções em divisões inteiras.*
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+Nos  casos de  algumas  operações elementares,  é pertinente  garantir
+certos subtipos  numéricos específicos  no retorno de  operações. 
+
+Para uma  *operação de divisão*  entre dois números de  subtipo ~integer~,
+retorna-se um número de subtipo  ~fraction~ quando o divisor não
+for divisível pelo  dividendo.  Essa decisão deriva da ideia  de que é
+necessário minimizar a perda de informação em uma operação.
+
+** Dados atômicos e objetos
+
+Quaisquer  tipos de  dados que  não  sejam células  /cons/ são  chamados
+/átomos/. Portanto, /símbolos/, /caracteres/, /streams/ e /números/ são /átomos/.
+
+Instâncias dos cinco tipos fundamentais são chamadas /objetos/.
+
+* Listas
+
+Listas são associações de objetos  em coleções, sendo portanto um /meio
+de combinação/ de objetos em  Majestic Lisp, sendo estes objetos outras
+listas ou não.
+
+Podemos  utilizar   células  /cons/  para  construir   vários  tipos  de
+estruturas  de  dados diferentes,  mas  a  forma mais  fundamental  de
+utilizá-las  é para  a construição  de listas.
+
+** TODO Listas pontuadas
+
+** Listas adequadas
+
+Para que  possamos representar listas adequadas,  seguimos duas regras
+básicas:
+
+1. O símbolo ~nil~ representa a lista vazia.
+2. Se  ~y~ é uma lista,  então o /cons/  ~(x . y)~  é uma lista de  ~x~ seguida
+   dos elementos de ~y~.
+
+Eis uma lista feita com um único par:
+
+#+begin_example
+(a . nil)
+#+end_example
+
+De acordo com a regra 2, esta é uma lista de um símbolo ~a~, seguida dos
+elementos  de  ~nil~   que,  de  acordo  com  a  regra   1,  não  possui
+elementos. Portanto,  trata-se de  uma lista de  um único  elemento, o
+símbolo ~a~.
+
+Através  do aninhamento  de /cons/,  podemos criar  listas de  quaisquer
+tamanhos. Eis uma lista cujos elementos sejam os símbolos ~a~ e ~b~:
+
+#+begin_example
+(a . (b . nil))
+#+end_example
+
+A seguinte lista possui, como elementos, ~a~, ~b~ e ~c~:
+
+#+begin_example
+(a . (b . (c . nil)))
+#+end_example
+
+** Notação abreviada de listas
+
+Como esta forma de expressar uma  lista é muito pouco prática, podemos
+instituir uma notação abreviada que seja mais conveniente:
+
+1. O símbolo ~nil~ pode ser representado como ~()~.
+2. Quando o ~cdr~ de um /cons/ for uma /lista/, pode-se omitir o ponto antes
+   do mesmo,  e também os parênteses  que o delimitam. Assim,  ~(a . (b
+   ...))~ pode ser escrito como ~(a b ...)~.
+
+Através  da  aplicação  repetida  dessas duas  novas  regras,  podemos
+transformar
+
+#+begin_example
+(a . (b . (c . nil)))
+#+end_example
+
+em
+
+#+begin_example
+(a b c)
+#+end_example
+
+Em outras palavras, uma lista pode ser expressada através da colocação
+de seus elementos entre parênteses. Assim, não há motivo para utilizar
+a notação com pontos para uma lista como  ~(a b c)~, a não ser que fosse
+estritamente necessário, por uma razão especial.
+
+Como  qualquer objeto  pode  ser  uma parte  de  um  /cons/, então  seus
+elementos  também podem  ser listas.  Todos os  exemplos a  seguir são
+listas válidas:
+
+#+begin_example
+(a (b) c)
+((a b c))
+(nil)
+#+end_example
+
+/Cons/ como estes, onde pode-se iterar através do ~cdr~ de seus elementos,
+e   eventualmente  encontra-se   sempre  ~nil~,   são  chamadas   /listas
+adequadas/. Esta é uma /lista adequada/:
+
+#+begin_example
+(a b c)
+#+end_example
+
+Esta lista, todavia, não é:
+
+#+begin_example
+(a b . c)
+#+end_example
+
+A lista vazia também é uma lista adequada.
+
+Um /cons/ que não seja classificado  como uma /lista adequada/ é chamado
+/lista  pontuada/,  porque  é  necessária   a  notação  de  pontos  para
+representá-la.
+
+** TODO Listas associativas
+* TODO Vetores
+
+Vetores são estruturas de dados  mutáveis, com tamanho variável, cujos
+elementos sejam de  um mesmo tipo, segundo  certas regras particulares
+que garantem um tipo único para o vetor em determinadas situações.
+
+Diferentemente das listas, vetores são meios de combinação que não são
+compostos de /cons cells/; ao invés  disso, os elementos de um vetor são
+armazenados  de forma  sequencial na  memória, não  sendo encapsulados
+pelas estruturas de pares.
+
+** Notação de vetores
+
+Vetores  são representados  sintaticamente entre  colchetes, de  forma
+muito similar às listas. De  forma geral, temos como regras sintáticas
+que:
+
+1. Os colchetes (~[~ e ~]~) delimitam os elementos de um vetor.
+2. Elementos individuais são separados por espaço em branco.
+
+Um vetor vazio pode ser representado como:
+
+#+begin_example
+[]
+#+end_example
+
+Valores  em   um  vetor  podem  ser   representados  igualmente  entre
+colchetes, com espaço vazio entre seus elementos:
+
+#+begin_example
+[1 2 3 4 5]
+#+end_example
+
+** Tipo de um vetor
+
+Vetores seguem uma uniformidade entre  seus elementos tanto quanto for
+possível. Em outras palavras, vetores possuem um tipo único entre seus
+elementos, ainda  que este tipo  seja uma representação  genérica para
+muitos tipos.
+
+O tipo de um vetor é deduzido a partir dos elementos fornecidos na sua
+criação  ou, caso  não seja  possível deduzir  seu tipo,  admite-se um
+vetor de qualquer tipo de objeto, o que implica em uma indireção extra
+em seus elementos.
+
+Há quatro tipos diferentes de vetores:
+
+*** Vetor de números inteiros
+
+Este vetor  é composto  unicamente de números  com o  subtipo numérico
+~integer~.
+
+#+begin_example
+[1 2 3 4 5]
+#+end_example
+
+*** Vetor de pontos flutuantes
+
+Este vetor  é composto  unicamente de números  com o  subtipo numérico
+~float~.
+
+#+begin_example
+[1.5 2.4 3.35 4.2 5.1]
+#+end_example
+
+*** Vetor de caracteres
+
+Este vetor possui certas particularidades  que serão discutidas mais à
+frente. Independente  disso, é  composto unicamente  de objetos  com o
+tipo ~char~.
+
+#+begin_example
+[#\H #\e #\l #\l #\o]
+#+end_example
+
+Para este tipo de vetor, podemos adicionar uma nova regra sintática:
+
+Um vetor de objetos do  tipo ~char~ pode ser sintaticamente representado
+através da substituição dos colchetes por aspas duplas (~"~), seguido de
+remoção  dos espaços  em branco  entre  os ítens,  e cada  um de  seus
+elementos serão  representados como  caracteres em sua  versão textual
+simples, sem o sufixo ~#\~.
+
+O vetor anterior de caracteres pode, portanto, ser representado como:
+
+#+begin_example
+"Hello"
+#+end_example
+
+*** Vetor de qualquer tipo (Any)
+
+Este vetor pode possuir qualquer objeto como elemento.
+
+Este é  o tipo inerente a  qualquer vetor que não  possua uniformidade
+nos  tipos   de  seus  componentes,   ou  cujo  tipo  não   possa  ser
+sintaticamente deduzido.
+
+Vetores de qualquer  tipo (ou de tipo ~any~) possuem  quaisquer tipos de
+elementos. Isso inclui  outros vetores, e pode  incluir também vetores
+sintaticamente idênticos aos exemplos anteriores.
+
+Os exemplos a seguir representam vetores que tenham, indubitavelmente,
+o tipo ~any~.
+
+#+begin_example
+[]
+[1 2/3 2j5 6 '(a b c)]
+[[] [] []]
+#+end_example
+
+Outros vetores podem, por meio  de transformações sucessivas durante a
+execução  de  um  programa   (por  exemplo,  inserções  sucessivas  de
+elementos em  um vetor vazio), serem  vetores de tipo ~any~  que lembram
+sintaticamente vetores de tipos específicos.
+
+Por  exemplo,  considere o  vetor  criado  sintaticamente na  forma  a
+seguir.
+
+#+begin_example
+[]
+#+end_example
+
+Este vetor é do tipo ~any~,  porque não podemos deduzir sintaticamente o
+tipo mais apropriado para um vetor temporariamente vazio.
+
+Suponhamos, portanto, que  dois elementos de tipo  ~char~ sejam inserido
+nesse vetor: as letras ~'H'~ e ~'e'~.
+
+#+begin_example
+[#\H #\e]
+#+end_example
+
+A regra sintática que garante uma notação entre aspas *não se aplica* no
+vetor acima, posto que o tipo de seus elementos não é ~char~, e sim ~any~,
+algo determinado no momento de sua criação.
+
+Para que possamos usufruir das idiossincrasias inerentes a um vetor de
+~char~, será necessário realizar uma  conversão explícita de um vetor de
+~any~ para  um vetor de ~char~.  Isso poderá ser realizado  através de uma
+das funções primitivas da linguagem.
+
+** TODO Coerção entre tipos de vetores
+
+** Strings
+
+Strings são  informação textual,  podendo ser compreendida  como algum
+tipo de sequência de um número variável de caracteres.
+
+Em  Majestic Lisp,  strings são  vetores  de caracteres  -- em  outras
+palavras, vetores de tipo ~char~.
+
+Portanto, um vetor construído pela forma
+
+#+begin_example
+(vector #\a #\b #\c)
+#+end_example
+
+é uma string válida, podendo  também ser expressado da seguinte forma,
+pela notação abreviada de vetores:
+
+#+begin_example
+[#\a #\b #\c]
+#+end_example
+
+*** Notação abreviada de strings
+
+Mesmo com a notação abreviada de vetores, expressar uma string como um
+vetor de  caracteres pode ser  muito pouco prático.  Podemos estipular
+algumas regras que tornam a legibilidade de uma string ainda melhor:
+
+1. Pode-se  substituir os colchetes (~[~  e ~]~) por aspas  duplas (~"~), em
+   ambos os casos;
+2. Caso  isso seja feito,  remova os espaços  entre os caracteres  e o
+   prefixo ~#\~ dos mesmos.
+
+Dessa  forma, a  string do  exemplo  anterior poderia  ser escrita  da
+seguinte forma:
+
+#+begin_example
+"abc"
+#+end_example
+
+* Valores-verdade
+
+O  símbolo  ~nil~ representa  falsidade,  além  de representar  a  lista
+fazia. O símbolo  ~t~ é a representação padrão de  verdade, mas qualquer
+objeto que não seja ~nil~ também contará como verdadeiro.
+
+Poderá parecer estranho usar o  mesmo valor para representar falsidade
+e a  lista vazia, mas na  prática, isso funciona bem.  Funções de Lisp
+costumeiramente retornam  conjuntos de respostas, e  um conjunto vazio
+de respostas é tratado uma falsidade.
+
+* Funções
+
+A  maior parte  dos programas  de  Majestic Lisp  são constituídos  de
+funções. Funções  tomam zero ou  mais objetos como  argumentos, talvez
+façam  alguma coisa  (por exemplo,  mostrar uma  mensagem na  tela), e
+então retornam um objeto.
+
+Funções podem ser classificadas  como /funções primitivas/ ou /clausuras/,
+dependendo da forma como são  geradas. Uma função primitiva geralmente
+é inerente  à implementação  de Majestic Lisp,  e uma  clausura estará
+relacionada a algo que pode ser definido através da própria linguagem,
+ou pelo programador.
+
+** Representação de clausuras
+
+Clausuras são representadas  usando listas. Por exemplo,  a clausura a
+seguir toma um único argumento, e retorna a soma entre o mesmo e ~1~.
+
+#+begin_example
+(lit closure <lexenv> (x) (+ x 1))
+#+end_example
+
+O  primeiro  elemento, ~lit~,  especifica  que  estamos tratando  de  um
+/objeto literal/, que não será interpretado.
+
+O  segundo,  ~closure~,  especifica  o   tipo  do  objeto  literal:  uma
+/clausura/.
+
+O  terceiro elemento  é o  contexto  léxico, uma  associação local  de
+símbolos  aos  quais  valores  estejam atrelados.   Se  o  exemplo  de
+clausura  tive sido  declarado no  /top-level/, o  contexto léxico  será
+vazio.
+
+O quarto  elemento, ~(x)~, é  uma /lambda list/, podendo  ser compreendida
+como os parâmetros da função. Quando a  função é chamada, o valor de ~x~
+será aquele valor com o qual a função é chamada.
+
+O quinto e último elemento, ~(+ x 1)~, é o /corpo/ da clausura, e define o
+valor retornado pela mesma.
+
+** Representação alternativa de clausuras
+
+Normalmente,  não expressamos  uma clausura  usando sua  representação
+literal. É suficiente que utilizemos a notação
+
+#+begin_example
+(fn (x) (+ x 1))
+#+end_example
+
+que gerará a clausura explicitada anteriormente.
+
+Esta sintaxe determina,  a princípio, uma forma especial,  uma vez que
+realiza captura de escopo e produz uma literal.
+
+* Macros
+
+Uma funcionalidade muito recorrente em dialetos de Lisp é a construção
+de /macros/: elementos  que auxiliam o programador  a reescrever sintaxe
+no  programa. Através  do uso  de  /macros/, pode-se  criar formas  mais
+sucintas  ou mais  intuitivas  para  determinados problemas,  enquanto
+ainda não se foge do uso da sintaxe da linguagem.
+
+** Representação
+
+Macros são  clausuras executadas  sobre uma expressão  qualquer, antes
+que a mesma seja interpretada. Nesse  sentido, o /macro/ nada mais é que
+uma função que opera sobre dados comuns.
+
+Um /macro/ é  representado como um /literal/ de três  elementos, tal que o
+terceiro elemento  seja uma  clausura propriamente dita,  como pode-se
+ver a seguir:
+
+#+begin_example
+(lit macro (lit closure <lexenv> (f x) (list f x)))
+#+end_example
+
+O  primeiro elemento,  ~lit~, deixa  claro  que estamos  tratando de  um
+literal,  que  consequentemente  não  deverá  ter  seus  sub-elementos
+interpretados. Já o segundo elemento, ~macro~, clarifica que tal literal
+constitui um /macro/.
+
+O  terceiro elemento  é  uma  /clausura/ comum,  que  será aplicada  aos
+argumentos do /macro/. Esta clausura captura o contexto onde o macro foi
+definido, e seu  retorno será considerado uma expressão  que, de forma
+subsequente à aplicação comum do macro, será interpretada.
+
+À aplicação  da clausura associada  aos dados preprocessados,  damos o
+nome de /expansão/ do /macro/.
+
+** Representação alternativa
+
+Assim  como o  caso das  clausuras, podemos  expressar /macros/  com uma
+notação sucinta baseada em uma forma especial:
+
+#+begin_example
+(mac (f x) (list f x))
+#+end_example
+
+O literal do macro poderá ser atribuído a um símbolo tanto no contexto
+global  quanto no  contexto  léxico, porém,  tentar  /aplicar/ um  macro
+(através da forma especial ~apply~, por exemplo) constitui um erro. Para
+um macro,  pode-se fazer  sua /expansão/  através de  ~macroexpand-1~, por
+exemplo.
+
+* Interpretação
+
+A execução de  um programa em Majestic Lisp  consiste na interpretação
+de expressões.  Todos  os objetos Majestic são  expressões, portanto a
+palavra "expressão"  é meramente um comunicado  de intenção: significa
+que espera-se que seja interpretado.
+
+** Resultados de uma interpretação
+
+1. Pode retornar um valor: ~(+ 1 2)~ retornará ~3~.
+2. Pode causar um erro: ~(/ 1 0)~ causará.
+3. Pode  falhar em terminar:  ~(defn foo () (foo))~ não parará  após ser
+   invocada.
+
+Outras  expressões também  realizam comportamento  no processo  de sua
+interpretação,  o  que  é  convencionalmente  conhecido  como  /efeitos
+colaterais/. Por exemplo, a expressão
+
+#+begin_example
+(print 1)
+#+end_example
+
+retornará ~nil~, mas antes disso, imprimirá ~1~ no console.
+
+# TODO: Esse ~o~ aí é pra quê, meu filho?
+Alguns /átomos/ são interpretados como si mesmos. Isto ocorre como todos
+os caracteres, /streams/  e números, assim como com os  símbolos ~nil~, ~t~,
+~o~ e ~apply~.  todos os outros símbolos são nomes  de variáveis, e sempre
+serão interpretados para algum valor, ou  causarão um erro se eles não
+possuírem valor associado.
+
+** Chamadas de funções
+
+Uma lista adequada cujo primeiro  elemento possa ser interpretado como
+uma função  é conhecida  como uma  /chamada de  função/. Por  exemplo, a
+expressão
+
+#+begin_example
+(+ x 1)
+#+end_example
+
+é uma  chamada de função, posto  que o valor  de ~+~ seja uma  função. O
+valor de uma chamada de função será o objeto retornado pela mesma.
+
+Chamadas de funções são interpretadas  da esquerda para a direita. Por
+exemplo, ao interpretarmos a expressão
+
+#+begin_example
+(+ 2 3)
+#+end_example
+
+teremos:
+
+1. Primeiramente, ~+~ é interpretado,  retornando uma /função/ que retorna
+   a soma de seus argumentos.
+2. ~2~ é interpretado, retornando a si mesmo.
+3. ~3~ é interpretado, retornando a si mesmo.
+4. Finalmente,  os dois números são  passados à função, que  retorna o
+   número ~5~.
+
+#+begin_example
+> (+ 2 3)
+5
+#+end_example
+
+Expressões podem ser  aninhadas. A regra de  interpretação da esquerda
+para  a  direita significa  que  funções  aninhadas são  interpretadas
+primeiramente e em profundidade. Por exemplo, a interpretação de
+
+#+begin_example
+(+ (- 5 2) 7)
+#+end_example
+
+pressupõe que as  sub-expressões que serão avaliadas  sejam, em ordem,
+~+~, ~(- 5 2)~, ~-~, ~5~, ~2~ e ~7~.
+
+** Formas especiais
+
+Nem  todas  as  expressões  são   interpretadas  da  esquerda  para  a
+direita.  Há  um  pequeno  conjunto de  símbolos  chamados  de  /formas
+especiais/,  e as  expressões  cujo primeiro  elemento  seja uma  forma
+especial será interpretada de acordo  com as regras definidas por essa
+mesma forma especial.
+
+Por exemplo, ~if~ é uma /forma especial/, e portanto, quando a expressão
+
+#+begin_example
+(if test then else)
+#+end_example
+
+é   interpretada,  apenas   um   dos  últimos   dois  elementos   será
+interpretado,  dependendo do  valor retornado  pelo segundo  elemento,
+~test~, que poderá ser verdadeiro ou falso.
+
+Objetos  que  podem  ser  utilizados como  primeiro  elemento  de  uma
+expressão são  chamados /operadores/. Assim, /funções/  e /formas especiais/
+são /operadores/. Mas, assim como o termo "expressão", esta é apenas uma
+expressão de  intenção. Pode-se colocar  qualquer objeto no  início de
+uma expressão, desde que especifique-se o que acontece ao colocá-lo.
+
+** TODO Escopo
+
+# Um contexto não deve ser  diretamente modificável. Todavia, pode ser
+# representado como uma alist.
+
+# Global: Variáveis globais. Mutável.
+# Léxico: Criado por função.
+# Dinâmico: Funções percebem o contexto onde estão sendo executadas. O
+# que  não significa  que saibam  tal contexto  durante uma  aplicação
+# parcial.
+
+* Ligações e Contextos
+
+Há três formas  de fazer com que uma variável  tenha um valor: através
+de ligações /globais/, /léxicas/ e /dinâmicas/.  A de consulta dos contextos
+durante um processo de consulta de valores de variáveis é:
+
+1. Contexto léxico;
+2. Contexto dinâmico;
+3. Contexto global.
+
+** Ligações globais
+
+Uma variável poderá  ter um valor /global/, como por  exemplo a função ~+~
+possui, significando que, por padrão, ela possui aquele valor em todos
+os lugares onde  puder ser invocada.  Tal variável  é dita /globalmente
+ligada/, e o conjunto de ligações globais é chamado /contexto global/.
+
+Podemos definir ligações globais entre  variáveis e valores através da
+forma especial ~def~.
+
+#+begin_example
+> (def my-value 5)
+my-value
+
+> my-value
+5
+#+end_example
+
+** Ligações léxicas ou estáticas
+
+Outra forma de uma variável ter um valor é através de ser um parâmetro
+de uma clausura. Quando a clausura
+
+#+begin_example
+(fn (x) (+ x 1))
+#+end_example
+
+é chamada,  a variável ~x~  irá, no corpo da  mesma, assumir o  valor de
+qualquer que seja o argumento com  o qual a clausura foi chamada. Este
+processo é chamado  de /ligação léxica/, e o atual  conjunto de /ligações
+léxicas/ durante a execução do corpo de uma clausura é chamado /contexto
+léxico/.
+
+Ocasionalmente, caso a clausura tenha sido definida dentro de outra,
+como no exemplo a seguir...
+
+#+begin_example
+(fn (x) (fn (y) (+ x y)))
+#+end_example
+
+...a  clausura  mais  interna  /capturará/  todas  as  ligações  léxicas
+determinadas  pela  externa  --  leia-se  o valor  atribuído  a  ~x~  na
+invocação da clausura.   Sendo assim, por mais que o  valor de retorno
+da  clausura  mais  externa  seja  a  clausura  interna,  esta  última
+conhecerá o valor de ~x~ devido a esse mecanismo de captura.
+
+Um  contexto capturado  por  uma clausura  será  extendido mediante  a
+aplicação  da mesma,  adicionando-se novas  definições que  determinem
+valores associados aos parâmetros da clausura.
+
+Uma clausura  definida sob  um contexto  global capturará  um contexto
+vazio, posto que  o contexto global compreenda um  contexto especial e
+diretamente modificável pela forma especial ~def~.
+
+Ao contexto capturado  pela clausura, antes e depois  de sua extensão,
+damos o nome /contexto léxico/.
+
+Abaixo,  temos  um   exemplo  explícito  que  explora   a  captura  de
+contexto. ~g~ é  definido através do retorno da aplicação  direta de uma
+função anônima, que por sua vez  retorna uma segunda função. Como esta
+segunda função  é gerada  dentro do  escopo da  primeira, o  escopo da
+primeira  função, gerado  durante a  aplicação da  mesma, onde  ~x~ está
+bem-definido e  ligado a ~9~,  é capturado pela função  retornada.
+
+#+begin_example
+> (def g
+    ((fn (x)
+       (fn (y) (+ x y)))
+     9))
+g
+
+> (g 4)
+13
+#+end_example
+
+** Ligações dinâmicas
+
+Adicionalmente,  como terceira  opção, temos  uma ligação  dinâmica. A
+ligação dinâmica ocorre  quando uma clausura refere-se  a uma variável
+que foi definida pelo contexto léxico onde a clausura foi chamada.
+
+Por exemplo, consideremos as definições a seguir.
+
+#+begin_example
+> (def *my-value* 5)
+my-value
+
+> (def my-function
+    (fn () *my-value*))
+my-function
+#+end_example
+
+O exemplo  a seguir  demonstra a invocação  da clausura  armazenada no
+contexto  global, sob  a alcunha  ~my-function~.  Esta  clausura procura
+primeiramente por  essa variável no  contexto léxico que  captura; não
+encontrando-a, volta-se para o contexto global, e lá procura-a.
+
+#+begin_example
+> (my-function)
+5
+#+end_example
+
+Em algumas  situações, pode  ser pertinente  /redefinir temporariamente/
+uma variável global ou, caso tal  variável global não exista, pode ser
+pertinente defini-la temporariamente.
+
+Isso  pode  ser  feito  através  da  criação  de  um  /contexto  léxico
+"especial"/, que  será consultado  pela clausura  antes da  consulta no
+/contexto global/. Vejamos o exemplo a seguir:
+
+#+begin_example
+> (let ((*my-value* 6))
+    (my-function))
+6
+#+end_example
+
+~let~ nada mais é que um  /macro/ para criação de contextos /léxicos/, sendo
+portanto   equivalente  à   aplicação  de   uma  clausura,   de  forma
+não-explícita.  Isso significa  que ~my-function~  será executada  em um
+contexto  léxico  que  realiza  /sombreamento/ da  definição  global  de
+~*my-value*~.
+
+Este  exemplo mostra  uma situação  onde, após  ~my-function~ falhar  ao
+tentar  encontrar ~*my-value*~  no escopo  léxico que  captura, a  mesma
+verifica o escopo  em que foi /invocada/, antes de  realizar uma procura
+por ~*my-value*~ no escopo global.
+
+Dizemos,  portanto,  que  ~*my-value*~ foi  dinamicamente  definida  com
+relação a ~my-function~, podendo  influenciar recursivamente na execução
+dessa  clausura. Todavia,  não  há definição  explícita  de um  /escopo
+dinâmico/, sendo  este tão somente  relacionado à forma  como clausuras
+são  aplicadas,  e  a  como ~*my-value*~  foi  localmente  redefinida  e
+acessada.
+
+Na  prática, durante  a  invocação de  ~my-function~,  esta realiza  uma
+*mescla* entre  seu escopo léxico  (após a  extensão) e o  escopo léxico
+onde a mesma foi invocada. Esse  processo de mescla é chamado de *união
+de contextos*, e deve garantir que os símbolos ligados no escopo léxico
+capturado e extendido tenham precedência de consulta sobre os símbolos
+ligados no escopo onde a clausura foi invocada.
+
+Assim,  ainda  que  possamos  falar   em  /escopo  dinâmico/  para  fins
+didáticos, o mesmo  trata-se de uma pequena modificação  na forma como
+uma clausura lida com seu próprio escopo.
+
+** Mutabilidade
+
+Majestic Lisp provê  formas de modificar certos  valores ou variáveis,
+principalmente através das formas especiais ~set~, ~set-car~ e ~set-cdr~. As
+duas  últimas  modificam  os  valores que  compõem  uma  célula  /cons/,
+enquanto ~set~ é responsável por modificar a associação entre um símbolo
+e um valor.
+
+A  forma especial  ~set~ é,  portanto, responsável  pela modificação  do
+valor associado a um certo identificador, em um contexto específico.
+
+Redefinir o valor associado a um identificador não modifica o valor em
+questão, apenas utiliza  um novo valor da linguagem  para substituir o
+valor que ali estava associado.
+
+O contexto modificado  pelo uso de ~set~  é dado pelo contexto  em que a
+variável em questão estiver alocada.  Desta forma, pode-se alterar uma
+variável local, capturada pelo escopo  da função, global, ou até mesmo
+dinâmica.
+
+#+begin_example
+> (def x 5)
+x
+
+> x
+5
+
+> (set x 9)
+x
+
+> x
+9
+
+> (let ((x 12))
+    (set x (1+ x))
+    x)
+13
+
+> (defn mutate-x ()
+    (set x (+ x 2))
+    x)
+mutate-x
+
+> (mutate-x)
+11
+
+> (let ((x 12))
+    (mutate-x))
+14
+
+> x
+11
+
+> (let ((x 12))
+    (defn mutate-x-local ()
+      (set x (+ x 2))
+      x))
+mutate-x-local
+
+> (mutate-x-local)
+14
+
+> x
+11
+
+> (mutate-x-local)
+16
+
+> x
+11
+#+end_example
+
+No caso específico das formas especiais ~set-car~ e ~set-cdr~, modifica-se
+uma célula /cons/, independentemente do tipo de ligação realizada para a
+declaração de tal  célula.  Em outras palavras,  a variável modificada
+terá seu contexto deduzido através do mesmo método empregado por ~set~.
+
+#+begin_example
+> (def x '(1 . 2))
+x
+
+> x
+(1 . 2)
+
+> (set-car x 5)
+(5 . 2)
+
+> (set-cdr x 6)
+(5 . 6)
+
+> x
+(5 . 6)
+
+> (defn replace-x-elts (a b)
+    (set-car x a)
+    (set-cdr x b)
+    x)
+replace-x-elts
+
+> (let ((x '(9 . 10)))
+    (replace-x-elts 20 90))
+(20 . 90)
+
+> x
+(5 . 6)
+
+> (replace-x-elts 30 45)
+(30 . 45)
+
+> x
+(30 . 45)
+
+> (let ((x '(9 . 10)))
+    (defn replace-x-elts-local (a b)
+      (set-car x a)
+      (set-cdr x b)
+      x))
+replace-x-elts-local
+
+> (replace-x-elts-local 13 50)
+(13 . 50)
+
+> x
+(30 . 45)
+#+end_example
+
+* Erros
+
+Em  Majestic Lisp,  erros  são sinalizados  através  de uma  expressão
+literal. Por exemplo, a expressão
+
+#+begin_example
+(/ 1 0)
+#+end_example
+
+poderá sinalizar um erro através da expressão:
+
+#+begin_example
+(lit error "Division by zero")
+#+end_example
+
+Na  expressão  de erro,  o  primeiro  elemento,  ~lit~, sinaliza  que  a
+expressão inteira deverá ser interpretada para si mesma.
+
+O segundo elemento,  ~error~, sinaliza que o objeto  em questão trata-se
+de um erro.
+
+O terceiro  elemento é uma  informação textual, que  chamamos /formato/,
+designando as instruções para a mensagem de erro.
+
+Pode-se  também   adicionar  mais  elementos,  que   complementarão  a
+informação a ser impressa na tela. Por exemplo, um erro da forma
+
+#+begin_example
+(lit error "{} is not a number" nil)
+#+end_example
+
+indica a intenção de que seja mostrada uma mensagem de erro como
+
+#+begin_example
+nil is not a number
+#+end_example
+
+para o usuário.
+
+Um objeto de  erro levanta uma /condição/ no sistema,  o que não precisa
+significar algo muito sofisticado,  mas deverá paralizar imediatamente
+o processo atual de interpretação, e  então ser mostrado ao usuário. A
+impressão da  mensagem de  erro na  tela fica a  cargo do  ambiente de
+programação.
+
+A  notação utilizada  na  mensagem de  erro, que  está  em formato  de
+/string/, é uma  notação correspondente à utilizada  na função primitiva
+~format~.
+
+Os erros podem  ser diretamente criados através da  primitiva ~err~, que
+será especificada junto às funções primitivas da linguagem.
+
+* Axiomas
+
+** Variáveis e constantes
+
+*** Símbolos auto-interpretáveis
+
+Alguns símbolos são  interpretáveis como si mesmos. Este é  o caso dos
+símbolos ~nil~, ~t~, ~&~ e ~apply~.
+
+*** Caracteres
+
+Caracteres  também são  símbolos  auto-interpretáveis; o  valor de  um
+caractere é sempre ele mesmo.
+
+*** Números
+
+Números   originalmente  poderiam   ser   enquadrados  como   símbolos
+especiais,  mas em  Majestic Lisp,  compreendemos o  número como  algo
+separado e igualmente auto-interpretável.
+
+*** Constantes globais
+**** ~*stdin*~
+
+Referencia, por padrão, o stream padrão de entrada da aplicação.
+
+Normalmente, este  stream está relacionado à  digitação de informações
+da parte do usuário, em um terminal.
+
+Como  este  stream  está  relacionado ao  processo  do  programa,  sua
+implementação é livre,  desde que se adeque ao  vocabulário de streams
+comuns. Todavia, ~*stdin*~  é um stream que *nunca  poderá ser encerrado*,
+de forma  que seu tempo  de vida esteja atrelado  ao tempo de  vida da
+execução do interpretador de Majestic Lisp.
+
+**** ~*stdout*~
+
+Referencia, por padrão, o stream padrão de saída da aplicação.
+
+Normalmente,  este stream  está relacionado  à escrita  de informações
+pelo interpretador, em um terminal.
+
+Como  este  stream  está  relacionado ao  processo  do  programa,  sua
+implementação é livre,  desde que se adeque ao  vocabulário de streams
+comuns. Todavia, ~*stdout*~ é um  stream que *nunca poderá ser encerrado*,
+de forma  que seu tempo  de vida esteja atrelado  ao tempo de  vida da
+execução do interpretador de Majestic Lisp.
+
+**** ~*stderr*~
+
+Referencia, por padrão, o stream de saída de erros da aplicação.
+
+Normalmente,  este  stream  está  relacionado à  escrita  de  erros  e
+avisos.
+
+Como  este  stream  está  relacionado ao  processo  do  programa,  sua
+implementação é livre,  desde que se adeque ao  vocabulário de streams
+comuns. Todavia, ~*stderr*~ é um  stream que *nunca poderá ser encerrado*,
+de forma  que seu tempo  de vida esteja atrelado  ao tempo de  vida da
+execução do interpretador de Majestic Lisp.
+
+**** ~*ulps*~
+
+Enumera um  número inteiro  positivo, expressando a  quantidade mínima
+de  números ~float~  representáveis entre  dois números  ~float~ de  mesmo
+sinal, para que estes sejam considerados aproximadamente iguais.
+
+Seu nome  está relacionado às  expressões /units of least  precision/ ou
+/units in the last place/.
+
+Por padrão, corresponde ao número inteiro ~3~. Para maiores informações,
+veja a descrição da função ~float=~.
+
+** Quote
+
+** Funções Primitivas
+
+Funções primitivas podem ser chamadas como funções, todavia, assume-se
+que já  existam, sem  que precisem ser  definidas com  código Majestic
+Lisp. Assim  como ocorre  nas chamadas de  funções, os  /argumentos/ nas
+chamadas de  primitivas são  completamente interpretados,  da esquerda
+para a direita.
+
+*** Convenções
+
+# TODO: Isso  aqui precisa ser  analisado com cuidado. Qual  o impacto
+# dessa decisão em Majestic?
+# TODO: Isso  aqui é  só para primitivas  mesmo ou  precisamos ajustar
+# isso para demais funções?
+Por convenção, argumentos faltantes  ao fim da /lambda-list/ equivalerão
+a  ~nil~.  Em contrapartida,  argumentos  extras  serão considerados  um
+erro.
+
+Ademais,  funções  que  enquadram-se  como /predicados/  (ou  seja,  que
+produzem um resultado  /verdadeiro/ ou /falso/ de acordo com  uma lista de
+argumentos)  normalmente terminam  seus  nomes com  o  caractere ~p~,  à
+exceção dos predicados ~eq~ e ~id~, por razões históricas.
+
+*** ~(symbolp x)~
+
+Informa se ~x~ é um símbolo ou  não. ~t~ é retornado em caso afirmativo, e
+~nil~ em caso negativo.
+
+#+begin_example
+> (symbolp t)
+t
+
+> (symbolp 2/3)
+nil
+#+end_example
+
+*** ~(eq x y)~
+
+Informa se ~x~ e ~y~ são símbolos /equivalentes/. A comparação só realmente
+ocorre se  ~x~ e ~y~  forem especificamente  símbolos. Caso ambos  sejam o
+mesmo símbolo, ~t~ é retornado; caso algum de ambos não seja símbolo ou,
+se forem, caso não sejam idênticos, retorna-se ~nil~.
+
+#+begin_example
+> (eq t t)
+t
+
+> (eq nil nil)
+t
+
+> (eq t nil)
+nil
+
+> (eq 20 t)
+nil
+#+end_example
+
+*** ~(nilp x)~
+
+Informa se ~x~ é /equivalente/ a ~nil~.  ~t~ é retornado em caso afirmativo, e
+~nil~ em caso negativo.
+
+# TODO: Isso  perdura? Ver a  questão do valor padrão  doss argumentos
+# faltantes.
+Pode-se  convencionar que  o comportamento  da chamada  ~(nilp x)~  seja
+exatamente o mesmo de ~(eq x)~ ou ~(eq x nil)~.
+
+#+begin_example
+> (nilp nil)
+t
+
+> (nilp 5)
+nil
+#+end_example
+
+*** ~(consp x)~
+
+Informa se ~x~ é  uma célula /cons/.  ~t~ é retornado  em caso afirmativo, e
+~nil~ em caso negativo.
+
+#+begin_example
+> (consp (cons 2 3))
+t
+
+> (consp '(a . b))
+t
+
+> (consp 10)
+nil
+#+end_example
+
+*** ~(atomp x)~
+
+Informa se  ~x~ é  um /átomo/.  Convenciona-se que,  para todo  e qualquer
+objeto que  não seja uma  célula /cons/, tal objeto  será um /átomo/.  ~t~ é
+retornado em caso afirmativo, e ~nil~ em caso negativo.
+
+#+begin_example
+> (atomp 1)
+t
+
+> (atomp 'a)
+t
+
+> (atomp '(1 2 3))
+nil
+#+end_example
+
+*** ~(charp x)~
+
+Informa se ~x~ é  um caractere. ~t~ é retornado em  caso afirmativo, e ~nil~
+em caso negativo.
+
+# TODO: Incluir exemplo para strings aqui.
+
+#+begin_example
+> (charp #\a)
+t
+
+> (charp t)
+nil
+#+end_example
+
+*** ~(char= x y)~
+
+Compara pela igualdade de dois caracteres.
+
+Caso algum dos objetos não seja um caractere, retorna um erro.
+
+#+begin_example
+> (char= #\a #\a)
+t
+
+> (char= #\a #\A)
+nil
+
+> (char= #\a t)
+(lit error "{} is not a character" t)
+
+> (char= nil #\bel)
+(lit error "{} is not a character" nil)
+#+end_example
+
+*** ~(streamp x)~
+
+Informa se ~x~ é um /stream/.  ~t~  é retornado em caso afirmativo, e ~nil~ em
+caso negativo.
+
+# TODO: Talvez seja necessário  alterar esse exemplo ao estabilizarmos
+# os streams.
+
+#+begin_example
+> (streamp (open-stream 'out "/home/user/file.txt"))
+t
+
+> (streamp *stdout*)
+t
+
+> (streamp t)
+nil
+#+end_example
+
+*** ~(numberp x)~
+
+Informa se  ~x~ é um  /número/. Esse predicado  diz respeito a  números em
+geral, não efetuando distinção de subtipos numéricos.
+
+#+begin_example
+> (numberp 2)
+t
+
+> (numberp .5)
+t
+
+> (numberp 2/3)
+t
+
+> (numberp 0j2.)
+t
+
+> (numberp t)
+nil
+#+end_example
+
+A seguir, descreveremos alguns predicados  que fazem a distinção entre
+subtipos numéricos.
+
+**** ~(integerp x)~
+
+Informa se ~x~ é um número  /inteiro/.  Esse predicado realiza a avaliação
+de ~x~ para identificar se o mesmo é um número e, caso o seja, avalia se
+trata-se de  um número inteiro.  ~t~  é retornado em caso  afirmativo, e
+~nil~ em caso negativo.
+
+#+begin_example
+> (integerp 2)
+t
+
+> (integerp 2/3)
+nil
+#+end_example
+
+**** ~(floatp x)~
+
+Informa se ~x~ é um /ponto flutuante/.  Esse predicado realiza a avaliação
+de ~x~ para identificar se o mesmo é um número e, caso o seja, avalia se
+trata-se de um  ponto flutuante.  ~t~ é retornado em  caso afirmativo, e
+~nil~ em caso negativo.
+
+#+begin_example
+> (floatp 2.5)
+
+> (floatp 2.)
+t
+
+> (floatp .5)
+t
+
+> (floatp 3)
+nil
+#+end_example
+
+**** ~(fractionp x)~
+
+Informa se  ~x~ é uma /fração/.   Esse predicado realiza a  avaliação de ~x~
+para identificar  se o  mesmo é um  número e, caso  o seja,  avalia se
+trata-se de um número fracionário.   ~t~ é retornado em caso afirmativo,
+e ~nil~ em caso negativo.
+
+#+begin_example
+> (fractionp 2/3)
+t
+
+> (fractionp 5/9)
+t
+
+> (fractionp 8)
+nil
+#+end_example
+
+**** ~(complexp x)~
+
+Informa se ~x~ é um número /complexo/.  Esse predicado realiza a avaliação
+de ~x~ para identificar se o mesmo é um número e, caso o seja, avalia se
+trata-se de um  número complexo.  ~t~ é retornado em  caso afirmativo, e
+~nil~ em caso negativo.
+
+#+begin_example
+> (complexp .5J1)
+t
+
+> (complexp -10J-3)
+t
+
+> (complexp 5)
+nil
+
+> (complexp 5J0)
+nil
+
+> (complexp 5J0.)
+t
+#+end_example
+
+Os dois últimos casos acima podem parecer peculiares do ponto de vista
+do que  fazem, mas são  bastante triviais.  O número ~5J0~  é convertido
+para  ~5~  (número  inteiro),  devido  à  nulidade  de  seu  coeficiente
+imaginário. Em  ~5J0.~, porém, que  é também equivalente a  ~5J0.0~, ainda
+que sua parte imaginária seja  tecnicamente nula, devido à condição de
+não-comparação por nulidade em coerções de pontos flutuantes, inibe-se
+que  o número  complexo como  um todo  seja convertido  para o  número
+inteiro ~5~.
+
+*** ~(vectorp x)~
+
+Informa se ~x~  é um vetor. ~t~  é retornado em caso afirmativo,  e ~nil~ em
+caso negativo.
+
+#+begin_example
+> (vectorp [1 2 3])
+t
+
+> (vectorp t)
+nil
+#+end_example
+
+*** ~(id x y)~
+
+Informa se ~x~ e ~y~ são /idênticos/, ou sejam, se são objetos que habitam o
+mesmo lugar na memória da máquina.
+
+A  ideia de  /identidade/  é  mais rigorosa  que  a  /igualdade/, e  menos
+específica que a /equivalência/. Enquanto pode-se dizer que há apenas um
+de  cada símbolo  ou caractere,  pode  haver um  número gigantesco  de
+células  /cons/  que não  sejam  /idênticas/,  mas  que tenham  /os  mesmos
+elementos/.
+
+#+begin_example
+> (id 'a 'a)
+t
+
+> (id #\c #\c)
+t
+
+> (id '(a b) '(a b))
+nil
+#+end_example
+
+Igualmente,  pode  ser também  que  dois  números sejam  numericamente
+iguais, mas sejam objetos diferentes.
+
+#+begin_example
+> (id 5 5)
+nil
+#+end_example
+
+Esse  comportamento  ocorre  porque  a /identidade/  trata  de  comparar
+diretamente  dois  objetos.  Enquanto  símbolos  e  caracteres  têm  a
+/identidade/ verificada de forma diferente,  outros tipos de objetos são
+comparados de  acordo com sua  localização na memória: caso  não sejam
+símbolos ou caracteres, dois objetos  serão /idênticos/ se referem-se ao
+exato mesmo espaço de memória.
+
+Para  realizar  comparações  por   /igualdade/,  em  especial  de  forma
+aritmética, recomenda-se utilizar a função ~=~ em vez de ~id~.
+
+Para uma identidade,  ~t~ é retornado em caso afirmativo,  e ~nil~ em caso
+negativo.
+
+*** ~(proper-list-p x)~
+
+Informa se ~x~ é uma /lista adequada/.
+
+Como anteriormente  citado, uma  lista adequada  é um  encadeamento de
+células /cons/, de tal forma que  iniciemos em uma célula /cons/ qualquer,
+indicando o primeiro elemento da lista, e verifique-se que o ~cdr~ dessa
+célula seja outro  /cons/, ou seja o símbolo ~nil~.  Caso seja outro /cons/,
+deve-se   verificar    essa   mesma    condição   para    tal   célula
+recém-descoberta.  ~t~ é  retornado em  caso afirmativo,  e ~nil~  em caso
+negativo.
+
+#+begin_example
+> (proper-list-p '(a b c d))
+t
+
+> (proper-list-p '(a b c . d))
+nil
+#+end_example
+
+*** ~(stringp x)~
+
+Informa se ~x~ é uma /string/.
+
+Strings são  vetores de caracteres  -- em outras palavras,  vetores de
+tipo ~char~.
+
+Caso  ~x~  seja  uma string,  ~t~  é  retornado.   Caso  não seja,  ~nil~  é
+retornado.
+
+#+begin_example
+> (stringp (vector #\a #\b #\c))
+t
+
+> (stringp [#\a #\b #\c])
+t
+
+> (stringp "abc")
+t
+
+> (stringp '(#\a #\b #\c))
+nil
+
+> (stringp (vec-coerce 'any [#\a #\b #\c]))
+nil
+
+> (stringp t)
+nil
+#+end_example
+
+*** ~(literalp x)~
+
+Informa se ~x~ é um /literal/.
+
+Literais são listas adequadas que são iniciadas pelo símbolo ~lit~. Tais
+listas nunca  são recursivamente interpretadas; tentar  interpretar um
+literal resulta nele mesmo como valor de retorno.
+
+Caso  ~x~  seja  um  literal,  ~t~  é retornado.  Caso  não  seja,  ~nil~  é
+retornado.
+
+#+begin_example
+> (literalp (fn (x) (* x x)))
+t
+
+> (literalp '(a b c))
+nil
+
+> (literalp (lit blah))
+t
+#+end_example
+
+*** ~(primitivep x)~
+
+Informa se ~x~ é uma /função primitiva/.
+
+Funções primitivas são  similares a clausuras no sentido  de que podem
+ser   /aplicadas/   a   argumentos,  porém   não   classificam-se   como
+clausuras. Em  outras palavras, pressupõe-se que  uma primitiva esteja
+presente  na  linguagem  durante  o  tempo  de  vida  da  execução  do
+interpretador.
+
+Assimo  como  no  caso  das clausuras,  primitivas  são  identificadas
+internamente como literais. Por exemplo, a função primitiva ~primitivep~
+em si  é interpretada  para um literal  ~(lit prim  primitivep)~. Assim,
+identifica-se uma  /primitiva/ pelo valor  da consulta do seu  nome, que
+envolve o símbolo ~prim~ como segundo elemento da lista.
+
+Caso  ~x~ seja  uma primitiva,  ~t~  é retornado.   Caso não  seja, ~nil~  é
+retornado.
+
+#+begin_example
+> (primitivep primitivep)
+t
+
+> (primitivep (fn (x) (+ x x)))
+nil
+
+> (primitivep +)
+t
+#+end_example
+
+*** ~(closurep x)~
+
+Informa se ~x~ é uma /clausura/.
+
+Clausuras são literais gerados pelo  resultado de interpretação de uma
+função  do usuário.  Especifica-se que  seja uma  clausura através  do
+segundo símbolo  da lista  que identifica  tal literal;  este elemento
+deverá ser o símbolo ~closure~.
+
+Em geral, clausuras  possuem a peculiaridade de  não misturarem-se com
+primitivas.  Portanto,  uma função  primitiva  não  é considerada  uma
+clausura.
+
+Caso  ~x~  seja uma  clausura,  ~t~  é retornado.  Caso  não  seja, ~nil~  é
+retornado.
+
+#+begin_example
+> (closurep (fn (x) (* x x)))
+t
+
+> (closurep (lit blah))
+nil
+
+> (closurep cons)
+nil
+
+> (closurep +)
+nil
+#+end_example
+
+*** ~(functionp x)~
+
+Informa se ~x~  é uma função. Uma possível  implementação para ~functionp~
+poderia ser:
+
+#+begin_example
+(defn functionp (f)
+  (or (primitivep f)
+      (closurep f)))
+#+end_example
+
+A alcunha /função/ deverá ser compreendida como um nome generalizado que
+define  /funções primitivas/  ou  /clausuras/; em  outras palavras,  ambos
+estes tipos de objetos compreendem /funções/.
+
+Esta função, portanto,  retorna ~t~ caso ~x~ seja uma  função primitiva ou
+uma clausura, e retorna ~nil~ em situação contrária.
+
+#+begin_example
+> (functionp (fn (x) (* x x)))
+t
+
+> (functionp +)
+t
+
+> (functionp cons)
+t
+
+> (functionp (lit blah))
+nil
+#+end_example
+
+*** ~(macrop x)~
+
+Informa se ~x~ é um /macro/.
+
+Macros são literais  gerados pelo resultado de  interpretação da forma
+especial ~mac~, que são capazes  de manipular expressões e reescrevê-las
+para  que sejam,  subsequencialmente, interpretadas.  Especifica-se um
+macro através do segundo símbolo  da lista que identifica tal literal;
+este elemento deverá ser o símbolo ~macro~.
+
+Macros  englobam uma  /clausura/  subjacente em  sua criação,  portanto,
+pode-se compreender  o terceiro elemento  de um literal de  macro como
+sendo tal clausura. Esta clausura  é responsável por receber dados que
+não  serão interpretados  antes de  serem repassados,  e portanto,  um
+/macro/ nada  mais é que uma  função especial que manipula  sintaxe para
+que possa ser interpretada, de forma subsequente.
+
+Caso ~x~ seja um macro, ~t~ é retornado. Caso não seja, ~nil~ é retornado.
+
+#+begin_example
+> (macrop (mac (x) `(list ,x)))
+t
+
+> (macrop until)
+t
+
+> (macrop (lit blah))
+nil
+
+> (macrop cons)
+nil
+
+> (macrop +)
+nil
+#+end_example
+
+*** ~(errorp x)~
+
+Informa se ~x~ é um objeto de /erro/.
+
+Erros  assemelham-se  a  clausuras  e primitivas,  porque  são  também
+/literais/. Um erro pode ser identificado através do segundo elemento de
+sua literal, que será sempre o símbolo ~error~.
+
+Caso ~x~ seja  um objeto de erro,  ~t~ é retornado.  Caso não  seja, ~nil~ é
+retornado.
+
+#+begin_example
+> (errorp (err "Some error"))
+t
+
+> (errorp (lit error "Some other error"))
+t
+
+> (errorp 2)
+nil
+#+end_example
+
+*** ~(cons x y)~
+
+Retorna  uma nova  célula  /cons/ cuja  primeira metade  seja  ~x~ e  cuja
+segunda metade seja ~y~.
+
+#+begin_example
+> (cons 'a 'b)
+(a . b)
+
+> (cons 1 2)
+(1 . 2)
+#+end_example
+
+Uma nova  célula /cons/ não  será idêntica  (~id~) a nenhuma  outra célula
+/cons/ existente.
+
+*** ~(car x)~
+
+Retorna a primeira metade de uma célula /cons/.
+
+#+begin_example
+> (car '(a . b))
+a
+
+> (car (cons 'c 'd))
+c
+#+end_example
+
+Especificamente para o símbolo ~nil~, seu ~car~ é ~nil~.
+
+#+begin_example
+> (car nil)
+nil
+#+end_example
+
+Historicamente,  /car/ refere-se  a "conteúdo  da parte  de endereço  do
+número  no registrador"  (/Contents  of the  Address  part of  Register
+number/). Esse nome legado refere-se à implementação original de LISP,
+feita em um IBM 704 no final da década de 1950, por John McCarthy e
+associados[fn:8].
+
+*** ~(cdr x)~
+
+Retorna a segunda metade de uma célula /cons/.
+
+#+begin_example
+> (cdr '(a . b))
+b
+
+> (cdr (cons 'c 'd))
+d
+#+end_example
+
+Assim como em ~car~, para o símbolo ~nil~, seu ~cdr~ é ~nil~.
+
+#+begin_example
+> (cdr nil)
+nil
+#+end_example
+
+Como  igualmente explicado  em  ~car~, o  nome /cdr/  é  histórico, e  diz
+respeito ao "conteúdo da parte de decremento do número no registrador"
+(/Contents of the Decrement part of Register number/).
+
+*** ~(copy x)~
+
+Retorna uma cópia rasa  de uma célula /cons/ ~x~. Se ~x~  não for uma célula
+/cons/, retorna um erro.
+
+A  função  cria uma  nova  célula  /cons/, garantidamente  diferente  de
+quaisquer  outras células  /cons/  anteriormente  criadas. Todavia,  seu
+conteúdo (/car/ e /cdr/) não  será copiado, permanecendo os mesmos objetos
+do ~x~ original.
+
+#+begin_example
+> (def x (cons 'a 'b))
+x
+
+> (def y (copy x))
+y
+
+> x
+(a . b)
+
+> y
+(a . b)
+
+> (id x y)
+nil
+
+> (and (id (car x) (car y))
+       (id (cdr x) (cdr y)))
+t
+
+> (copy t)
+(lit error "{} is not a cons cell" t)
+#+end_example
+
+*** ~(length x)~
+
+Retorna um número /inteiro/ correspondente  à quantidade de elementos em
+uma  /lista/.
+
+Se o  objeto for uma lista  pontuada, considera-se o tamanho  da mesma
+até o /cdr/ contendo um átomo.
+
+Se o  objeto for uma lista  adequada, procede-se da mesma  maneira até
+que ~nil~ seja encontrado.
+
+Caso o objeto em questão não seja uma /lista/, será levantado um erro no
+sistema.
+
+#+begin_example
+> (length '(1 2 3 4))
+4
+
+> (length '(a b c))
+3
+
+> (length nil)
+0
+
+> (length 'a)
+(lit error "{} is not a proper list" a)
+
+> (length '(1 2 . 3))
+2
+#+end_example
+
+*** ~(depth x)~
+
+Retorna  um   número  inteiro   correspondente  ao  nível   máximo  de
+aninhamentos em uma lista.
+
+Se o objeto for um átomo, será levantado um erro no sistema.
+
+Do contrário, a função recorre sobre a estrutura das células /cons/. Uma
+sublista  será considerada  como tendo  profundidade se  e somente  se
+possuir pelo menos um elemento.
+
+#+begin_example
+> (depth 1)
+(lit error "{} is an atom" 1)
+
+> (depth '())
+0
+
+> (depth '(()))
+1
+
+> (depth '((1)))
+2
+
+> (depth '(1 2 3 4 5))
+5
+
+> (depth '(1 2 3 4 5 6))
+6
+
+> (depth '(1 2 3 4 5 . 6))
+5
+#+end_example
+
+*** ~(type x)~
+
+Retorna um símbolo que indique o /tipo/ de um certo objeto.
+
+Para  os  tipos  numéricos,  que envolvem  a  ideia  intermediária  de
+/subtipo/, retorna-se  a informação  mais específica a  respeito daquele
+elemento.  Por exemplo,  o tipo  de ~1/3~  será ~fraction~,  pois isso  já
+indica  implicitamente  que  o  objeto  seja  um  ~number~.  Comparações
+genéricas podem ser feitas com os predicados apropriados.
+
+#+begin_example
+> (type 1)
+integer
+
+> (type 2.0)
+float
+
+> (type 'a)
+symbol
+
+> (type nil)
+symbol
+
+> (type 2/3)
+fraction
+
+> (type '(a b c))
+cons
+
+> (type #\L)
+char
+
+> (type *stdout*)
+stream
+
+> (type 1J5)
+complex
+
+> (type [1 2 3])
+vector
+#+end_example
+
+*** ~(intern x)~
+
+/Interna/   um  novo   símbolo   no  escopo   global   da  linguagem   e
+retorna-o.  Caso o  símbolo já  exista no  escopo global,  retorne tal
+símbolo. Caso a string em questão seja vazia, será retornado o símbolo
+~nil~.
+
+~x~ deverá ser obrigatoriamente uma string. Essa string será o nome para
+o novo símbolo em questão. Caso não seja, será retornado um erro.
+
+É importante lembrar que o nome  de um símbolo é puramente estético do
+ponto de  vista de sintaxe,  servindo portanto para designar  um único
+símbolo, independente de sua implementação.
+
+#+begin_example
+> (intern "blah")
+blah
+
+> (intern "foo")
+foo
+
+> (intern "")
+nil
+
+> (intern 'a)
+(lit error "{} is not a string" a)
+#+end_example
+
+*** ~(name x)~
+
+Toma um  símbolo /interno/ no escopo  global da linguagem e  retorna seu
+nome, no formato de string. Caso ~x~ não seja um símbolo, será retornado
+um erro.
+
+#+begin_example
+> (name t)
+"t"
+
+> (name 'foo)
+"foo"
+
+> (name 'thing)
+"thing"
+
+> (name nil)
+"nil"
+
+> (name "Blah")
+(lit error "{} is not a symbol" "Blah")
+#+end_example
+
+*** ~(get-environment type)~
+
+Retorna uma referência  ao contexto requisitado. Se  o contexto léxico
+for requisitado no /top-level/, será retornado um contexto vazio.
+
+~type~ deve  corresponder a  um dos símbolos  ~lexical~ ou  ~global~. Outros
+símbolos ocasionarão um erro.
+
+Note que modificar o contexto retornado poderá colocar o interpretador
+em um estado  inseguro. Todavia, os contextos /léxico/ e  /global/ não são
+~set~-áveis, ou seja,  não há local em algum contexto,  por padrão, onde
+podem ser redefinidos, pois suas referências não podem ser obtidas com
+consulta simples.
+
+#+begin_example
+> (get-environment 'global)
+#<environment {...}>
+
+> (get-environment 'blah)
+(lit error "Unknown environment type {}" blah)
+
+> (let ((x 5)
+        (y 6))
+    (get-environment 'lexical))
+#<environment {...}>
+
+> (let ((x 5)
+        (y 6))
+    (let ((env (get-environment 'lexical)))
+      (def sum-test `(lit closure ,env () ((+ x y))))))
+sum-test
+
+> (sum-test)
+11
+#+end_example
+
+*** ~(coin)~
+
+Retorna os símbolos ~t~ e ~nil~, aleatoriamente.
+
+#+begin_example
+> (coin)
+t
+
+> (coin)
+t
+
+> (coin)
+nil
+
+> (coin)
+t
+
+> (coin)
+nil
+
+> (coin)
+nil
+#+end_example
+
+*** ~(sys com . args)~
+
+Executa  o comando  ~com~, seguido  dos  argumentos em  ~args~. Tanto  ~com~
+quanto os elementos da lista ~args~ devem ser /strings/.
+
+Caso  o comando  não possa  ser  executado por  algum motivo  anormal,
+retorna  um erro.   Caso algum  dos  argumentos não  seja uma  string,
+também retorna um erro.
+
+Caso o comando  seja executado com sucesso, retorna  um número inteiro
+correspondente ao código de retorno do comando.
+
+#+begin_example
+> (sys "/bin/true")
+0
+
+> (sys "/bin/false")
+1
+
+> (sys "ls" "-all" "--color=never")
+0
+#+end_example
+
+*** ~(format fmt . rest)~
+
+Retorna uma /string/ contendo os elementos em ~rest~, formatados segundo a
+/string/ de formato ~fmt~.
+
+A /string/  de formato deverá conter  zero ou mais indicadores  na forma
+~{}~,  que  serão  substituídos  pela formatação  padrão  dos  elementos
+contidos em ~rest~, na sequência em que aparecem.
+
+Caso  um  ou  mais  indicadores  ~{}~  estejam  mal-escritos,  a  função
+retornará  um  erro.  Da  mesma  forma, caso  a  função  possua  menos
+argumentos, após  o formato, do  que for  esperado no mesmo,  a função
+também retornará um erro.
+
+#+begin_example
+> (format "Hello world")
+"Hello world"
+
+> (format "The number five: {}" 5)
+"The number five: 5"
+
+> (format "The floating point {} is nice" 2.)
+"The floating point 2.0 is nice"
+
+> (let ((x 1/2))
+    (format "The number {} has a subtype {}"
+            x
+            (type x)))
+"The number 1/2 has a subtype fraction"
+
+> (format "Hello {}")
+(lit error "Missing arguments on format")
+
+> (format "Hello {" "World")
+(lit error "Unmatched opening curly brace in {}" "Hello {")
+
+> (format "Hello }" "World")
+(lit error "Unmatched closing curly brace in {}" "Hello }")
+#+end_example
+
+*** ~(err fmt . rest)~
+
+Cria um  objeto de  /erro/. O  retorno será um  /literal/, que  conterá um
+formato e o restante dos argumentos para compor tal formato.
+
+A string  de formato obedece à  mesma sintaxe de ~format~,  sendo também
+acompanhada  de tantos  objetos quanto  forem necessários  para que  a
+formatação possa ser aplicada.
+
+#+begin_example
+> (err "{} is not a number" t)
+(lit error "{} is not a number" t)
+
+> (err "This is an error, numbers are {} and {}" 2 3)
+(lit error "This is an error, numbers are {} and {}" 2 3)
+#+end_example
+
+*** ~(warn fmt . rest)~
+
+Mostra uma mensagem de alerta em  ~*stderr*~, sucedida por uma quebra de
+linha. O retorno será sempre ~nil~.
+
+A string  de formato obedece à  mesma sintaxe de ~format~,  sendo também
+acompanhada  de tantos  objetos quanto  forem necessários  para que  a
+formatação possa ser aplicada.
+
+Nos exemplos a seguir, a saída para o console corresponde à saída para
+~*stderr*~, e não para a saída  padrão, como normalmente se apresenta em
+outros exemplos.
+
+#+begin_example
+> (warn "{} is not a number" t)
+; Warning: t is not a number
+;
+nil
+
+> (warn "This is a warning, numbers are {} and {}" 2 3)
+; Warning: This is a warning, numbers are 2 and 3
+;
+nil
+#+end_example
+
+*** ~(list . rest)~
+
+Retorna uma nova lista com  todos os elementos passados por parâmetro,
+na sequência em que foram passados.
+
+Caso nenhum elemento tenha sido passado, retornará ~nil~.
+
+#+begin_example
+> (list 1 2 3)
+(1 2 3)
+
+> (list 'a 6 'b)
+(a 6 b)
+
+> (list)
+nil
+#+end_example
+
+*** ~(append . rest)~
+
+Retorna uma nova lista, gerada através  da anexação de todas as listas
+passadas à função.
+
+Se ~rest~  é uma lista  de listas, será gerada  uma nova lista,  tal que
+todos  os elementos  de cada  sublistas  sejam dispostos  na nova,  na
+sequência em que as sublistas foram fornecidas.
+
+Se o último elemento de ~rest~ for  um único átomo, ele se tornará o /cdr/
+ao fim da lista -- isto é, o resultado será uma /lista pontuada/.
+
+#+begin_example
+> (append '(1 2 3) '(4 5 6))
+(1 2 3 4 5 6)
+
+> (append '(a (b c) d (e)) '(f (g h)))
+(a (b c) d (e) f (g h))
+
+> (append '(a b c) 'd)
+(a b c . d)
+#+end_example
+
+*** ~(last x)~
+
+Retorna  o  último   /cons/ de  uma  lista.  Se   o  parâmetro  passado
+inicialmente não for um /cons/, retorna um erro.
+
+Caso a  lista passada seja uma  /lista pontuada/, retorna o  último /cons/
+possível.
+
+#+begin_example
+> (last '(a b c d))
+(d)
+
+> (last '(a b c . d))
+(c . d)
+
+> (last 'a)
+(lit error "{} is not a cons" a)
+#+end_example
+
+*** ~(reverse x)~
+
+Inverte  os elementos  de uma  lista adequada  ~x~, retornando  uma nova
+lista com os mesmos elementos da original.
+
+Caso ~x~ não seja um /cons/, retorna  um erro. Da mesma forma, caso ~x~ seja
+uma lista pontuada, retorna também um erro.
+
+#+begin_example
+> (reverse '(a b c d))
+(d c b a)
+
+> (reverse 'a)
+(lit error "{} is not a cons" a)
+
+> (reverse '(a b c . d))
+(lit error "Not a proper list: {}" (a b c . d))
+#+end_example
+
+*** ~(nthcdr n lst)~
+
+Recupera o ~n~-ésimo /cons/ da lista ~lst~.
+
+Os /cons/'es  começam a ser  contados a partir  de ~0~.  Assim,  um número
+menor  que  ~0~  incorrerá  em  um erro.   Da  mesma  forma,  um  número
+não-inteiro também será considerado um erro.
+
+Se  ~lst~ for  uma  lista  pontuada, o  algoritmo  tentará encontrar  os
+elementos até  onde for possível.  Caso o algoritmo precise  chegar ao
+ponto de encontrar o  /cdr/ de um objeto que não seja  /cons/ ou o símbolo
+~nil~, um erro será levantado.
+
+Caso ~n~ corresponda a um índice  maior que o índice atribuído ao último
+elemento, o retorno será ~nil~.
+
+#+begin_example
+> (nthcdr 0 '(1 2 3 4))
+(1 2 3 4)
+
+> (nthcdr 1 '(1 2 3 4))
+(2 3 4)
+
+> (nthcdr 3 '(1 2 3 4))
+(4)
+
+> (nthcdr 3 '(1 2 3 . 4))
+(lit error "{} is not a list" 4)
+
+> (nthcdr -1 '(1 2 3 4))
+(lit error "{} is not a valid index" -1)
+
+> (nthcdr 3/4 '(1 2 3 4))
+(lit error "{} is not an integer" 3/4)
+
+> (nthcdr 4 '(1 2 3 4))
+nil
+
+> (nthcdr 5 '(1 2 3 4))
+nil
+
+> (nthcdr 50 nil)
+nil
+#+end_example
+
+*** ~(nth n lst)~
+
+Recupera o ~n~-ésimo elemento da lista ~lst~.
+
+Uma possível implementação para ~nth~ seria:
+
+#+begin_example
+(defn nth (n lst)
+  (car (nthcdr n lst)))
+#+end_example
+
+Os elementos  começam a ser contados  a partir de ~0~.  Assim, um número
+menor  que  ~0~  incorrerá  em  um  erro.  Da  mesma  forma,  um  número
+não-inteiro também será considerado um erro.
+
+Se  ~lst~ for  uma  lista  pontuada, o  algoritmo  tentará encontrar  os
+elementos até  onde for possível.  Caso o algoritmo precise  chegar ao
+ponto de encontrar o  /cdr/ de um objeto que não seja  /cons/ ou o símbolo
+~nil~, um erro será levantado.
+
+Caso ~n~ corresponda a um índice  maior que o índice atribuído ao último
+elemento, o retorno será ~nil~.
+
+#+begin_example
+> (nth 0 '(1 2 3 4))
+1
+
+> (nth 3 '(1 2 3 4))
+4
+
+> (nth 3 '(1 2 3 . 4))
+(lit error "{} is not a list" 4)
+
+> (nth -1 '(1 2 3 4))
+(lit error "{} is not a valid index" -1)
+
+> (nth 3/4 '(1 2 3 4))
+(lit error "{} is not an integer" 3/4)
+
+> (nth 4 '(1 2 3 4))
+nil
+
+> (nth 5 '(1 2 3 4))
+nil
+
+> (nth 50 nil)
+nil
+#+end_example
+
+*** ~(macroexpand-1 x)~
+
+Expande uma  expressão quotada,  caso esta envolva  a aplicação  de um
+/macro/.
+
+Retorna o resultado  da aplicação da função associada ao  macro, o que
+pode ser tanto uma expressão válida quanto um objeto de erro.
+
+#+begin_example
+> (def m (mac (f x) (list f x)))
+m
+
+> (macroexpand-1 '(m f 5))
+(f 5)
+#+end_example
+
+A expansão de um  macro deverá retornar um erro caso  a expansão em si
+gere uma /função/  ao invés alguma outra forma, pois  *macros não admitem
+aplicação parcial*.
+
+Igualmente, caso a própria aplicação do  macro gere algum erro, o erro
+deverá ser retornado.
+
+*** TODO ~(macroexpand x)~ :noexport:
+
+# Macroexpand não é pra funcionar assim não! Revisar isso aqui.
+# Talvez  seja  legal  bolar  uma estratégia  melhor  de  expansão  de
+# macros. Evitar expansões ad-hoc em runtime, quem sabe.
+
+Expande  uma  expressão  quotada,   enquanto  esta  ainda  envolver  a
+aplicação de um /macro/.
+
+~macroexpand~ compreende  a aplicação  repetida da  função ~macroexpand-1~
+até que não seja possível realizar uma nova expansão.
+
+#+begin_example
+> (def m1 (mac (f x) (list f x)))
+m1
+
+> (def m2 (mac (f) (list 'm1 f 5)))
+m2
+
+> (macroexpand-1 '(m2 f))
+(m1 f 5)
+
+> (macroexpand '(m2 f))
+(f 5)
+#+end_example
+
+*** ~(not x)~
+
+Nega logicamente o argumento ~x~.
+
+De acordo  com as regras de  /verdade/ de Majestic Lisp,  qualquer valor
+diferente de ~nil~ será  considerado verdadeiro. Portanto, ao aplicarmos
+esta  função a  qualquer valor  diferente de  ~nil~, obteremos  ~nil~ como
+resposta.
+
+Pela mesma regra de /verdade/, ao  aplicarmos a função ~not~ ao valor ~nil~,
+obteremos necessariamente o símbolo ~t~.
+
+#+begin_example
+> (not 1)
+nil
+
+> (not '(a b c))
+nil
+
+> (not t)
+nil
+
+> (not nil)
+t
+#+end_example
+
+*** ~(gensym)~
+
+Gera um símbolo aleatório.
+
+Os símbolos  têm uma representação textual  com o formato ~:Gx~,  onde ~x~
+será um número  que, internamente, é gerado sem que  haja colisões com
+outros símbolos.
+
+Isso  classifica  a  função  ~gensym~ como  uma  função  necessariamente
+impura, sendo portanto dependente de estado externo à mesma.
+
+#+begin_example
+> (gensym)
+:G88
+
+> (gensym)
+:G89
+
+> (gensym)
+:G90
+
+> (gensym)
+:G91
+#+end_example
+
+*** ~(terpri)~
+
+Imprime uma nova linha no stream ~*stdout*~.
+
+Uma possível implementação para ~terpri~ poderia ser:
+
+#+begin_example
+(defn terpri ()
+  (write-char #\newline *stdout*))
+#+end_example
+
+A impressão da nova linha retorna um erro se não puder ser efetuada em
+~*stdout*~. Caso contrário, a função sempre retorna ~nil~.
+
+#+begin_example
+> (terpri)
+;
+nil
+
+> (let ((*stdout* (open-stream 'out "file.txt")))
+    (close-stream *stdout*)
+    (terpri))
+(lit error "The stream {} is closed" #<stream (out) {...}>)
+#+end_example
+
+*** ~(display x)~
+
+Imprime o  objeto ~x~ no  /stream/ ~*stdout*~.  A impressão *não  adiciona* um
+caractere de fim de linha ao final da impressão, portanto, *o resultado
+da execução pode aparecer junto à saída esperada*.
+
+Para  adicionar um  terminador de  linha ao  final da  impressão, veja
+~terpri~.
+
+Uma possível implementação de ~display~ seria:
+
+#+begin_example
+(defn display (x)
+  (write x *stdout*))
+#+end_example
+
+A  impressão do  objeto está  condicionada à  impressão de  objetos de
+Majestic por parte do sistema.
+
+Retorna um erro  se o objeto não puder ser  impresso em ~*stdout*~. Caso
+contrário, a função sempre retorna ~nil~.
+
+#+begin_example
+> (display 'hello)
+; hello
+nil
+
+> (do (display 'hello)
+      (terpri))
+; hello
+;
+nil
+
+> (let ((x 2)
+        (y 3))
+    (display (+ x y))
+    (terpri))
+; 5
+;
+nil
+
+> (let ((*stdout* (open-stream 'out "file.txt")))
+    (close-stream *stdout*)
+    (display 'a))
+(lit error "Cannot write to closed stream")
+#+end_example
+
+*** TODO ~(pretty-display x)~
+
+Imprime o objeto ~x~ no stream ~*stdout*~.
+
+~pretty-display~ é exatamente igual a ~display~,  à exceção do fato de que
+esta função tenta realizar /pretty printing/ da expressão em ~x~.
+
+# Falta aqui alguns exemplos, mas não sem antes ajustar quais serão as
+# regras  do pretty  printer, que  também deveria  ser especificado  à
+# parte.
+
+# Essa função pode se tornar inútil em breve.
+
+*** ~(print fmt . rest)~
+
+Imprime uma string formatada a partir  de ~fmt~ e dos argumentos em ~rest~
+no /stream/  ~*stdout*~. O processo de  impressão *necessariamente adiciona
+uma nova linha ao final do texto impresso*.
+
+Uma possível implementação  para essa função em  Majestic Lisp poderia
+ser:
+
+#+begin_example
+(defn print args
+  (write-string
+    (apply format args)
+    *stdout*)
+  (terpri))
+#+end_example
+
+Esta função retorna um erro caso  a formatação não possa ser feita, 
+
+#+begin_example
+> (print "My name is {}" 'Someone)
+; My name is Someone
+;
+nil
+
+> (print "{} + {} = {}"
+         2
+         3
+         (+ 2 3))
+; 2 + 3 = 5
+;
+nil
+
+> (print "Hello {}")
+(lit error "Missing arguments on format")
+
+> (let ((*stdout* (open-stream 'out "file.txt")))
+    (close-stream *stdout*)
+    (print "Hello {}" 'World))
+(lit error "Cannot write to closed stream")
+#+end_example
+
+*** ~(load path)~
+
+Carrega o código do arquivo existente no caminho ~path~, interpretando-o
+logo em seguida.
+
+Caso o caminho não possa ser aberto, retorna um objeto de erro.
+
+Espera-se que  o arquivo  em questão  constitua-se de  código Majestic
+Lisp válido. Caso alguma das  formas textualmente descritas no arquivo
+falhe   em  sua   interpretação,  tal   processo  será   imediatamente
+interrompido, e o erro relacionado será retornado.
+
+Do contrário,  a função retornará o  mesmo valor de retorno  da última
+expressão interpretada no arquivo.
+
+O exemplo  a seguir  assume a  execução em um  sistema Unix,  apenas a
+título de exemplo.
+
+Suponha-se o arquivo ~test.maj~ com conteúdo:
+
+#+begin_example
+(defn foo (x)
+  (+ x 2))
+
+(defn bar ()
+  (foo 5))
+#+end_example
+
+Pode-se, portanto, considerar o seguinte uso de tal arquivo:
+
+#+begin_example
+> (load "test.maj")
+bar
+
+> (foo 7)
+9
+
+> (bar)
+7
+#+end_example
+
+De forma similar, erros serão emitidos quando um arquivo não existir.
+
+#+begin_example
+> (load "blah.maj")
+(lit error "While reading file {}: Cannot open file" "blah.maj")
+#+end_example
+
+*** ~(equal x y)~
+
+Informa  se  ~x~  e ~y~  são  iguais.  A  igualdade  tratada por  ~equal~  é
+inerentemente mais  permissiva, e procurará realizar  comparação entre
+os elementos de acordo com o  tipo dos mesmos, quando tais tipos forem
+iguais.  Ademais,  ~equal~  realizará comparações  recursivas  entre  os
+elementos de coleções.
+
+A função ~equal~ é executada de forma a ser o mais permissiva quanto for
+possível. Isso significa que ~equal~ não retorna erros relacionados aos
+tipos  de ~x~  e  ~y~, e  será  capaz de  comparar  estes dois  argumentos
+independentemente de seus tipos.
+
+A  função ~equal~  pode ser  implementada em  Majestic Lisp  da seguinte
+forma:
+
+#+begin_example
+(defn equal (x y)
+  (cond ((and (numberp x) (numberp y))
+         (= x y))
+        ((and (vectorp x) (vectorp y))
+         (vector= x y))
+        ((and (symbolp x) (symbolp y))
+         (eq x y))
+        ((and (consp x) (consp y))
+         (when (equal (car x) (car y))
+           (equal (cdr x) (cdr y))))
+        ((and (atomp x) (atomp y))
+         (id x y))
+        (t nil)))
+#+end_example
+
+Como é  possível notar, ~x~  e ~y~ podem  ser quaisquer tipos  de valores;
+quando  forem  coleções  (como  listas ou  vetores),  ~equal~  realizará
+comparações recursivamente entre seus elementos.
+
+Caso   os  dois   parâmetros  sejam   iguais,  segundo   os  critérios
+estabelecidos, retorna ~t~. Caso contrário, retorna ~nil~.
+
+#+begin_example
+> (equal 0.5 1/2)
+t
+
+> (equal [1 2 3] [1 2 3])
+t
+
+> (equal 'a 'b)
+nil
+
+> (equal '(a b c) '(a b c))
+t
+
+> (equal #\F #\F)
+t
+
+> (equal *stdin* *stdin*)
+t
+
+> (equal *stdin* *stdout*)
+nil
+
+> (equal 20 'a)
+nil
+
+> (equal *stdout* '(a b c))
+nil
+
+> (equal [6 5] '(6 5))
+nil
+
+> (equal "Teste" "Teste")
+t
+#+end_example
+
+** Funções para vetores
+*** ~(vector . rest)~
+
+Cria um vetor de objetos.
+
+O tipo do vetor está relacionado aos tipos dos elementos fornecidos em
+~rest~:
+
+1. Se ~rest~ é ~nil~, então será retornado um vetor vazio de tipo ~any~;
+2. Se ~rest~ possui elementos de tipos variados, então será retornado um
+   vetor de tipo ~any~ com os elementos fornecidos em sequência;
+3. Se  ~rest~ possui apenas elementos  de tipos ~integer~, ~float~  ou ~char~,
+   então  será retornado  um vetor  com tipo  igual ao  dos elementos,
+   populado pelos mesmos elementos fornecidos em sequência.
+
+#+begin_example
+> (vector)
+[]
+
+> (vec-type (vector))
+any
+
+> (vector 1 2 3 4)
+[1 2 3 4]
+
+> (vec-type (vector 1 2 3 4))
+integer
+
+> (vector 1. 3. 2.5)
+[1.0 3.0 2.5]
+
+> (vec-type (vector 1. 3. 2.5))
+float
+
+> (vector #\H #\e #\l #\l #\o)
+"Hello"
+
+> (vec-type (vector #\H #\e #\l #\l #\o))
+char
+
+> (vector 1. 3 2/5 2j6 'blah)
+[1.0 3 2/5 2J6 blah]
+
+> (vec-type (vector 1. 3 2/5 2j6 'blah))
+any
+#+end_example
+
+*** ~(vec-type vec)~
+
+Retorna o tipo de um vetor. Caso o objeto fornecido não seja um vetor,
+será retornado um erro.
+
+Em  circunstâncias normais,  será  retornado um  dos símbolo  ~integer~,
+~float~, ~char~ ou ~any~.
+
+#+begin_example
+> (vec-type [])
+any
+
+> (vec-type [1 2 3 4])
+integer
+
+> (vec-type [1. 3. 2.5])
+float
+
+> (vec-type "Hello")
+char
+
+> (vec-type [1. 3 2/5 2j6 'blah])
+any
+
+> (vec-type 2)
+(lit error "{} is not a vector" 2)
+#+end_example
+
+*** ~(vec-coerce type vec)~
+
+Tenta converter o  tipo de um vetor  ~vec~ para o tipo  ~type~, que deverá
+ser um dos símbolos ~integer~, ~float~, ~char~ ou ~any~.
+
+O vetor original não será alterado, e será retornado um novo vetor com
+o novo tipo.
+
+A conversão  segue as regras de  coerção entre vetores. Assim,  caso a
+coerção individual  de um  elemento falhe,  a coerção  do vetor  em si
+falhará.
+
+Caso  ~vec~ não  seja um  vetor, caso  ~type~ não  seja um  símbolo --  em
+especial, caso não seja um  dos símbolos permitidos --, será retornado
+um erro.
+
+#+begin_example
+> (let ((v []))
+    (vec-push v 2)
+    (vec-push v 3)
+    (print "Vector: {}" v)
+    (print "Vector type: {}" (vec-type v))
+    (set v (vec-coerce 'integer v))
+    (print "Vector type: {}" (vec-type v)))
+; Vector: [2 3]
+; Vector type: any
+; Vector type: integer
+;
+nil
+
+> (vec-coerce 'any "Hello")
+[#\H #\e #\l #\l #\o]
+#+end_example
+
+*** ~(vec-push x vec)~
+
+Insere um novo elemento ~x~ ao final do vetor ~vec~. O vetor original será
+alterado  durante essa  operação.  Portanto,  ~vec-push~ *é  uma operação
+destrutiva*.
+
+Uma possível implementação para ~vec-push~ poderia ser:
+
+#+begin_example
+(defn vec-push (x vec)
+  (vec-insert vec
+              (vec-length vec)
+              x))
+#+end_example
+
+Para que essa operação funcione, ~vec~ precisa ser um vetor, e ~x~ precisa
+ser  um elemento  cujo tipo  seja compatível  com o  tipo do  vetor em
+questão. Por exemplo, vetores de tipo ~integer~, ~float~ e ~char~ só aceitam
+novos elementos de  tais tipos; vetores de tipo  ~any~ aceitam quaisquer
+tipos de elementos.
+
+Caso os parâmetros não possuam os  tipos e valores esperados, a função
+retornará  erros. Em  caso de  sucesso, será  retornado o  mesmo vetor
+original, após a sua modificação.
+
+#+begin_example
+> (def v (vec-coerce 'integer []))
+v
+
+> (vec-push 5 v)
+[5]
+
+> (vec-push 6 v)
+[5 6]
+
+> (vec-push 'a v)
+(lit error "{} has type {}, which is incompatible with pushing to vector of type {}" a symbol integer)
+
+> (let ((myvec []))
+    (mapc (fn (x) (vec-push x myvec)) '(5 6 a 2/3))
+    myvec)
+[5 6 a 2/3]
+#+end_example
+
+*** ~(vec-set pos x vec)~
+
+Redefine um  elemento de  ~vec~ na posição  ~pos~ para o  novo valor  ~x~. O
+vetor original será alterado  durante essa operação. Portanto, ~vec-set~
+*é uma operação destrutiva*.
+
+Para que essa operação funcione, ~vec~ precisa ser um vetor, e ~x~ precisa
+ser  um elemento  cujo tipo  seja compatível  com o  tipo do  vetor em
+questão. Por exemplo, vetores de tipo ~integer~, ~float~ e ~char~ só aceitam
+novos elementos de  tais tipos; vetores de tipo  ~any~ aceitam quaisquer
+tipos de elementos.
+
+Ademais, ~pos~  precisa ser um número  inteiro maior ou igual  a zero, e
+menor que  o tamanho do vetor  em questão. Por exemplo,  para um vetor
+com  tamanho  ~6~,  serão  admitidos  valores no  intervalo  de  ~0~  a  ~5~
+inclusive.
+
+Caso os parâmetros não possuam os  tipos e valores esperados, a função
+retornará  erros. Em  caso de  sucesso, será  retornado o  mesmo vetor
+original, após a sua modificação.
+
+#+begin_example
+> (def v [1 2 3 4 5])
+v
+
+> (vec-type v)
+integer
+
+> (vec-set 2 50 v)
+[1 2 50 4 5]
+
+> (vec-set 4 10 v)
+[1 2 50 4 10]
+
+> (vec-set 5 90 v)
+(lit error "Index {} is out of bounds in {}" 5 [11 2 50 4 10])
+#+end_example
+
+*** ~(vec-pop vec)~
+
+Remove  um elemento  na última  posição de  ~vec~ e  o retorna.  O vetor
+original será alterado durante essa  operação. Portanto, ~vec-pop~ *é uma
+operação destrutiva*.
+
+Uma possível implementação para ~vec-pop~ poderia ser:
+
+#+begin_example
+(defn vec-pop (vec)
+  (let ((len (vec-length vec)))
+    (unless (zerop len)
+      (vec-remove vec (1- len)))))
+#+end_example
+
+Para que essa operação funcione, ~vec~  precisa ser um vetor. Caso não o
+seja, a função retornará um erro.
+
+Se  não  houver  mais  elementos  a serem  retirados  do  vetor,  será
+retornado ~nil~.
+
+#+begin_example
+> (def vec [1 2 3])
+vec
+
+> (while (> (vec-length vec) 0)
+    (print "{}" (vec-pop vec)))
+; 3
+; 2
+; 1
+;
+nil
+
+> (vec-pop vec)
+nil
+
+> vec
+[]
+
+> (vec-pop 2/3)
+(lit error "{} is not a vector" 2/3)
+#+end_example
+
+*** ~(vec-deq vec)~
+
+Remove um  elemento na primeira  posição de ~vec~  e o retorna.  O vetor
+original será alterado  durante essa operação. Portanto  ~vec-deq~ *é uma
+operação destrutiva*.
+
+Para que essa operação funcione, ~vec~  precisa ser um vetor. Caso não o
+seja, a função retornará um erro.
+
+Se  não  houver  mais  elementos  a serem  retirados  do  vetor,  será
+retornado ~nil~.
+
+#+begin_example
+> (def vec (apply vector (iota 3)))
+vec
+
+> vec
+[0 1 2]
+
+> (until (zerop (vec-length vec))
+    (print "{}" (vec-deq vec)))
+; 0
+; 1
+; 2
+;
+nil
+
+> (vec-deq vec)
+nil
+
+> vec
+[]
+
+> (vec-deq 2/3)
+(lit error "{} is not a vector" 2/3)
+#+end_example
+
+*** ~(vec-length vec)~
+
+Retorna  a quantidade  de elementos  do  vetor. A  quantidade será  um
+número inteiro maior ou igual a zero.
+
+Caso o objeto informado não seja um vetor, será retornado um erro.
+
+#+begin_example
+> (vec-length [])
+0
+
+> (vec-length [1 2 3 4])
+4
+
+> (vec-length (apply vector (reverse (iota 50))))
+50
+
+> (vec-length *stdin*)
+(lit error "{} is not a vector" #<stream (in) {...}>)
+#+end_example
+
+*** ~(vec-at pos vec)~
+
+Retorna um valor numa posição específica do vetor.
+
+~pos~ deve ser um valor maior ou igual  a ~0~, e menor que a quantidade de
+elementos  do vetor.  Assim, um  vetor  de cinco  elementos permite  a
+recuperação  de  valores nas  posições  entre  ~0~  e ~4~  inclusive,  por
+exemplo.
+
+Se  ~vec~ não  for um  vetor ou  ~pos~ não  for um  número inteiro,  serão
+retornados  erros. Igualmente,  se  ~pos~ não  estiver  no intervalo  de
+valores admitido, será também retornado um erro.
+
+#+begin_example
+> (vec-at 1 [1 2 3])
+2
+
+> (vec-at 0 "Hello")
+#\H
+
+> (vec-at 5 "Hello")
+(lit error "Index {} is out of bounds in {}" 5 "Hello")
+
+> (vec-at 5 '(1 2 3))
+(lit error "{} is not a vector" (1 2 3))
+#+end_example
+
+*** ~(vec-remove pos vec)~
+
+Remove um elemento na posição ~pos~ de ~vec~ e o retorna. O vetor original
+será  alterado  durante essa  operação.   Portanto,  ~vec-remove~ *é  uma
+operação destrutiva*.
+
+Para  que essa  operação funcione,  ~vec~ precisa  ser um  vetor, e  ~pos~
+precisa ser um número inteiro positivo, maior ou igual a ~0~ e menor que
+o tamanho de ~vec~. Caso contrário, a função retornará erros.
+
+O elemento removido será então retornado pela função.
+
+#+begin_example
+> (def vec [1 2 3 4 5])
+vec
+
+> (vec-remove 2 vec)
+3
+
+> (vec-remove 2 vec)
+4
+
+> vec
+[1 2 5]
+
+> (vec-remove 2 vec)
+5
+
+> (vec-remove 2 vec)
+(lit error "Index {} is out of bounds in {}" [1 2])
+
+> (vec-remove 0 2)
+(lit error "{} is not a vector" 2)
+#+end_example
+
+*** ~(vec-insert pos x vec)~
+
+Insere  um novo  elemento  ~x~ na  posição  ~pos~ do  vetor  ~vec~. O  vetor
+original será  alterado durante essa operação.  Portanto, ~vec-insert~ *é
+uma operação destrutiva*.
+
+Para que essa  operação funcione, ~vec~ precisa ser um  vetor, ~x~ precisa
+ser  um elemento  cujo tipo  seja compatível  com o  tipo do  vetor em
+questão, e  ~pos~ precisa  ser um número  inteiro de valor  entre ~0~  e o
+tamanho do vetor ~vec~.
+
+Por exemplo,  vetores de tipo ~integer~,  ~float~ e ~char~ só  aceitam novos
+elementos de tais  tipos; vetores de tipo ~any~  aceitam quaisquer tipos
+de elementos.
+
+No caso de ~pos~, para um  vetor de ~n~ elementos, serão admitidos valores
+de ~0~  a ~n~ inclusive.  Uma inserção  na posição ~n~  é similar ao  uso de
+~vec-push~.
+
+Caso os parâmetros não possuam os  tipos e valores esperados, a função
+retornará  erros. Em  caso de  sucesso, será  retornado o  mesmo vetor
+original, após a sua modificação.
+
+#+begin_example
+> (def v [1 2 3])
+v
+
+> v
+[1 2 3]
+
+> (vec-insert 3 5 v)
+[1 2 3 5]
+
+> (vec-insert 0 5 v)
+[5 1 2 3 5]
+
+> (vec-insert 0 5 v)
+[5 5 1 2 3 5]
+
+> (vec-insert 0 5 v)
+[5 5 5 1 2 3 5]
+
+> (vec-insert 1 7 v)
+[5 7 5 5 1 2 3 5]
+
+> (vec-insert 3 8 v)
+[5 7 5 8 5 1 2 3 5]
+
+> (vec-insert 20 8 [1 2 3])
+(lit error "Index {} is out of bounds in {}" 20 [1 2 3])
+
+> (vec-insert 2 'a [1 2 3])
+(lit error "{} has type {}, which is incompatible with insertion on vector of type {}" a symbol integer)
+#+end_example
+
+*** ~(vector= va vb)~
+
+Verifica se ~va~ e ~vb~ são vetores iguais.
+
+Vetores iguais são aqueles que possuem mesmo subtipo, mesmo tamanho, e
+elementos iguais. A igualdade de  elementos entre vetores é verificada
+com auxílio da função ~equal~,  que pode ser temporariamente substituída
+com a utilização de escopo dinâmico.
+
+Uma possível implementação de ~vector=~ pode ser:
+
+#+begin_example
+(defn vector= (va vb)
+  (when (eq (vec-type va) (vec-type vb))
+    (let* ((len (vec-length va))
+           (i 0)
+           (continue t))
+      (when (= len (vec-length vb))
+        (while (and (< i len) continue)
+          (unless (equal (vec-at va i)
+                         (vec-at vb i))
+            (set continue nil))
+          (set i (1+ i)))
+        continue))))
+#+end_example
+
+Caso ~va~ e ~vb~ sejam iguais,  retorna ~t~. Caso contrário, retorna ~nil~. Se
+~va~ ou ~vb~ não forem vetores, será retornado um erro.
+
+#+begin_example
+> (vector= [1 2 3] [1 2 3])
+t
+
+> (let ((v [5 6 7 8]))
+    (vector= v [5 6 7 8]))
+t
+
+> (vector= [1 2] [3 4 5])
+nil
+
+> (vector= "Hello" "Hello")
+t
+
+> (vector= ['a 'b] [#\a #\b])
+nil
+
+> (vector= 'a ['a])
+(lit error "{} is not a vector" a)
+
+> (vector= [5] 5)
+(lit error "{} is not a vector" 5)
+#+end_example
+
+** Funções numéricas
+
+As funções a seguir descrevem operações com números.
+
+*** Coerção e extração de elementos
+**** ~(number-coerce subtype x)~
+
+Realiza coerção de  um número, de um subtipo para  outro. Ao contrário
+das operações primitivas, que realizam coerções para que haja o mínimo
+de perda de  informação possível, aqui a coerção é  realizada de forma
+forçada.
+
+~x~  pode ser  qualquer  número.  ~subtype~ precisa  ser  um dos  símbolos
+~integer~, ~fraction~, ~float~ e ~complex~.
+
+Caso ~x~ não seja um número, será retornado um erro.
+
+#+begin_example
+> (number-coerce 'float 1)
+1.0
+
+> (number-coerce 'integer 1J3)
+1
+
+> (number-coerce 'integer 2.3)
+2
+
+> (number-coerce 'float 2/5)
+0.4
+
+> (number-coerce 'integer t)
+(lit error "{} is not a number" t)
+#+end_example
+
+**** ~(real-part x)~
+
+Retorna a parte real de um número complexo. Retorna erros se ~x~ não for
+um número, e também se não for um número complexo.
+
+#+begin_example
+> (real-part 2j5)
+2
+
+> (real-part 3/2j7)
+3/2
+
+> (real-part 1/2)
+(lit error "{} is not a complex number" 1/2)
+
+> (real-part nil)
+(lit error "{} is not a number" nil)
+#+end_example
+
+**** ~(imag-part x)~
+
+Retorna  o coeficiente  da  parte imaginária  de  um número  complexo,
+enquanto número real, dependendo do subtipo da mesma. Retorna erros se
+~x~ não for um número, e também se não for um número complexo.
+
+#+begin_example
+> (imag-part 2j5)
+5
+
+> (imag-part 7j3/2)
+3/2
+
+> (imag-part 1/2)
+(lit error "{} is not a complex number" 1/2)
+
+> (imag-part nil)
+(lit error "{} is not a number" nil)
+#+end_example
+
+**** ~(numer x)~
+
+Retorna o  numerador de uma  fração, enquanto número  inteiro. Retorna
+erros se ~x~ não for um número, e também se não for uma fração.
+
+A função sempre considera a fração passada após sua simplificação.
+
+#+begin_example
+> (numer 1/2)
+1
+
+> (numer 6/4)
+3
+
+> (numer 2)
+(lit error "{} is not a fraction" 2)
+
+> (numer nil)
+(lit error "{} is not a number" nil)
+#+end_example
+
+**** ~(denom x)~
+
+Retorna o denominador de uma  fração, enquanto número inteiro. Retorna
+erros se ~x~ não for um número, e também se não for uma fração.
+
+A função sempre considera a fração passada após sua simplificação.
+
+#+begin_example
+> (denom 1/2)
+2
+
+> (denom 6/4)
+2
+
+> (denom 2)
+(lit error "{} is not a fraction" 2)
+
+> (denom nil)
+(lit error "{} is not a number" nil)
+#+end_example
+
+**** ~(richest-number-type x y)~
+
+Retorna um símbolo indicando o tipo  mais rico em informação entre ~x~ e
+~y~. Caso ~x~ ou ~y~ não sejam números, retorna um erro.
+
+Essa  função é  essencial  para  o emprego  de  coerções numéricas  em
+operações primitivas.  Ao deduzirmos o  tipo, entre outros  dois, onde
+menos se perde informação, podemos realizar coerções em ~x~ e ~y~ para que
+operações primitivas sejam feitas nos mesmos, de forma subsequente.
+
+Esta  função   segue  estritamente  as  regras   de  coerção  numérica
+mencionadas na especificação de números anteriormente citada.
+
+Esta função também *não aborda* casos individuais relacionados a números
+compostos (~fraction~ e ~complex~, quando  o primeiro possui denominador ~1~
+e o  segundo possui  parte imaginária  igual a  ~0~). Para  estes casos,
+espera-se  que   a  operação  em   questão  realize  um   processo  de
+/simplificação/ do resultado, onde uma nova coerção poderá ocorrer.
+
+#+begin_example
+> (richest-number-type 5 2.0)
+float
+
+> (richest-number-type 2 2/3)
+fraction
+
+> (richest-number-type 2J3 9)
+complex
+
+> (richest-number-type 2/3J-9 2.0)
+complex
+
+> (richest-number-type 2/3J-9 t)
+(lit error "{} is not a number" t)
+#+end_example
+
+**** ~(rich-number-coerce x y)~
+
+Realiza uma coerção rica entre ~x~ e ~y~.
+
+Uma  coerção rica  toma  o subtipo  numérico  mais rico  entre  ~x~ e  ~y~
+(através   de  ~richest-number-type~)   e  utiliza   ~number-coerce~  para
+transformar ambos ~x~ e ~y~ em números dos subtipos designados.
+
+#+begin_example
+(defn rich-number-coerce (x y)
+  (let ((best-type (richest-number-type x y)))
+    (list (number-coerce best-type x)
+          (number-coerce best-type y))))
+#+end_example
+
+Esta função retorna uma lista contendo as versões transformadas de ~x~ e
+~y~. Caso  um desses parâmetros  não seja  um número, será  retornado um
+erro,    normalmente    sendo    o   mesmo    erro    retornado    por
+~richest-number-type~.
+
+#+begin_example
+> (rich-number-coerce 2J3 2/5)
+(2J3 2/5J0.0)
+
+> (rich-number-coerce 1.5 5/2)
+(3/2 5/2)
+
+> (rich-number-coerce 2 t)
+(lit error "{} is not a number" t)
+#+end_example
+
+*** Operações aritméticas
+
+As operações básicas de Majestic  dependem da quantidade de argumentos
+passados para as funções. Em geral, há comportamentos para zero, um ou
+mais argumentos.
+
+Caso algum dos argumentos não seja um número, retorna um erro.
+
+As  operações podem  precisar  de algumas  coerções implícitas.  Essas
+coerções  estão   definidas  na  discussão  anterior   a  respeito  da
+especificação dos números.
+
+**** ~(+ . rest)~
+
+*Nenhum argumento:* Retorna o elemento neutro da soma (~1~).
+
+*Um argumento:* Conjugado  -- retorna o conjugado do  número atual, caso
+seja  um  número   complexo;  do  contrário,  retorna   o  número  sem
+alterações.
+
+*Mais argumentos:* Retorna o somatório dos argumentos.
+
+#+begin_example
+> (+)
+1
+
+> (+ 2J3)
+2J-3
+
+> (+ 1 2 3)
+6
+
+> (+ 'a)
+(lit error "{} is not a number" a)
+#+end_example
+
+**** ~(- . rest)~
+
+*Nenhum argumento:* Retorna o elemento neutro da subtração (~0~).
+
+*Um argumento:* Retorna a negação do número.
+
+*Mais argumentos:* Retorna a subtração sucessiva dos argumentos.
+
+#+begin_example
+> (-)
+0
+
+> (- 1)
+-1
+
+> (- 1 2 3)
+-4
+
+> (- 'a)
+(lit error "{} is not a number" a)
+#+end_example
+
+**** ~(* . rest)~
+
+*Nenhum argumento:* Retorna o elemento neutro da multiplicação (~1~).
+
+*Um  argumento:* Retorna  o  sinal do  número.  Para números  positivos,
+retorna  ~1~; para  negativos,  retorna  ~-1~. Caso  o  número seja  zero,
+retorna ~0~.
+
+*Mais argumentos:* Retorna o produtório dos argumentos.
+
+#+begin_example
+> (*)
+1
+
+> (* -50)
+-1
+
+> (* 1 2 3)
+6
+
+> (* 3J2 1J7)
+-11J23.0
+
+> (* 'a)
+(lit error "{} is not a number" a)
+#+end_example
+
+**** ~(/ . rest)~
+
+*Nenhum argumento:* Retorna o elemento neutro da divisão (~1~).
+
+*Um argumento:* Retorna o /recíproco/ do número. Os números podem precisar
+de coerção para que o recíproco seja calculado.
+
+*Mais argumentos:* Retorna a divisão sucessiva dos argumentos.
+
+Exclusivamente  para esta  operação,  nenhum dos  argumentos pode  ser
+/zero/. Se for, será gerado um erro de divisão por zero.
+
+#+begin_example
+> (/)
+1
+
+> (/ 3)
+1/3
+
+> (/ 0.5)
+2
+
+> (/ 3 4)
+3/4
+
+> (/ 2 3 0)
+(lit error "Division by zero")
+
+> (/ 0)
+(lit error "Division by zero")
+
+> (/ 2 'a)
+(lit error "{} is not a number" a)
+#+end_example
+
+*** Miscelânea
+**** ~(zerop x)~
+
+Retorna ~t~ se ~x~ for um número igual a zero.
+
+Esta  função usualmente  utiliza uma  comparação com  zero através  da
+operação de  comparação ~=~. Para o  caso de números com  subtipo ~float~,
+será utilizada a operação de comparação ~float=~.
+
+#+begin_example
+(defn zerop (x)
+  (or (and (floatp x)
+           (float= x 0.0))
+      (= x 0)))
+#+end_example
+
+Caso o objeto  em questão não seja um número,  será retornado um erro,
+geralmente o mesmo retornado por ~float=~ ou ~=~.
+
+#+begin_example
+> (zerop 0.00)
+t
+
+> (zerop 0/1)
+t
+
+> (zerop 0)
+t
+
+> (zerop 5)
+nil
+
+> (zerop t)
+(lit error "{} is not a number" t)
+#+end_example
+
+**** ~(iota n)~
+
+Gera uma lista contendo  números de ~0~ a ~(1- n)~  (~n~ não estará incluído
+na lista).
+
+Retorna um erro se ~n~ não for um número inteiro positivo.
+
+#+begin_example
+> (iota 0)
+nil
+
+> (iota 5)
+(0 1 2 3 4)
+
+> (map 1+ (iota 5))
+(1 2 3 4 5)
+
+> (iota -1)
+(lit error "iota expects a positive integer number")
+
+> (iota 2/3)
+(lit error "iota expects a positive integer number")
+
+> (iota 'a)
+(lit error "iota expects a positive integer number")
+#+end_example
+
+**** ~(1+ x)~
+
+Retorna o número ~x~, acrescido de uma unidade (~1~).
+
+~1+~ pode ser definido da seguinte forma:
+
+#+begin_example
+(defn 1+ (x) (+ 1 x))
+#+end_example
+
+Caso ~x~ não seja um número, será retornado um erro.
+
+#+begin_example
+> (1+ 2)
+3
+
+> (map 1+ (iota 2))
+(1 2)
+
+> (1+ 'a)
+(lit error "{} is not a number" a)
+#+end_example
+
+**** ~(1- x)~
+
+Retorna o número ~x~, decrescido de uma unidade (~1~).
+
+~1-~ pode ser definido da seguinte forma:
+
+#+begin_example
+(defn 1- (x) (+ -1 x))
+#+end_example
+
+Caso ~x~ não seja um número, será retornado um erro.
+
+#+begin_example
+> (1- 2)
+1
+
+> (map 1- (iota 2))
+(-1 0)
+
+> (1- 'a)
+(lit error "{} is not a number" a)
+#+end_example
+
+** TODO Operações de comparação
+
+*** ~(= x y . rest)~
+
+Verifica por igualdade entre dois ou mais números, retornando ~t~ ou ~nil~.
+
+Antes  de efetuar  qualquer  comparação, realiza-se  uma coerção  rica
+entre ~x~  e ~y~. Em  seguida, procede-se  à comparação para  cada subtipo
+numérico.
+
+A  igualdade numérica  realiza operações  internas de  comparação para
+todos os  subtipos numéricos,  exceto o subtipo  ~float~. Nesse  caso, a
+função  recorrerá   à  função  ~float=~  para   comparação.  Todavia,  é
+importante  salientar  que *comparações  por  igualdade  com ~float~  são
+desencorajadas*.
+
+#+begin_example
+> (= 4/2 2)
+t
+
+> (let ((x 1))
+    (= 1 x))
+t
+
+> (= 2J3 2/3)
+nil
+
+> (= 2.0 2)
+t
+
+> (= 2 4/2 2 3 5)
+nil
+
+> (= t 2/3)
+(lit error "{} is not a number" t)
+#+end_example
+
+Para um número de argumentos maior que dois, a função tentará comparar
+~x~ e  ~y~ e, caso  a comparação seja  verdadeira, repetirá a  execução da
+função, removendo  ~x~ da  lista de argumentos.  Caso a  comparação seja
+falsa,  interrompe-se o  processo  recursivo, e  retorna-se ~nil~,  como
+esperado.
+
+Em termos práticos, a comparação a seguir desenvolve-se como indicado:
+
+#+begin_example
+(= 2 4/2 2 3 5)
+(= 4/2 2 3 5)
+(= 2 3 5)
+nil
+#+end_example
+
+*** ~(float= x y)~
+
+# Ver: https://docs.rs/float-cmp/0.8.0/float_cmp/index.html
+
+Verifica por igualdade entre exatamente dois números de subtipo ~float~.
+
+Esta  função   é  utilizada   de  forma  subjacente   nas  comparações
+aritméticas  da  função ~=~,  quando  envolvem  a comparação  de  pontos
+flutuantes.
+
+Comparar pontos  flutuantes por igualdade é  uma operação notavelmente
+dificultosa,  posto que  valores decimais  não possuem  representações
+precisas quando lidamos com pontos flutuantes. Como exemplo, vejamos o
+código a seguir,  como executado em um interpretador  de Majestic Lisp
+feito como referência:
+
+#+begin_example
+> (def f 0.1)
+f
+
+> (def sum 0.0)
+sum
+
+> (repeat 10 (set sum (+ sum f)))
+sum
+
+> (def product (* f 10))
+product
+
+> (print "sum = {}, product = {}" sum product)
+; sum = 0.9999999999999999, product = 1.0
+; 
+nil
+
+> (float= sum product)
+t
+#+end_example
+
+Os  valores de  ~sum~ e  ~product~ neste  exemplo variam  de acordo  com a
+máquina,  a  implementação e  a  representação  utilizada para  pontos
+flutuantes. Justamente por isso, pode-se  observar a ocorrência de uma
+anomalia: ambos  ~sum~ e ~product~ calculam  a multiplicação de ~f~  por ~10~,
+porém  de   maneiras  diferentes;  enquanto   ~sum~  usa  o   método  de
+multiplicações  sucessivas,   ~product~  envolve  o  uso   da  função  ~*~
+diretamente.
+
+Isto ocorre  devido à  natureza da  representação de  ~float~'s enquanto
+arredondamentos dos números aos  quais queremos representar. Por isso,
+a melhor opção para uma comparação  direta entre ~float~'s é comparar se
+dois números são suficientemente próximos um do outro.
+
+Normalmente seria interessante considerar  um valor pequeno $\epsilon$
+que representasse  a distância entre dois  números representáveis como
+~float~, todavia,  a própria forma  de representação desses  números faz
+com que uma  constante $\epsilon$ possa se tornar  inefetiva em alguns
+casos,  especialmente  quando  o  número aumenta.  Assim,  o  ideal  é
+considerar  $\epsilon$  como  uma  medida variável  e  dependente  dos
+números comparados.
+
+Para tanto, é possível tomar  a representação binária dos ~float~'s como
+se fossem  representações binárias de números  inteiros (~integer~), que
+conservam a  propriedade de serem  adjacentes, quando os  dois ~float~'s
+o são.  Assim, uma mera  subtração destes  números, em seu  formato de
+números  inteiros, dizem-nos  quão longe  um  do outro  eles estão  no
+espaço dos ~float~'s.
+
+Mais especificamente, dados $a$ e $b$  que possuem o mesmo sinal e são
+do subtipo numérico ~float~, temos que:
+
+\begin{equation}
+a_\textrm{integer} - b_{integer} = 1 + p
+\end{equation}
+
+onde $p$ é  a quantidade de números  possivelmente representáveis como
+~float~ entre $a$ e $b$[fn:3].
+
+A partir deste  método, sabemos agora que ~float=~  envolve realizar tal
+comparação entre ~float~'s  de forma que a operação acima  não exceda um
+certo  número  $p$,  também  conhecido   como  ULPs  (/units  of  least
+precision/, ou /units in the last place/).
+
+Em Majestic Lisp, ULPs é  uma constante global armazenada como ~*ulps*~,
+que  pode  ser temporariamente  modificada  através  de uma  definição
+dinâmica.
+
+Em  geral, recomenda-se  não realizar  comparação direta  entre pontos
+flutuantes,  pela  natureza imprecisa  de  seus  possíveis métodos  de
+comparação.   Todavia,   para  as  situações  onde   for  extremamente
+necessário,  será  possível  delegar  esta  atividade  para  a  função
+~float=~.
+
+Finalmente,  ao  tratarmos do  uso  conceitual  da linguagem,  onde  a
+limitação de ~float~'s não existiria,  ~float=~ seria meramente uma versão
+mais específica de ~=~.
+
+*** ~(> x y . rest)~
+
+Compara consecutivamente se um número  é maior que outro, retornando ~t~
+ou ~nil~.
+
+Antes  de efetuar  qualquer  comparação, realiza-se  uma coerção  rica
+entre ~x~  e ~y~. Em  seguida, procede-se  à comparação para  cada subtipo
+numérico.
+
+A  função numérica  de maior-que  realiza comparações  entre todos  os
+subtipos numéricos, exceto para números  ~complex~, posto que o conjunto
+$\mathbb{C}$  não pode  ser um  campo ordenado[fn:4].  Para o  caso de
+números  de  subtipo  ~fraction~,   realiza-se  uma  conversão  para  um
+denominador comum e compara-se os números inteiros do numerador.
+
+Realizar uma  comparação usando ~>~,  de forma  a envolver um  número de
+subtipo ~complex~, gerará um erro.
+
+#+begin_example
+> (> 5/2 2)
+t
+
+> (let ((x 1))
+    (> 1 x))
+nil
+
+> (> 10 5 3 1)
+t
+
+> (> 1 2 3)
+nil
+
+> (> 2J3 2/3)
+(lit error "The set of complex numbers can't be an ordered field")
+
+> (> 3 t)
+(lit error "{} is not a number" t)
+#+end_example
+
+Para um número de argumentos maior que dois, a função tentará comparar
+~x~ e  ~y~ e, caso  a comparação seja  verdadeira, repetirá a  execução da
+função, removendo  ~x~ da  lista de argumentos.  Caso a  comparação seja
+falsa,  interrompe-se o  processo  recursivo, e  retorna-se ~nil~,  como
+esperado.
+
+Em termos práticos, a comparação a seguir desenvolve-se como indicado:
+
+#+begin_example
+(> 3 2 1)
+(> 2 1)
+t
+#+end_example
+
+*** ~(< x y . rest)~
+
+Compara consecutivamente se um número  é menor que outro, retornando ~t~
+ou ~nil~.
+
+Antes  de efetuar  qualquer  comparação, realiza-se  uma coerção  rica
+entre ~x~  e ~y~. Em  seguida, procede-se  à comparação para  cada subtipo
+numérico.
+
+A  função numérica  de menor-que  realiza comparações  entre todos  os
+subtipos numéricos, exceto para números  ~complex~, posto que o conjunto
+$\mathbb{C}$ não pode  ser um campo ordenado.  Para o  caso de números
+de  subtipo ~fraction~,  realiza-se  uma conversão  para um  denominador
+comum e compara-se os números inteiros do numerador.
+
+Realizar uma  comparação usando ~<~,  de forma  a envolver um  número de
+subtipo ~complex~, gerará um erro.
+
+#+begin_example
+> (< 2 5/2)
+t
+
+> (let ((x 1))
+    (< 1 x))
+nil
+
+> (< 1 3 5 10)
+t
+
+> (< 3 2 1)
+nil
+
+> (< 2J3 2/3)
+(lit error "The set of complex numbers can't be an ordered field")
+
+> (< 3 t)
+(lit error "{} is not a number" t)
+#+end_example
+
+Para um número de argumentos maior que dois, a função tentará comparar
+~x~ e  ~y~ e, caso  a comparação seja  verdadeira, repetirá a  execução da
+função, removendo  ~x~ da  lista de argumentos.  Caso a  comparação seja
+falsa,  interrompe-se o  processo  recursivo, e  retorna-se ~nil~,  como
+esperado.
+
+Em termos práticos, a comparação a seguir desenvolve-se como indicado:
+
+#+begin_example
+(< 1 2 3)
+(< 2 3)
+t
+#+end_example
+
+*** ~(>= x y . rest)~
+
+Compara  consecutivamente se  um  número  é maior  ou  igual a  outro,
+retornando ~t~ ou ~nil~.
+
+Esta  função não  é capaz  de  realizar comparações  para números  com
+subtipo ~complex~,  posto que  o conjunto $\mathbb{C}$  não pode  ser um
+campo ordenado.  Realizar uma comparação envolvendo  um numero ~complex~
+retornará um erro.
+
+Uma possível definição para essa função seria:
+
+#+begin_example
+(defn >= args
+  (or (apply > args)
+      (apply = args)))
+#+end_example
+
+Esta função  pode portanto ser  definida com base  em ~>~ e  ~=~, herdando
+portanto o comportamento e as limitações subjacentes dessas funções.
+
+#+begin_example
+> (>= 5/2 2)
+t
+
+> (>= 2.0 2)
+t
+
+> (>= 1 2 3)
+nil
+
+> (>= 3 3 1)
+t
+
+> (>= 5J9 6J9)
+(lit error "The set of complex numbers can't be an ordered field")
+
+> (>= 3 t)
+(lit error "{} is not a number" t)
+#+end_example
+
+*** ~(<= x y . rest)~
+
+Compara  consecutivamente se  um  número  é menor  ou  igual a  outro,
+retornando ~t~ ou ~nil~.
+
+Esta  função não  é capaz  de  realizar comparações  para números  com
+subtipo ~complex~,  posto que  o conjunto $\mathbb{C}$  não pode  ser um
+campo ordenado.  Realizar uma comparação envolvendo  um numero ~complex~
+retornará um erro.
+
+Uma possível definição para essa função seria:
+
+#+begin_example
+(defn <= args
+  (or (apply < args)
+      (apply = args)))
+#+end_example
+
+Esta função  pode portanto ser  definida com base  em ~>~ e  ~=~, herdando
+portanto o comportamento e as limitações subjacentes dessas funções.
+
+#+begin_example
+> (<= 5/2 2)
+nil
+
+> (<= 2.0 2)
+t
+
+> (<= 1 2 3)
+t
+
+> (<= 3 3 1)
+nil
+
+> (<= 5J9 6J9)
+(lit error "The set of complex numbers can't be an ordered field")
+
+> (<= 3 t)
+(lit error "{} is not a number" t)
+#+end_example
+
+*** TODO ~(abs x)~ :noexport:
+*** TODO ~(div x y)~ :noexport:
+*** TODO ~(expt x y)~ :noexport:
+** TODO Funções de streams
+*** Abertura, fechamento e status de streams
+**** ~(open-stream dir path)~
+
+Abre um /stream/ para um arquivo no caminho ~path~, com direção ~dir~.
+
+Caso o  caminho possa ser aberto,  retorna um /stream/. Caso  não possa,
+retorna um objeto de erro.
+
+~dir~  deve ser  um dos  símbolos ~in~  ou ~out~.  Caso contrário,  a função
+retornará um erro.
+
+Se  o arquivo  já existe  e  for aberto  com a  direção ~out~,  qualquer
+informação nele escrita será inserida ao final do mesmo.
+
+#+begin_example
+> (open-stream 'out "/home/user/blah.txt")
+#<stream {...}>
+
+> (open-stream 'out "/")
+(lit error "Cannot open stream to path {}" "/")
+#+end_example
+
+**** ~(close-stream x)~
+
+Fecha um /stream/ ~x~.
+
+Em  caso de  sucesso,  retorna ~t~.  Caso o  /stream/  já esteja  fechado,
+retorna ~nil~.
+
+Se ~x~ não for um /stream/, retorna um erro.
+
+Caso haja  algum erro interno  relacionado ao /stream/, a  função também
+poderá retornar um objeto de erro.
+
+#+begin_example
+> (def s (open-stream 'out "/home/user/blah.txt"))
+#<stream {...}>
+
+> (close-stream s)
+t
+
+> (close-stream s)
+nil
+#+end_example
+
+**** ~(stat x)~
+
+Mostra o  estado de  um certo /stream/  ~s~. Os estados  podem ser  ~open~ e
+~closed~. Caso o objeto não seja um /stream/, retorna um erro.
+
+#+begin_example
+> (def s (open-stream 'out "/home/user/blah.txt"))
+s
+
+> (stat s)
+open
+
+> (close-stream s)
+t
+
+> (stat s)
+closed
+
+> (stat 3)
+(lit error "Not a stream: {}" 3)
+#+end_example
+
+*** TODO Leitura e escrita em streams
+
+**** ~(write x stream)~
+
+Escreve o objeto ~x~ no stream  de saída informado, sem espaço em branco
+ao final.
+
+Uma possível implementação para ~write~ poderia ser:
+
+#+begin_example
+(defn write (x stream)
+  (write-string (apply format '("{}" x))
+                stream))
+#+end_example
+
+O objeto será escrito na forma de sua representação textual interna.
+
+Caso o stream não  seja de saída, ou caso o  stream esteja fechado, ou
+caso  ~stream~ não  seja  um stream,  retorna  um erro.  Contrariamente,
+retorna ~nil~.
+
+Se houver  algum outro  problema no processo  de escrita,  essa função
+poderá também retornar um erro indicando o problema em questão.
+
+#+begin_example
+> (let ((stream *stdout*))
+    (write (fn (x) (* x x)) stream))
+; #<function (fn (x)) {...}>
+nil
+
+> (let ((stream *stdin*))
+    (write (fn (x) (* x x)) stream))
+(lit error "{} is not an output stream" #<stream (in) {...}>)
+
+> (write (fn (x) (* x x)) 5)
+(lit error "{} is not a stream" 5)
+#+end_example
+
+**** ~(read stream)~
+
+Lê um objeto  no stream de entrada informado, avançando  o ponteiro de
+leitura do stream até onde for possível.
+
+O texto lido  passa pelo processo de /parsing/ da  própria linguagem, de
+forma que uma única expressão válida  seja lida a partir do arquivo, e
+então  retornada  sem passar  pelo  processo  de interpretação.  Sendo
+assim,  ~read~ pode  ser considerado  o ponto  de entrada  do /parser/  de
+Majestic Lisp.
+
+Caso  haja um  erro no  processo de  /parsing/, será  retornado um  erro
+correspondente ao problema em tal processo.
+
+Caso  o stream  não seja  de  entrada, ou  caso seja  o stream  esteja
+fechado,   ou   caso  ~stream~   não   seja   um  stream,   retorna   um
+erro.
+
+Contrariamente,   será   retornado   um  objeto   de   Majestic   Lisp
+correspondente à expressão lida ou, caso  o stream de entrada tenha se
+esgotado, será retornado o símbolo ~eof~.
+
+Se houver  algum outro  problema no processo  de leitura,  essa função
+poderá também retornar um erro indicando o problema em questão.
+
+Supondo um  arquivo-texto ~teste.txt~  contendo exatamente  os seguintes
+caracteres, sem espaço em branco ao final...
+
+#+begin_example
+(foo bar baz) (1 2 3)
+#+end_example
+
+...os exemplos a seguir utilizam-se de tal arquivo.
+
+#+begin_example
+> (def *my-stream* (open-stream 'in "teste.txt"))
+*my-stream*
+
+> *my-stream*
+#<stream (in) {...}>
+
+> (read *my-stream*)
+(foo bar baz)
+
+> (read *my-stream*)
+(1 2 3)
+
+> (read *my-stream*)
+eof
+
+> (read *stdout*)
+(lit error "{} is not an input stream" #<stream (out) {...}>)
+
+> (close-stream *my-stream*)
+t
+
+> (read *my-stream*)
+(lit error "The stream {} is closed" #<stream (in) {...}>)
+
+> (read 2/3)
+(lit error "{} is not a stream" 2/3)
+#+end_example
+
+**** ~(read-char stream)~
+
+Lê  um único  caractere no  stream de  entrada informado,  avançando o
+ponteiro de leitura do stream, caso seja possível.
+
+Caso  o stream  não seja  de  entrada, ou  caso seja  o stream  esteja
+fechado,   ou   caso  ~stream~   não   seja   um  stream,   retorna   um
+erro.
+
+Contrariamente, será retornado  o caractere lido ou, caso  o stream de
+entrada tenha se esgotado, será retornado o símbolo ~eof~.
+
+Se houver  algum outro  problema no processo  de leitura,  essa função
+poderá também retornar um erro indicando o problema em questão.
+
+Supondo um  arquivo-texto ~teste.txt~  contendo exatamente  os seguintes
+caracteres, sem espaço em branco ao final...
+
+#+begin_example
+Teste
+#+end_example
+
+...os exemplos a seguir utilizam-se de tal arquivo.
+
+#+begin_example
+> (def *my-stream* (open-stream 'in "teste.txt"))
+*my-stream*
+
+> *my-stream*
+#<stream (in) {...}>
+
+> (read-char *my-stream*)
+#\T
+
+> (read-char *my-stream*)
+#\e
+
+> (do (until (eq 'eof (peek-char *my-stream*))
+        (display (read-char *my-stream*)))
+      (terpri)
+      (read-char *my-stream*))
+; ste
+;
+eof
+
+> (close-stream *my-stream*)
+t
+
+> (read-char *stdout*)
+(lit error "{} is not an input stream" #<stream (out) {...}>)
+
+> (read-char *my-stream*)
+(lit error "The stream {} is closed" #<stream (in) {...}>)
+
+> (read-char 2/3)
+(lit error "{} is not a stream" 2/3)
+#+end_example
+
+**** ~(peek-char stream)~
+
+Lê um  único caractere no stream  de entrada informado, sem  avançar o
+ponteiro de leitura do stream.
+
+Caso  o stream  não seja  de  entrada, ou  caso seja  o stream  esteja
+fechado,   ou   caso  ~stream~   não   seja   um  stream,   retorna   um
+erro.
+
+Contrariamente, será retornado  o caractere lido ou, caso  o stream de
+entrada tenha se esgotado, será retornado o símbolo ~eof~.
+
+Se houver  algum outro  problema no processo  de leitura,  essa função
+poderá também retornar um erro indicando o problema em questão.
+
+Supondo um  arquivo-texto ~teste.txt~  contendo exatamente  os seguintes
+caracteres, sem espaço em branco ao final...
+
+#+begin_example
+Teste
+#+end_example
+
+...os exemplos a seguir utilizam-se de tal arquivo.
+
+#+begin_example
+> (def *my-stream* (open-stream 'in "teste.txt"))
+*my-stream*
+
+> *my-stream*
+#<stream (in) {...}>
+
+> (peek-char *my-stream*)
+#\T
+
+> (peek-char *my-stream*)
+#\T
+
+> (do (until (eq 'eof (peek-char *my-stream*))
+        (display (read-char *my-stream*)))
+      (terpri)
+      (peek-char *my-stream*))
+; Teste
+;
+eof
+
+> (close-stream *my-stream*)
+t
+
+> (peek-char *stdout*)
+(lit error "{} is not an input stream" #<stream (out) {...}>)
+
+> (peek-char *my-stream*)
+(lit error "The stream {} is closed" #<stream (in) {...}>)
+
+> (peek-char 2/3)
+(lit error "{} is not a stream" 2/3)
+#+end_example
+
+**** ~(write-char c stream)~
+
+Escreve o  caractere ~c~  no stream  de saída  informado, sem  espaço em
+branco ao final.
+
+Caso o stream não  seja de saída, ou caso o  stream esteja fechado, ou
+caso  ~stream~ não  seja  um stream,  retorna  um erro.  Contrariamente,
+retorna ~nil~.
+
+Se houver  algum outro  problema no processo  de escrita,  essa função
+poderá também retornar um erro indicando o problema em questão.
+
+#+begin_example
+> (let ((stream *stdout*))
+    (write-char #\a stream))
+; a
+nil
+
+> (let ((stream (open-stream 'out "teste.txt")))
+    (close-stream stream)
+    (write-char #\a stream))
+(lit error "The stream {} is closed" #<stream (out) {...}>)
+
+> (let ((stream *stdin*))
+    (write-char #\a stream))
+(lit error "{} is not an output stream" #<stream (in) {...}>)
+
+> (write-char #\a 5)
+(lit error "{} is not a stream" 5)
+
+> (write-char 5 *stdout*)
+(lit error "{} is not a character" 5)
+#+end_example
+
+**** ~(write-string str stream)~
+
+Escreve  a string  ~str~ no  stream de  saída informado,  sem espaço  em
+branco ao final.
+
+A string escrita no stream, após  sua formatação, não deverá ter aspas
+duplas (~"~) ao início, e nem ao final.
+
+Caso o stream não  seja de saída, ou caso o  stream esteja fechado, ou
+caso  ~stream~ não  seja  um stream,  retorna  um erro.  Contrariamente,
+retorna ~nil~.
+
+Se houver  algum outro  problema no processo  de escrita,  essa função
+poderá também retornar um erro indicando o problema em questão.
+
+#+begin_example
+> (let ((stream *stdout*))
+    (write-string "Hello" stream))
+; Hello
+nil
+
+> (let ((stream (open-stream 'out "teste.txt")))
+    (close-stream stream)
+    (write-string "Hello" stream))
+(lit error "The stream {} is closed" #<stream (out) {...}>)
+
+> (let ((stream *stdin*))
+    (write-string "Hello" stream))
+(lit error "{} is not an output stream" #<stream (in) {...}>)
+
+> (write-string "Hello" 5)
+(lit error "{} is not a stream" 5)
+
+> (write-string 5 *stdout*)
+(lit error "{} is not a string" 5)
+#+end_example
+
+** TODO Formas Especiais
+*** ~(quote x)~
+
+Toma ~x~ como um valor, isto é, sem que ~x~ seja interpretado.
+
+#+begin_example
+> (quote x)
+x
+
+> (quote (1 2 3))
+(1 2 3)
+
+> (quote (+ 5 6))
+(+ 5 6)
+#+end_example
+
+*** ~(def sym val)~
+
+Associa o  valor ~val~ ao  símbolo ~sym~ no  contexto global, e  retorna o
+símbolo ao qual ~val~ foi atribuído.
+
+O objeto ~sym~ não será interpretado, mas deverá ser obrigatoriamente um
+símbolo. ~val~ será interpretado antes de ser atribuído.
+
+Caso ~sym~ não seja um símbolo, um erro será levantado.
+
+Caso  ~val~ tenha  problemas  em  sua interpretação,  o  erro gerado  na
+interpretação será retornado, e ~sym~ não será atribuído a valor algum.
+
+#+begin_example
+> (def x 5)
+x
+
+> (def (foo bar) 5)
+(lit error "{} is not a symbol" (foo bar))
+
+> (def y (length x))
+(lit error "{} is not a proper list" 5)
+#+end_example
+
+*** ~(set sym val)~
+
+Redefine o valor associado ao símbolo ~sym~, inserindo ~val~ em seu lugar,
+e retorna o símbolo ao qual ~val~ foi atribuído.
+
+O objeto ~sym~ não será interpretado, mas deverá ser obrigatoriamente um
+símbolo. ~val~ será interpretado antes de ser atribuído.
+
+Caso ~sym~ não seja um símbolo, um erro será levantado.
+
+Caso  ~val~ tenha  problemas  em  sua interpretação,  o  erro gerado  na
+interpretação  será retornado,  e o  valor  associado a  ~sym~ não  será
+modificado.
+
+Durante o processo de atribuição,  ~set~ procura o símbolo definido mais
+próximo  do escopo  em que  foi  invocado. Sendo  assim, ~set~  primeiro
+tentará encontrar o símbolo no escopo léxico atual; caso não encontre,
+~set~   procurará   pelo  símbolo   no   escopo   léxico  em   que   foi
+invocado. Subsequentemente, caso o  símbolo ainda não seja encontrado,
+~set~ procurará tal símbolo no escopo global.
+
+Se  ~sym~  não for  encontrado  em  nenhum  dos  escopos, um  erro  será
+retornado.
+
+#+begin_example
+> (set x 5)
+(lit error "{} is unbound" x)
+
+> (def x 1)
+x
+
+> x
+1
+
+> (set x 5)
+x
+
+> x
+5
+
+> (let ((x 6))
+    (print "x = {}" x)
+    (set x 9)
+    (print "x = {}" x))
+; x = 6
+; x = 9
+;
+nil
+
+> x
+5
+#+end_example
+
+*** ~(set-car x val)~
+
+Redefine o /car/ da célula /cons/ ~x~ pelo valor ~val~.
+
+~x~ sempre será interpretado. Portanto, espera-se que o resultado de sua
+interpretação  seja  uma  célula  /cons/   (seja  ligada  a  um  símbolo
+informado, seja criada através da função ~cons~, ou mesmo criada através
+de /quotation/ ou /quasiquotation/).
+
+Caso o resultado da interpretação de  ~x~ não seja uma célula /cons/, será
+retornado um  erro. Igualmente, erros na  interpretação de ~x~ e  de ~val~
+serão retornados antes que a modificação seja realizada.
+
+Após a modificação, será retornada a célula /cons/ modificada.
+
+É  importante  prestar  atenção  a qual  célula  /cons/,  exatamente,  ~x~
+referencia.  Pode ser  interessante copiar  a lista  ou a  célula /cons/
+modificada antes que a operação seja realizada.
+
+#+begin_example
+> (def x '(1 . 2))
+x
+
+> (set-car x 3)
+(3 . 2)
+
+> (set-car '(9 . 0) 'f)
+(f . 0)
+
+> (let ((x '(4 . 5)))
+    (set-car x 9))
+(9 . 5)
+
+> x
+(3 . 2)
+
+> (let ((a x))
+    (set-car a 4))
+(4 . 2)
+
+> x
+(4 . 2)
+
+> (let ((a (copy x)))
+    (set-car a 5))
+(5 . 2)
+
+> x
+(4 . 2)
+#+end_example
+
+*** ~(set-cdr x val)~
+
+Redefine o /cdr/ da célula /cons/ ~x~ pelo valor ~val~.
+
+~x~ sempre será interpretado. Portanto, espera-se que o resultado de sua
+interpretação  seja  uma  célula  /cons/   (seja  ligada  a  um  símbolo
+informado, seja criada através da função ~cons~, ou mesmo criada através
+de /quotation/ ou /quasiquotation/).
+
+Caso o resultado da interpretação de  ~x~ não seja uma célula /cons/, será
+retornado um  erro. Igualmente, erros na  interpretação de ~x~ e  de ~val~
+serão retornados antes que a modificação seja realizada.
+
+Após a modificação, será retornada a célula /cons/ modificada.
+
+É  importante  prestar  atenção  a qual  célula  /cons/,  exatamente,  ~x~
+referencia.  Pode ser  interessante copiar  a lista  ou a  célula /cons/
+modificada antes que a operação seja realizada.
+
+#+begin_example
+> (def x '(1 . 2))
+x
+
+> (set-cdr x 3)
+(1 . 3)
+
+> (set-cdr '(9 . 0) 'f)
+(9 . f)
+
+> (let ((x '(4 . 5)))
+    (set-cdr x 9))
+(4 . 9)
+
+> x
+(1 . 3)
+
+> (let ((a x))
+    (set-cdr a 4))
+(1 . 4)
+
+> x
+(1 . 4)
+
+> (let ((a (copy x)))
+    (set-cdr a 5))
+(1 . 5)
+
+> x
+(1 . 4)
+#+end_example
+
+*** ~(if pred conseq altern)~
+
+Realiza  a  interpretação  de uma  condicional  simples,  efetivamente
+realizando controle de fluxo.
+
+A forma  ~pred~ é, inicialmente, interpretada,  constituindo portanto um
+/predicado/. Caso o  resultado desse predicado seja  um valor /verdadeiro/
+(ou seja, qualquer  valor que não seja o símbolo  ~nil~), a forma ~conseq~
+será interpretada, e seu valor será retornado.
+
+Caso contrário,  a forma  ~altern~ será interpretada,  e seu  valor será
+retornado.
+
+#+begin_example
+> (if (nilp 'a)
+      'is-nil
+      'is-not-nil)
+is-not-nil
+
+> (if (nilp nil)
+      'is-nil
+      'is-not-nil)
+is-nil
+#+end_example
+
+Caso  seja necessário  interpretar mais  de uma  forma nos  lugares de
+~conseq~ e/ou  ~altern~, recomenda-se associá-las usando  a forma especial
+~do~.
+
+*** ~(fn lambda-list . body)~
+
+Gera um /literal/ para uma clausura.  Esta forma especial é similar a um
+macro, porém realiza explicitamente a captura do escopo léxico atual.
+
+Uma forma como
+
+#+begin_example
+(fn (x) (* x x))
+#+end_example
+
+gera um literal
+
+#+begin_example
+(lit closure <env> (x) ((* x x)))
+#+end_example
+
+onde ~<env>~ é  o contexto léxico no qual a clausura foi declarada.
+
+O corpo  de uma  clausura é  armazenado em  uma lista  com um  ou mais
+elementos, onde  cada elemento é  uma expressão individual.  Durante a
+aplicação da mesma,  os elementos são avaliados em  sequência (como se
+houvesse uma  forma especial  ~do~ implícita),  tendo em  consideração o
+contexto léxico ~<env>~ que foi  capturado, extendido com ligações entre
+os elementos  da /lambda list/  e os  valores passados como  parâmetro à
+clausura.
+
+O literal gerado  pode ser representado, durante a  impressão, como um
+objeto que não possa ser lido pelo interpretador.
+
+Para maiores informações, veja /Aplicação/ e /Interpretação/.
+
+#+begin_example
+> (fn (x) (* x x))
+#<function (fn (x)) {...}>
+
+> (fn (x . rest) (list x rest))
+#<function (fn (x . rest)) {...}>
+
+> ((fn (x) (* x x)) 5)
+25
+
+> (def square (fn (x) (* x x)))
+square
+
+> (square 5)
+25
+#+end_example
+
+*** ~(mac lambda-list . body)~
+
+Gera um literal para um macro. Esta forma especial, na realidade, gera
+internamente  uma  clausura  que,  quando  aplicada  a  uma  lista  de
+argumentos, transforma essa lista de argumentos em uma nova lista, que
+poderá então ser interpretada, de forma subsequente.
+
+Assim,  um macro  também é  capaz  de capturar  o contexto  no qual  é
+declarado.
+
+Uma forma como
+
+#+begin_example
+(mac (x) `(list ,x))
+#+end_example
+
+gera um literal
+
+#+begin_example
+(lit macro (lit closure <env> (x) (`(list ,x))))
+#+end_example
+
+onde ~<env>~ é  o contexto léxico no qual o macro foi declarado.
+
+As regras  sintáticas da  forma especial  ~mac~ acabam  sendo exatamente
+iguais às da forma ~fn~, pela  definição de que um /macro/ constitui-se de
+uma clausura subjacente.
+
+Um /macro/ não pode ser aplicado  através da forma ~apply~, porém pode ser
+aplicado  como se  fosse  uma  clausura comum.  Neste  caso, o  objeto
+aplicado gera uma nova expressão que será imediatamente interpretada.
+
+O uso do macro poderá ser verificado através de atribuí-lo a um nome e
+então realizar apenas a expansão do  mesmo, através de uma função como
+~macroexpand-1~.
+
+O literal gerado  pode ser representado, durante a  impressão, como um
+objeto que não possa ser lido pelo interpretador.
+
+#+begin_example
+> (mac (x) `(list ,x))
+#<macro (mac (x)) {...}>
+
+> ((mac (x) `(list ,x)) 5)
+(5)
+
+> (def encapsulate (mac (x) `(list ,x)))
+encapsulate
+
+> (macroexpand-1 '(encapsulate 5))
+(list 5)
+
+> (encapsulate 5)
+(5)
+#+end_example
+
+*** ~(quasiquote x)~, ~(unquote x)~, ~(unquote-splice x)~
+
+Percorre recursivamente ~x~, alternando todas  as formas iniciadas com o
+símbolo ~unquote~ por  sua interpretação no contexto atual.
+Caso ~x~ seja meramente um símbolo ou uma lista sem ~unquote~, o resultado
+será o mesmo de ~quote~:
+
+#+begin_example
+> (quote a)
+a
+
+> (quasiquote a)
+a
+#+end_example
+
+Caso não o seja, o resultado será uma nova lista ou objeto, tal que os
+elementos sob ~unquote~ sejam trocados em seus lugares corretos.
+
+#+begin_example
+> (let ((x 5)  (y 6))
+    (quasiquote (1 (unquote x) (unquote y))))
+(1 5 6)
+#+end_example
+
+Caso queiramos  anexar os  elementos de uma  lista diretamente  em uma
+lista atual, podemos usar ~unquote-splice~ para fazê-lo.
+
+#+begin_example
+> (let ((lst (list 1 2 3)))
+    (quasiquote (0 (unquote lst))))
+(0 (1 2 3))
+
+> (let ((lst (list 1 2 3)))
+    (quasiquote (0 (unquote-splice lst))))
+(0 1 2 3)
+#+end_example
+
+*** ~(do . rest)~
+
+Interpreta os  valores de  cada uma das  expressões contidas  na lista
+~rest~, e então retorna o valor da última expressões.
+
+Se alguma expressão emitir um  erro, a interpretação será interrompida
+e o erro será retornado.
+
+Caso não haja expressões disponíveis, retorna ~nil~.
+
+#+begin_example
+> (do 'a 'b (list 'c 'd 'e))
+(c d e)
+
+> (do)
+nil
+#+end_example
+
+Alguns  macros  e  formas  especiais  utilizam  ~do~'s  implícitos  para
+possibilitar declarações menos  redundantes. Para maiores informações,
+veja as formas  especiais ~fn~, ~mac~ e ~letrec~, e  os macros ~defn~, ~defmac~,
+~let~, ~let*~, ~letfn~, ~letfn*~, ~when~, ~unless~ e ~cond~.
+
+*** TODO ~(apply fun args)~
+
+# TODO:  Se fun  e args  serão  interpretados, apply  não deveria  ser
+# apenas uma função primitiva?
+
+Aplica a função ~fun~ à lista de argumentos ~args~. Ambos ~fun~ e ~args~ serão
+interpretados antes de serem apropriadamente aplicados.
+
+~fun~  não  pode ser  um  macro.  Macros  possuem uso  especialmente  em
+situações de reescrita de código, o  que constitui um tipo especial de
+aplicação, a ser feita antes de uma interpretação propriamente dita.
+
+Esta operação equivale  a interpretar o resultado de  ~(cons fun args)~,
+portanto,  a  função  ~fun~  e  cada um  dos  argumentos  em  ~args~  será
+devidamente interpretado antes de realizar a aplicação.
+
+#+begin_example
+> (let ((fun (fn (x y) (+ x y))))
+    (apply fun '(1 2)))
+3
+
+> (apply cond '((t 1)))
+(lit error "Macros cannot be applied")
+
+> (apply 1 '(2))
+(lit error "Cannot apply {} to args {}" 1 (2))
+#+end_example
+
+*** ~(while pred . body)~
+
+Executa  sequencialmente o  conjunto  de expressões  contidas em  ~body~
+enquanto o predicado ~pred~ retornar um valor verdadeiro.
+
+A forma ~while~ permite executar  código iterativamente, com garantia de
+que o processo de iteração em si  não faça com que a pilha de chamadas
+do sistema chegue à exaustão.
+
+O valor  retornado pela forma  especial ~while~  será o valor  da última
+expressão de ~body~,  ao ser executada na última  iteração. Caso nenhuma
+iteração tenha ainda ocorrido, será retornado o símbolo ~nil~.
+
+~body~  também poderá  ser uma  expressão vazia,  o que  configuraria um
+/spinlock/ na duração da validade do predicado.
+
+Caso o  predicado ~pred~ ou alguma  expressão de ~body~ retornem  erros, o
+laço de ~while~ será imediatamente quebrado e o erro será retornado.
+
+#+begin_example
+> (let ((x 0))
+    (while (< x 5)
+      (print "x = {}" x)
+      (set x (1+ x))))
+; x = 0
+; x = 1
+; x = 2
+; x = 3
+; x = 4
+;
+x
+
+> (let ((lst '(1 2 3 a 5)))
+    (while (not (nilp lst))
+      (let (((num . rest) lst))
+        (print "2 = {}? {}"
+               num
+               (= 2 num))
+        (set lst rest))))
+; 2 = 1? nil
+; 2 = 2? t
+; 2 = 3? nil
+;
+(lit error "{} is not a number" a)
+
+> (let ((lst '(1 2 3 NaN 5)))
+    (while (< (car lst) 5)
+      (let (((num . rest) lst))
+        (print "{}" num)
+        (set lst rest))))
+; 1
+; 2
+; 3
+;
+(lit error "{} is not a number" NaN)
+#+end_example
+
+*** ~(and . rest)~
+
+Interpreta os  valores de  cada uma das  expressões contidas  na lista
+~rest~,  enquanto as  interpretações  resultarem em  valores não-~nil~,  e
+então retorna o valor da última expressão.
+
+Quando  uma  expressão  gera  um  resultado  ~nil~,  a  interpretação  é
+interrompida, como anteriormente citado, e ~nil~ é retornado.
+
+Se alguma expressão emitir um  erro, a interpretação será interrompida
+e o erro será retornado.
+
+Caso não haja expressões disponíveis, retorna ~t~.
+
+#+begin_example
+> (and (= 1 1) (= 0.5 1/2) 'ok)
+ok
+
+> (and (= 1 1) (< 0.5 1/2) 'ok)
+nil
+
+> (and)
+t
+#+end_example
+
+*** ~(or . rest)~
+
+Interpreta os  valores de  cada uma das  expressões contidas  na lista
+~rest~, enquanto as interpretações resultarem no valor ~nil~.
+
+Quando  uma expressão  gera um  resultado não-~nil~,  a interpretação  é
+interrompida, como anteriormente citado, e o valor da interpretação da
+expressão em questão é retornado.
+
+Se alguma expressão emitir um  erro, a interpretação será interrompida
+e o erro será retornado.
+
+Caso não haja expressões disponíveis, retorna ~nil~.
+
+#+begin_example
+> (or (not (= 1 1)) (< 0.5 1/2) 'ok)
+ok
+
+> (or (= 1 1) (< 0.5 1/2))
+t
+
+> (or)
+nil
+#+end_example
+
+*** ~(letrec bindings . body)~
+
+Define uma lista de funções que serão bem-definidas durante a execução
+da expressão ~body~.
+
+~bindings~  é uma  lista  de  definições de  funções  similares a  ~defn~,
+todavia  sem o  símbolo ~defn~  em seu  início. ~letrec~  segue as  mesmas
+regras sintáticas de ~letfn~ e ~letfn*~.
+
+O funcionamento de ~letrec~ aproxima-se muito  do uso prático de ~letfn~ e
+~letfn*~.  Todavia,  ~letrec~ permite  a declaração de  /funções mutuamente
+recursivas/,    *puramente    através     de    um    contexto    léxico
+compartilhado*.   Para  tanto,  cada  função ali  declarada  captura  o
+próprio contexto criado por ~letrec~ /após a definição/ das mesmas.
+
+Essa característica torna ~letrec~  fundamentalmente diferente de ~letfn~,
+uma vez que  todas as funções envolvidas terão  referências às funções
+ali  declaradas. Em  outras palavras,  o uso  recursivo de  uma função
+declarada com  ~letrec~ não implica em  procura da mesma em  um contexto
+"dinâmico" (ou seja, no contexto onde tal função foi chamada).
+
+Um  bloco ~letrec~  pode, portanto,  retornar uma  de suas  clausuras, e
+qualquer recursão ou recursão mútua  na mesma não será degenerada pela
+procura recursiva de  uma das funções declaradas no  contexto onde for
+executada.
+
+Como esse  tipo de operação exige  modificar a forma como  funções são
+declaradas  -- mais  precisamente,  modificar a  forma  como ocorre  a
+captura  de  contexto  --,  ~letrec~ precisa  ser  uma  forma  especial,
+diferente de ~letfn~ e ~let~, que podem ser declarados como macros.
+
+#+begin_example
+> (letrec ((foo ()
+             (print "Calling foo")
+             (bar))
+           (bar ()
+             (print "Calling bar")
+             (baz))
+           (baz ()
+             (print "Calling baz")))
+    (foo))
+; Calling foo
+; Calling bar
+; Calling baz
+; 
+nil
+
+> (letrec ((iter (x)
+             (if (> x 0)
+                 (do (print "Recursion #{}" x)
+                     (iter (1- x)))
+                 'finished)))
+    (iter 5))
+; Recursion #5
+; Recursion #4
+; Recursion #3
+; Recursion #2
+; Recursion #1
+; 
+finished
+
+> (def my-function
+       (letrec ((foo () (bar))
+                (bar ()
+                  (print "Hello from bar on letrec")))
+         foo))
+my-function
+
+> (my-function)
+; Hello from bar on letrec
+; 
+nil
+#+end_example
+
+*** ~(unwind-protect expr cleanup)~
+
+~unwind-protect~ interpreta  a expressão protegida ~expr~  e, independente
+de  tal  interpretação resultar  em  falha,  garante que  a  expressão
+~cleanup~ seja sempre interpretada em seguida.
+
+~unwind-protect~ deve retornar a  interpretação de ~expr~, independente de
+a mesma ser um erro ou não. O resultado de ~cleanup~ será ignorado.
+
+~unwind-protect~  é uma  forma especial  utilizada para  garantir certos
+efeitos colaterais  como forma  de limpeza após  a execução  de certas
+expressões[fn:5], e não  realiza prevenções contra falhas  em casos de
+terminação anormal do processo de interpretação.
+
+Por exemplo, ~unwind-protect~ não garante que, mediante uma operação que
+faça  com que  a aplicação  entre em  um estado  irrecuperável, ocorra
+algum  tipo  de limpeza;  neste  tipo  de  situação, espera-se  que  a
+aplicação encerre-se imediatamente.
+
+Supondo um  arquivo-texto ~teste.txt~  contendo exatamente  os seguintes
+caracteres, sem espaço em branco ao final...
+
+#+begin_example
+Teste
+#+end_example
+
+...os exemplos a seguir utilizam-se de tal arquivo.
+
+#+begin_example
+> (def *my-stream* nil)
+*my-stream*
+
+> (unwind-protect
+      (do (set *my-stream* (open-stream 'in "teste.txt"))
+          (read-char *my-stream*))
+    (do (close-stream *my-stream*)
+        (set *my-stream* nil)))
+#\T
+
+> *my-stream*
+nil
+
+> (do (set *my-stream* (open-stream 'out "teste.txt"))
+      (read-char *my-stream*))
+(lit error "{} is not an input stream" #<stream (out) {...}>)
+
+> *my-stream*
+#<stream (out) {...}>
+
+> (do (close-stream *my-stream*)
+      (set *my-stream* nil))
+*my-stream*
+
+> *my-stream*
+nil
+
+> (unwind-protect
+      (do (set *my-stream* (open-stream 'out "teste.txt"))
+          (read-char *my-stream*))
+    (do (close-stream *my-stream*)
+        (set *my-stream* nil)))
+(lit error "{} is not an input stream" #<stream (out) {...}>)
+
+> *my-stream*
+nil
+#+end_example
+
+** Macros do leitor de expressões
+
+*** Quote (~'~)
+
+O macro de leitor ~'~ aplica a  forma especial ~quote~ ao próximo objeto a
+ser lido.
+
+Esse  símbolo deverá  ser apresentado  junto  ao objeto  à direita  do
+mesmo, sem espaços separando-os.
+
+Por exemplo, os objetos quotados a seguir
+
+#+begin_example
+(quote a)
+(quote (1 2 3))
+#+end_example
+
+poderão ser reescritos usando o macro de leitor da seguinte forma:
+
+#+begin_example
+'a
+'(1 2 3)
+#+end_example
+
+*** Quasiquote (~`~)
+
+O macro  de leitor ~`~  ajuda a escrever  o processo de  quasiquoting de
+forma  sucinta. Em  suma,  o  próximo objeto  a  ser  lido deverá  ser
+englobado em uma forma especial de ~quasiquote~.
+
+Esse  símbolo deverá  ser apresentado  junto  ao objeto  à direita  do
+mesmo, sem espaços separando-os.
+
+Por exemplo, uma forma como
+
+#+begin_example
+(quasiquote (x))
+#+end_example
+
+poderá ser escrita, de forma sucinta, como
+
+#+begin_example
+`(x)
+#+end_example
+
+Veja  que o  objeto quasi-quotado  passa a  ficar em  evidência, sendo
+precedido pelo símbolo ~`~, de forma similar a um objeto quotado.
+
+*** Unquote (~,~)
+
+O macro de leitor ~,~ ajuda a  escrever o processo de unquoting de forma
+sucinta. Este macro de leitor só  será válido no interior de uma forma
+especial de quasiquoting.
+
+Esse  símbolo deverá  ser apresentado  junto  ao objeto  à direita  do
+mesmo, sem espaços separando-os.
+
+Por  exemplo, considere  a forma  a seguir,  que faz  uso do  macro de
+leitor para quasiquoting:
+
+#+begin_example
+`(+ (unquote x) (unquote y))
+#+end_example
+
+Podemos reescrevê-la facilmente com o uso do novo macro de leitor para
+unquoting:
+
+#+begin_example
+`(+ ,x ,y)
+#+end_example
+
+*** Unquote-Splice (~,@~)
+
+O  macro de  leitor  ~,@~ é  similar ao  unquote,  todavia representa  o
+processo de  unquoting para  os elementos de  uma lista,  que chamamos
+~unquote-splice~. Assim, podemos considerá-lo como uma especialização do
+macro de leitor de unquote (~,~).
+
+Essa sequência  de símbolos deverá  ser apresentada junto ao  objeto à
+direita da mesma, sem espaços para separação.
+
+Por exemplo, considere a forma a seguir, levando em consideração que ~x~
+é uma lista adequada:
+
+#+begin_example
+`(,y (unquote-splice x))
+#+end_example
+
+Para reescrever esta expressão de  forma sucinta, poderemos usar nosso
+novo macro de leitor:
+
+#+begin_example
+`(,y ,@x)
+#+end_example
+
+*** Sintaxe de vetores (~[ ]~)
+
+Os macros de leitor  ~[~ e ~]~ delimitam uma sequência  de itens que serão
+interpretados  e   transformados  em  um  vetor.   Podemos,  portanto,
+considerá-los uma sintaxe alternativa para o uso da função ~vector~.
+
+Por exemplo, considere um vetor declarado da forma a seguir:
+
+#+begin_example
+(vector 1 2 'a 3 (+ 2 5))
+#+end_example
+
+Esta chamada de  função em específico poderá ser reescrita  da forma a
+seguir:
+
+#+begin_example
+[1 2 'a 3 (+ 2 5)]
+#+end_example
+
+** Macros
+
+Macros  nada mais  são que  funções aplicadas  a expressões  ainda não
+interpretadas.  As expressões  são  tratadas  como meras  informações,
+processadas  pelo  /macro/, e  seu  resultado  então será  utilizado  na
+interpretação em questão.
+
+*** ~(cond . clauses)~
+
+Realiza  a  interpretação  de múltiplas  condicionais  encadeadas,  em
+sequência.
+
+~cond~ tira proveito das capabilidades  de ~if~, a estrutura apropriada de
+controle de fluxo.  Isso significa que cada cláusula de  ~cond~ deve ser
+avaliada como se fosse  o /predicado/ e a /consequência/ de  um ~if~; caso o
+/predicado/ não  seja verdadeiro, a  execução continua como se  ~cond~ não
+tivesse tal cláusula avaliada.
+
+Uma possível implementação para ~cond~ poderia ser:
+
+#+begin_example
+(defmac cond clauses
+  (if (nilp clauses)
+      nil
+      `(if ,(caar clauses)
+           ,(car (cdar clauses))
+           ,(if (nilp (cdr clauses))
+                nil
+                (cons 'cond (cdr clauses))))))
+#+end_example
+
+Dessa forma, o seguinte uso do macro ~cond~...
+
+#+begin_example
+(cond ((zerop x) 0)
+      ((< x 1) (- x))
+      (t x))
+#+end_example
+
+...expande-se completamente para a forma:
+
+#+begin_example
+(if (zerop x)
+    0
+    (if (< x 1)
+        (- x)
+        (if t x nil)))
+#+end_example
+
+Assim, o ~cond~ nada mais é que  a utilização de ~if~'s em sequência, onde
+a  escrita  dos mesmos  geraria  indentação  excessiva ou  desconforto
+visual.
+
+O uso  do símbolo ~t~  na última cláusula define  ~t~ como sendo  o último
+predicado,  ou seja,  fará com  que  a última  comparação seja  sempre
+verdadeira, o que idiomaticamente  equipara-se ao uso da palavra-chave
+~else~ em  outras linguagens. Se  ~t~ não  for utilizado para  garantir um
+valor final de retorno, será retornado sempre o símbolo ~nil~.
+
+#+begin_example
+> (let ((x 1))
+    (cond ((zerop x) 0)
+          ((< x 1) (- x))
+          (t x)))
+1
+
+> (let ((x 0))   
+    (cond ((zerop x) 0)
+          ((< x 1) (- x))
+          (t x)))
+0
+
+> (cond (t 'a))
+a
+
+> (cond ((eq 'a 'b) 'ok))
+nil
+#+end_example
+
+*** ~(defn name lambda-list . body)~
+
+Associa uma literal de clausura ao símbolo ~name~ no contexto global.
+
+Uma possível implementação desse macro seria:
+
+#+begin_example
+(defmac defn (label lambda-list . body)
+  `(def ,label (fn ,lambda-list ,@body)))
+#+end_example
+
+Isto leva à conclusão de que a forma a seguir...
+
+#+begin_example
+(defn name lambda-list . body)
+#+end_example
+
+...será expandida para a seguinte expressão:
+
+#+begin_example
+(def name (fn lambda-list . body))
+#+end_example
+
+As demais regras para uso das formas especiais ~def~ e ~fn~ se aplicam.
+
+*** ~(defmac name lambda-list . body)~
+
+Associa uma literal de macro ao símbolo ~name~ no contexto global.
+
+Uma possível implementação desse macro seria:
+
+#+begin_example
+(def defmac
+  (mac (label lambda-list . body)
+       `(def ,label
+            (mac ,lambda-list ,@body))))
+#+end_example
+
+Isto leva à conclusão de que a forma a seguir...
+
+#+begin_example
+(defmac name lambda-list . body)
+#+end_example
+
+...será expandida para a seguinte expressão:
+
+#+begin_example
+(def name (mac lambda-list . body))
+#+end_example
+
+As demais regras para uso das formas especiais ~def~ e ~mac~ se aplicam.
+
+*** ~(let bindings . body)~
+
+Cria  um contexto  léxico onde  valores sejam  bem-definidos, e  então
+interpreta uma série de expressões  em sequência delimitadas por ~body~,
+retornando o valor da última expressão interpretada.
+
+Caso haja  um erro em  alguma das  interpretações ou na  definição das
+variáveis,  a execução  é  interrompida imediatamente  e  o erro  será
+retornado.
+
+A  sintaxe para  as  ligações  é dada  pela  lista  de listas  chamada
+~bindings~,  onde cada  sublista  possui exatamente  dois elementos,  no
+seguinte molde:
+
+#+begin_example
+((x1 v1) (x2 v2) (x3 v3) ... (xn vn))
+#+end_example
+
+No  exemplo acima,  as expressões  ~x1~, ~x2~,  ..., ~xn~  dizem respeito  a
+expressões  às  quais  os  valores  ~v1~,  ~v2~,  ...,  ~vn~  serão  ligados
+respectivamente, após suas interpretações.
+
+As expressões  ~x1~, ..., ~xn~  não necessariamente precisam  ser símbolos
+únicos,   podendo  ser   listas  adequadas   ou  pontuadas;   o  valor
+interpretado a ser atribuído a essas expressões será desestruturado de
+acordo com a  forma das expressões ~x1~, ..., ~xn~.  Isso está diretamente
+correlacionado com a forma como  funções ligam seus parâmetros formais
+aos valores a elas fornecidos.
+
+As definições de variáveis não podem ser dependentes umas das outras.
+
+De fato, por ser um macro, ~let~ pode ser definido da seguinte forma:
+
+#+begin_example
+(defmac let (args . body)
+  ((fn (sepfn)
+     ((fn ((syms vals))
+        `((fn ,syms ,@body)
+          ,@vals))
+      (sepfn args nil nil sepfn)))
+   (fn (pairs syms vals recur)
+       (if (nilp pairs)
+           (list syms vals)
+           (recur (cdr pairs)
+                  (cons (caar pairs) syms)
+                  (cons (car (cdar pairs)) vals)
+                  recur)))))
+#+end_example
+
+Apesar de  não ser uma implementação  trivial, o /macro/ ~let~  sugere que
+uma expressão como...
+
+#+begin_example
+(let ((x 1) (y 2))
+  (+ x y))
+#+end_example
+
+...será transformada na expressão a seguir:
+
+#+begin_example
+((fn (y x) (+ x y)) 2 1)
+#+end_example
+
+Portanto,  todo  e  qualquer  uso  de  ~let~  corresponderá,  mesmo  que
+teoricamente, a uma  aplicação /ad-hoc/ de uma função  anônima, e poderá
+usufruir  dos  recursos desse  processo  de  aplicação de  uma  função
+(exceto em casos de aplicação parcial).
+
+*** ~(let* bindings . body)~
+
+Cria  contextos léxicos  em  sequência com  valores bem-definidos,  de
+forma que uma definição de valores possa depender das definições que a
+precedem, e  então interpreta  uma série  de expressões  em sequência,
+delimitadas   por  ~body~.   Retorna   o  valor   da  última   expressão
+interpretada.
+
+Caso haja  um erro em  alguma das  interpretações ou na  definição das
+variáveis,  a execução  é  interrompida imediatamente  e  o erro  será
+retornado.
+
+Dessa forma, ~let*~ poderia ser definido como:
+
+#+begin_example
+(defmac let* (clauses . body)
+  (if (nilp clauses)
+      (cons 'do body)
+      `(let (,(car clauses))
+         ,(if (nilp (cdr clauses))
+              (cons 'do body)
+              `(let* ,(cdr clauses)
+                 ,@body)))))
+#+end_example
+
+Em outras  palavras, trata-se de  uma versão  especial de ~let~,  onde a
+definição de  uma variável  pode depender das  variáveis anteriormente
+definidas.
+
+Considerando a seguinte expressão:
+
+#+begin_example
+(let* ((x (* 2 3))
+       (y (1+ x))
+       (z (+ y 3)))
+  (+ x y z))
+#+end_example
+
+Ela poderá ser expandida para a forma a seguir:
+
+#+begin_example
+(let ((x (* 2 3)))
+  (let* ((y (1+ x))
+         (z (+ y 3)))
+    (+ x y z)))
+#+end_example
+
+Como se pode observar, a expansão  de ~let*~ culmina no uso recursivo do
+próprio macro, com usos sequenciais do macro ~let~.
+
+Uma expansão  parcial do uso recursivo  de ~let*~ no exemplo  culmina em
+algo com uma execução similar à expressão:
+
+#+begin_example
+(let ((x (* 2 3)))
+  (let ((y (1+ x)))
+    (let ((z (+ y 3)))
+      (+ x y z))))
+#+end_example
+
+Ou, expandindo todos os usos de ~let~:
+
+#+begin_example
+((fn (x)
+  ((fn (y)
+     ((fn (z)
+        (+ x y z))
+      (+ y 3)))
+   (1+ x)))
+  (* 2 3))
+#+end_example
+
+Dessa  forma, fica  claro  que  cada definição  de  variáveis em  ~let*~
+é efetuada  em um contexto  onde as variáveis  anteriormente definidas
+estejam bem-definidas.
+
+*** ~(letfn bindings . body)~
+
+Cria um contexto  léxico onde certas funções  estejam bem-definidas, e
+então interpreta uma série de expressões em sequência, delimitadas por
+~body~. Retorna   o  valor   da  última   expressão interpretada.
+
+Caso haja  um erro em  alguma das  interpretações ou na  definição das
+funções,  a  execução  é  interrompida imediatamente  e  o  erro  será
+retornado.
+
+~letfn~ é,  na prática,  uma versão  modificada de  ~let~, onde  cada caso
+inscrito na lista  ~bindings~ é uma sublista que se  assemelha ao uso de
+~defn~.
+
+Sendo assim, ~bindings~ segue uma estrutura similar ao exemplo:
+
+#+begin_example
+((function1 () body1) ... (functionN () bodyN))
+#+end_example
+
+Dessa   forma,   as   funções  ~function1~,   ...,   ~functionN~   estarão
+bem-definidas para a execução das expressões contidas em ~body~.
+
+O macro ~letfn~ poderia ser escrito da seguinte forma:
+
+#+begin_example
+(defmac letfn (defs . body)
+  ((fn (sepfn)
+     ((fn ((syms vals))
+        `((fn ,syms ,@body)
+          ,@vals))
+      (sepfn defs nil nil sepfn)))
+   (fn (pairs syms vals recur)
+       (if (nilp pairs)
+           (list syms vals)
+           (recur (cdr pairs)
+                  (cons (caar pairs) syms)
+                  (cons (cons 'fn (cdar pairs)) vals)
+                  recur)))))
+#+end_example
+
+Uma expressão envolvendo o uso de ~letfn~ como a expressão a seguir:
+
+#+begin_example
+(letfn ((foo (x) (+ 1 2 x)))
+  (foo 5))
+#+end_example
+
+Tal  expressão acaba  por  expandir-se para  a  aplicação imediata  de
+função, que recebe outra(s) como parâmetro:
+
+#+begin_example
+((fn (foo) (foo 5))
+ (fn (x) (+ 1 2 x)))
+#+end_example
+
+É importante  notar que o macro  ~letfn~ *não possibilita a  definição de
+funções  recursivas*. Uma  função  recursiva requer  que  a mesma  seja
+executada em um  contexto onde a mesma esteja  bem-definida.
+
+Teoricamente, uma função definida via ~letfn~ pode encontrar sua própria
+definição durante  a execução  das expressões de  ~body~ através  de uma
+consulta ao contexto em que  foi chamada, sendo portanto dependente do
+uso de  /contexto dinâmico/.
+
+Todavia, caso a função seja retornada ou atribuída em um contexto fora
+do  criado  por  ~letfn~,  esta consulta  falhará,  tendo  comportamento
+inesperado do  ponto de  vista do programador.  Um exemplo  deste erro
+pode ser observado a seguir.
+
+#+begin_example
+> (def my-function
+       (letfn ((foo () (bar))
+               (bar ()
+                 (print "Hello from bar on letfn")))
+         foo))
+my-function
+
+> (my-function)
+(lit error "{} is unbound" bar)
+#+end_example
+
+Funções  locais  propriamente  recursivas,   que  capturam  o  próprio
+contexto em que estão definidas,  devem ser definidas através da forma
+especial ~letrec~.
+
+*** ~(letfn* bindings . body)~
+
+Cria  contextos léxicos  em  sequência com  funções bem-definidas,  de
+forma que uma definição de função  possa depender das definições que a
+precedem, e  então interpreta  uma série  de expressões  em sequência,
+delimitadas   por  ~body~.   Retorna   o  valor   da  última   expressão
+interpretada.
+
+Caso haja  um erro em  alguma das  interpretações ou na  definição das
+funções,  a  execução  é  interrompida imediatamente  e  o  erro  será
+retornado.
+
+~letfn*~ pode ser definido da seguinte forma:
+
+#+begin_example
+(defmac letfn* (clauses . body)
+  (if (nilp clauses)
+      (cons 'do body)
+      `(letfn (,(car clauses))
+         ,(if (nilp (cdr clauses))
+              (cons 'do body)
+              `(letfn* ,(cdr clauses)
+                 ,@body)))))
+#+end_example
+
+Pode-se  observar que  ~letfn*~ define  uma forma  modificada de  ~letfn~,
+assim como ~let*~ define uma forma modificada de ~let~. Assim, a definição
+de cada função pode depender das funções anteriormente definidas.
+
+Deve-se adicionar  que essa  dependência é dada  a partir  de /capturas
+sucessivas de  contexto/ durante  as definições das  funções. Portanto,
+uma  função definida  mais posteriormente,  mesmo quando  retornada do
+escopo de  ~letfn*~ ou atribuída  a uma  variável em um  escopo externo,
+esta  ainda manterá  as referências  capturadas das  funções definidas
+antes de si.
+
+O exemplo a seguir demonstra esse comportamento.
+
+#+begin_example
+> (def my-function
+       (letfn* ((foo ()
+                  (print "Executing foo"))
+                (bar ()
+                  (print "Executing bar")
+                  (foo)))
+         bar))
+my-function
+
+> (letfn ((foo ()
+            (print "This is another foo")))
+    (my-function))
+; Executing bar
+; Executing foo
+;
+nil
+#+end_example
+
+*** ~(when pred . body)~
+
+Realiza  a  interpretação sequencial  das  expressões  de ~body~,  se  e
+somente   se  a   interpretação   de  ~pred~   resultar   em  um   valor
+verdadeiro. Nesse caso,  retorna o valor da última  expressão de ~body~;
+caso contrário, retorna ~nil~.
+
+O macro ~when~  pode ser implementado a partir da  forma especial ~if~, da
+seguinte forma:
+
+#+begin_example
+(defmac when (pred . body)
+  `(if ,pred (do ,@body) nil))
+#+end_example
+
+Assim, uma expressão como esta:
+
+#+begin_example
+(when t
+  (print "Hello")
+  (+ 2 3))
+#+end_example
+
+Acaba por tornar-se esta expressão:
+
+#+begin_example
+(if t
+    (do (print "Hello")
+        (+ 2 3))
+    nil)
+#+end_example
+
+O macro ~when~ executa, portanto, controle  de fluxo, assim como a forma
+especial ~if~ e o macro ~cond~,  todavia lida apenas com a consequência de
+um resultado  verdadeiro para o  predicado, e é  capaz de lidar  com a
+execução de várias expressões sem depender da forma especial ~do~.
+
+#+begin_example
+> (when (nilp 'a)
+    'is-nil)
+nil
+
+> (when (nilp nil)
+    'is-nil)
+is-nil
+#+end_example
+
+*** ~(unless pred . body)~
+
+Realiza  a  interpretação sequencial  das  expressões  de ~body~,  se  e
+somente  se a  interpretação  de  ~pred~ resultar  em  ~nil~. Nesse  caso,
+retorna o  valor a última  expressão de ~body~; caso  contrário, retorna
+~nil~.
+
+O macro  ~unless~ pode ser  implementado através da utilização  da forma
+especial ~if~:
+
+#+begin_example
+(defmac unless (pred . body)
+  `(if (not ,pred) (do ,body) nil))
+#+end_example
+
+Assim, uma expressão como esta:
+
+#+begin_example
+(unless nil
+  (print "Hello")
+  (+ 2 3))
+#+end_example
+
+Acaba por tornar-se esta expressão:
+
+#+begin_example
+(if (not nil)
+    (do (print "Hello")
+        (+ 2 3))
+    nil)
+#+end_example
+
+O macro ~unless~ age, portanto, como  uma versão /negativa/ de ~when~, sendo
+também responsável por controle de fluxo.
+
+#+begin_example
+> (unless (nilp 'a)
+    'ok)
+ok
+
+> (unless (nilp nil)
+    'ok)
+nil
+#+end_example
+
+*** ~(until pred . body)~
+
+Executa  sequencialmente o  conjunto  de expressões  contidas em  ~body~
+enquanto o  predicado ~pred~  retornar ~nil~. A  execução da  sequência de
+expressões será realizada até que  a condição seja satisfeita.
+
+O  valor retornado  será o  valor  da última  expressão executada,  na
+última iteração. Caso nenhuma  iteração tenha ocorrido, será retornado
+~nil~.
+
+O macro ~until~ pode ser implementado da seguinte forma:
+
+#+begin_example
+(defmac until (pred . body)
+  `(while (not ,pred) ,@body))
+#+end_example
+
+Assim, uma forma como esta:
+
+#+begin_example
+(until (>= x 5)
+  (set x (1+ x)))
+#+end_example
+
+Será expandida para:
+
+#+begin_example
+(while (not (>= x 5)
+  (set x (1+ x)))
+#+end_example
+
+Como pode-se  observar, o  macro ~until~  é a  forma /negativa/  de ~while~,
+assim como ocorre com ~unless~ e ~when~.
+
+#+begin_example
+> (let ((x 0))
+    (until (>= x 5)
+      (print "x = {}" x)
+      (set x (1+ x))))
+; x = 0
+; x = 1
+; x = 2
+; x = 3
+; x = 4
+;
+x
+
+> (let ((lst '(1 2 3 a 5)))
+    (until (nilp lst)
+      (let (((num . rest) lst))
+        (print "2 = {}? {}"
+               num
+               (= 2 num))
+        (set lst rest))))
+; 2 = 1? nil
+; 2 = 2? t
+; 2 = 3? nil
+;
+(lit error "{} is not a number" a)
+
+> (let ((lst '(1 2 3 NaN 5)))
+    (until (>= (car lst) 5)
+      (let (((num . rest) lst))
+        (print "{}" num)
+        (set lst rest))))
+; 1
+; 2
+; 3
+;
+(lit error "{} is not a number" NaN)
+#+end_example
+
+*** ~(repeat n . body)~
+
+Executa  sequencialmente as  expressões de  ~body~, por  um número  ~n~ de
+vezes. O valor  retornado será o valor da  última expressão executada,
+na última iteração. Caso nenhuma iteração ocorra, será retornado ~nil~.
+
+O macro ~repeat~ pode ser escrito da seguinte forma:
+
+#+begin_example
+(defmac repeat (n . body)
+  (let ((it (gensym))
+        (res (gensym)))
+    `(let ((,it   ,n)
+           (,res nil))
+       (while (> ,it 0)
+         (set ,res (do ,@body))
+         (set ,it (1- ,it)))
+       ,res)))
+#+end_example
+
+Uma expressão como a seguinte:
+
+#+begin_example
+(repeat 5 (print "Test"))
+#+end_example
+
+Expande-se para uma expressão similar a esta:
+
+#+begin_example
+(let ((:G189   5)
+      (:G188 nil))
+  (while (> :G189 0)
+    (set :G188 (do (print "Test")))
+    (set :G189 (1- :G189)))
+  :G188)
+#+end_example
+
+Sendo assim,  ~repeat~ pode ser visto  como um uso de  ~while~ que explora
+uma variável que  sofre modificação, e outra que  armazena o resultado
+parcial da  expressão a  cada iteração.
+
+Os  símbolos  ~:G189~   e  ~:G188~  mostrados  no   exemplo  são  símbolos
+arbitrários  automaticamente  gerados,  e  serão  diferentes  em  cada
+uso de  ~repeat~. Sua geração é  efeito colateral da medida  tomada para
+que ~repeat~  não se torne  um macro /anafórico/,  isto é, que  não nomeie
+variáveis  que possam  ser  normalmente  utilizadas pelo  programador,
+evitando o risco de erros semânticos.
+
+#+begin_example
+> (repeat 4 (print "Hello"))
+; Hello
+; Hello
+; Hello
+; Hello
+;
+nil
+
+> (let ((x 5))
+    (repeat 4
+      (print "x = {}" x)
+      (set x (1- x))))
+; x = 5
+; x = 4
+; x = 3
+; x = 2
+;
+x
+#+end_example
+
+*** ~(with-open-stream (sym dir file) . body)~
+
+Abre um  stream ligado ao símbolo  ~sym~, de direção ~dir~  para o caminho
+~file~,  garantindo  que o  stream  seja  fechado  após a  execução  das
+expressões em ~body~.
+
+Uma possível implementação para ~with-open-stream~ poderia ser:
+
+#+begin_example
+(defmac with-open-stream ((sym dir file) . body)
+  `(let ((,sym (open-stream ,dir ,file)))
+     (unwind-protect (do ,@body)
+       (close-stream ,sym))))
+#+end_example
+
+Sendo assim, uma expressão como esta:
+
+#+begin_example
+(with-open-stream (s 'in "teste.txt")
+  (read-char s))
+#+end_example
+
+Expande-se para a seguinte expressão:
+
+#+begin_example
+(let ((s (open-stream 'in "teste.txt")))
+  (unwind-protect
+      (do (read-char s))
+    (close-stream s)))
+#+end_example
+
+Caso  o  stream  não  possa  ser  aberto,  o  erro  na  abertura  será
+retornado.
+
+Caso  ocorra   algum  erro  na   execução  das  expressões   em  ~body~,
+~with-open-stream~  ainda garante  que o  stream seja  fechado. O  valor
+retornado será o valor de interpretação da última expressão em ~body~.
+
+O fechamento do stream está sujeito às regras de uso da forma especial
+~unwind-protect~.
+
+Supondo um  arquivo-texto ~teste.txt~  contendo exatamente  os seguintes
+caracteres, sem espaço em branco ao final...
+
+#+begin_example
+Teste
+#+end_example
+
+...os exemplos a seguir utilizam-se de tal arquivo.
+
+#+begin_example
+> (with-open-stream (stream 'in "/home/alchemist/teste.txt")
+    (read-char stream))
+#\T
+
+> (with-open-stream (stream 'out "/home/alchemist/teste.txt")
+    (read-char stream))
+(lit error "{} is not an input stream" #<stream (out) {...}>)
+#+end_example
+
+*** TODO ~(case x . clauses)~ :noexport:
+*** TODO Variações de ~car~ e ~cdr~
+
+# Desincentivar uso de sintaxe concreta!
+
+- ~first~: Igual a ~(car x)~.
+- ~rest~: Igual a ~(cdr x)~.
+- ~caar~ (~first-of-first~): Igual a ~(car (car x))~.
+- ~cadr~ (~second~): Igual a ~(car (cdr x))~.
+- ~cdar~ (~rest-of-first~): Igual a ~(cdr (car x))~.
+- ~cddr~ (~rest-of-rest~): Igual a ~(cdr (cdr x))~.
+- ~third~: Igual a ~(car (cddr x))~.
+- ~fourth~: Igual a ~(cadr (cddr x))~.
+
+** TODO Miscelânea
+
+*** ~(map f (x . xs))~
+
+Mapeia uma  função ~f~ sobre uma  lista, retornando, ao final,  uma nova
+lista,  composta do  resultado da  aplicação de  ~f~ sobre  cada um  dos
+elementos da lista, em ordem.
+
+Uma possível implementação para ~map~ seria:
+
+#+begin_example
+(defn map (f (x . xs))
+  (unless (nilp x)
+    (cons (f x)
+          (map f xs))))
+#+end_example
+
+~map~ desestrutura o segundo argumento -- uma lista -- em seus elementos
+/car/ e  /cdr/ (~x~  e ~xs~,  respectivamente). Assim, caso  ~x~ não  seja nulo,
+aplica-se ~f~  em ~x~ e coleta-se  o resultado, repetindo-se a  função ~map~
+recursivamente para ~xs~, até que a lista se esgote.
+
+Caso a lista passada como segundo argumento seja uma lista pontuada, o
+último /cdr/ será ignorado.
+
+#+begin_example
+> (map (fn (x) (* x x))
+       '(1 2 3 4 5))
+(1 4 9 16 25)
+
+> (map (fn (x) (* x x))
+       '(1 2 3 4 . 5))
+(1 4 9 16)
+#+end_example
+
+*** ~(mapc f (x . xs))~
+
+Mapeia uma função ~f~ sobre uma lista, retornando ~nil~ ao final.
+
+Uma possível implementação para ~mapc~ seria:
+
+#+begin_example
+(defn mapc (f (x . xs))
+  (unless (nilp x)
+    (f x)
+    (mapc f xs)))
+#+end_example
+
+~mapc~  opera de  forma muito  similar a  ~map~, todavia  sem a  coleta de
+resultados da  aplicação de  ~f~ em  ~x~. Em  outras palavras,  ~mapc~ opera
+melhor principalmente  quando seu  uso envolve /efeitos  colaterais/, ou
+seja, quando ~f~  não está atrelado à ideia de  apenas retornar um valor
+para cada parâmetro a ele passado.
+
+Um exemplo  clássico do  uso de  /efeitos colaterais/  é a  *impressão em
+tela*.  Pode-se usar  ~mapc~  para,  por exemplo,  imprimir  cada um  dos
+elementos de uma lista, em sequência.
+
+Caso a lista passada como segundo argumento seja uma lista pontuada, o
+último /cdr/ será ignorado.
+
+#+begin_example
+> (mapc (fn (x) (* x x))
+        '(1 2 3 4 5))
+nil
+
+> (do (mapc (fn (x) (display x))
+            '(1 2 3 4 5))
+      (terpri))
+; 12345
+;
+nil
+#+end_example
+
+*** ~(assp proc (x . xs))~
+
+Varre uma  /lista associativa/, aplicando ~proc~  à chave de cada  uma das
+associações,  sequencialmente.  Caso  uma  aplicação  tenha  um  valor
+não-nulo, toda aquela associação será retornada como resposta.
+
+Uma possível implementação para ~assp~ seria:
+
+#+begin_example
+(defn assp (proc (x . xs))
+  (unless (nilp x)
+    (let (((key . rest) x))
+      (or (and (proc key) x)
+          (assp proc xs)))))
+#+end_example
+
+Caso nenhuma associação retorne um  valor não-nulo durante a aplicação
+de ~proc~ em sua chave, retorna ~nil~.
+
+#+begin_example
+> (assp (fn (x) (eq 'b x))
+        '((a . 1) (b . 2) (c . 3)))
+(b . 2)
+
+> (assp (eq 'b) '((a . 1) (b . 2) (c . 3)))
+(b . 2)
+
+> (assp (eq 'z) '((a . 1) (b . 2) (c . 3)))
+nil
+#+end_example
+
+*** ~(assoc sym alist)~
+
+Varre uma lista associativa, procurando por ~sym~ nas chaves de cada uma
+das associações,  sequencialmente. Quando  ~sym~ corresponde à  chave de
+uma associação, toda aquela associação será retornada como resposta.
+
+Para  comparar  ~sym~ com  cada  uma  das  chaves, ~assoc~  utiliza-se  da
+função ~equal~, que pode ser  temporariamente alterada através do uso de
+uma variável dinâmica.
+
+A função ~assoc~  poderia ser implementada com base na  função ~assp~:
+
+#+begin_example
+(defn assoc (sym alist)
+  (assp (equal sym) alist))
+#+end_example
+
+Caso nenhuma associação possua ~sym~ como sua chave, retorna-se ~nil~.
+
+#+begin_example
+> (assoc 'b '((a . 1) (b . 2) (c . 3)))
+(b . 2)
+
+> (assoc 'a '((a . 1) (b . 2) (a . 3)))
+(a . 1)
+
+> (letfn ((equal (x y)
+            (= x y)))
+    (assoc 2 '((1 . a) (2 . b) (3 . c))))
+(2 . b)
+
+> (assoc 'z '((a . 1) (b . 2) (a . 3)))
+nil
+#+end_example
+
+*** ~(member elt lst)~
+
+Varre  uma  lista  de  elementos,   procurando  por  ~elt~.  Quando  ~elt~
+corresponde  ao primeiro  elemento de  uma sublista,  aquela sublista,
+incluindo ~elt~ como primeiro elemento, será retornada.
+
+Para  comparar ~elt~  com cada  um dos  elementos, ~member~ utiliza-se  da
+função ~equal~, que pode ser  temporariamente alterada através do uso de
+uma variável dinâmica.
+
+A função ~member~ poderia ser implementada da seguinte forma:
+
+#+begin_example
+(defn member (elt lst)
+  (unless (nilp lst)
+    (let (((x . rest) lst))
+      (or (and (equal elt x)
+               lst)
+          (member elt rest)))))
+#+end_example
+
+Caso  o elemento  ~elt~ não  se  encontre em  ~lst~, será retornado ~nil~.
+
+#+begin_example
+> (member 'a '(x y z a b c))
+(a b c)
+
+> (member 'x '(x y z a b c))
+(x y z a b c)
+
+> (member 'c '(x y z a b c))
+(c)
+
+> (letfn ((equal (x y)
+            (= x y)))
+    (member 1 '(5 6 7 1 2 3)))
+(1 2 3)
+
+> (member 'n '(x y z a b c))
+nil
+#+end_example
+
+* TODO Aplicação
+** Aplicação de clausuras
+
+# Escopo
+# 1. Tenta achar a variável no  escopo local (léxico capturado + novos
+#    bindings);
+# 2. Tenta achar a variável no escopo de invocação (escopo dinâmico);
+# 3. Tenta achar a variável no escopo global.
+
+# Aplicação parcial
+# - (a b c) -> Pode haver aplicação parcial
+# - (a b c . rest) -> AP para a e b, possivelmente c
+# - args -> Sem AP
+# TODO:  Nos casos  de AP  opcional, o  axioma `&`  deve ser  usado na
+# invocação da função.
+
+# Desestruturação
+# Desestruturação  não é  como  a aplicação  parcial,  portanto, se  o
+# argumento não for  desestruturável (ex. célula cons  ou nil), haverá
+# erro. Igualmente,  caso falte argumentos para  desestruturação exata
+# (sem lista pontuada no padrão), também será emitido um erro.
+# - (a (x .  xs)) -> Desestrutura o segundo argumento,  se ele for uma
+#                    lista; caso contrário, retorna erro.
+# - (a (b  c) d)  -> Desestrutura  o segundo argumento,  se ele  for uma
+#                    lista, tomando apenas dois elementos. Em caso de
+#                    quantidade excedente de elementos,  retorna erro.
+
+# Propostas:
+# (a (eq 'b) c) -> TALVEZ: Match exato?
+
+** Aplicação de primitivas
+** Aplicação de macros
+
+* TODO Interpretação
+
+# Lembrar de retropropagar erros!
+
+* Footnotes
+
+[fn:5] A título de comparação, ~unwind-protect~  é similar a blocos /try-finally/
+na linguagem Object Pascal, e ao bloco /finally/ em Java.
+
+[fn:4] Para mais informações sobre campos ordenados, veja a Wikipedia:
+https://en.wikipedia.org/wiki/Ordered_field.
+
+[fn:3] Para  maiores informações  a respeito  deste algoritmo,  veja o
+tópico,  como   foi  brilhantemente   explicado,  por   Bruce  Dawson:
+https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/.
+
+[fn:2] Caso  seja importante comparar  pela igualdade de  dois números
+~float~, Majestic Lisp provê a função  ~float=~, que se baseia em /unidades
+de menor precisão/.
+
+[fn:1] Tradução livre do Inglês, /literate program/. 
+
+[fn:8] https://en.wikipedia.org/wiki/CAR_and_CDR 
+
+[fn:6] Mais informações em http://www.paulgraham.com/bel.html. 

@@ -1,0 +1,1117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+<head>
+<!-- 2022-10-24 seg 00:27 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Apêndice B: Mais Exemplos de Majestic Lisp</title>
+<meta name="author" content="Lucas S. Vieira" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="./main.css" />
+<link rel="stylesheet" type="text/css" href="./syntax.css" />
+<link id="theme-css" rel="stylesheet" type="text/css" href="./dark-theme.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="../img/cat-i-mage.jpg">
+<meta name="theme-color" content="#14171e">
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Apêndice B: Mais Exemplos de Majestic Lisp</h1>
+<p>
+Este apêndice reune alguns exemplos interessantes de código escrito em
+Majestic  Lisp, que  não  foram mostrados  anteriormente, em  especial
+exemplos  mais longos.
+</p>
+
+<p>
+A  maioria  do que  será  mostrado  a  seguir  é código,  sem  maiores
+explicações  acerca  dos   mesmos;  recomenda-se  verificar  quaisquer
+materiais ou referências assinaladas para maiores informações.
+</p>
+
+<div id="outline-container-org8beaee5" class="outline-2">
+<h2 id="org8beaee5"><span class="section-number-2">1.</span> Bootstrapping</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+O processo  de <i>boostrapping</i>  em Majestic Lisp  envolve a  definição de
+macros, funções e  variáveis do sistema diretamente  em Majestic Lisp,
+permitindo que não seja necessário  programá-las em Rust. Dessa forma,
+é  possível  testar  novos  conceitos de  Majestic  usando  a  própria
+linguagem, antes de alterar o interpretador.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #6a9955;">;; </span><span style="color: #6a9955;">-*- mode: lisp; mode: majestic; -*-</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">defmac macro</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> <span style="color: #569cd6;">defmac</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">mac</span> <span style="color: #87cefa;">(</span>label lambda-list . body<span style="color: #87cefa;">)</span>
+       `<span style="color: #87cefa;">(</span><span style="color: #569cd6;">def</span> ,label
+            <span style="color: #ffd700;">(</span><span style="color: #569cd6;">mac</span> ,lambda-list ,@body<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">defn macro</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> <span style="color: #569cd6;">defn</span> <span style="color: #da70d6;">(</span>label lambda-list . body<span style="color: #da70d6;">)</span>
+  `<span style="color: #da70d6;">(</span><span style="color: #569cd6;">def</span> ,label <span style="color: #87cefa;">(</span><span style="color: #569cd6;">fn</span> ,lambda-list ,@body<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">when macro</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> <span style="color: #569cd6;">when</span> <span style="color: #da70d6;">(</span>pred . body<span style="color: #da70d6;">)</span>
+  `<span style="color: #da70d6;">(</span><span style="color: #569cd6;">if</span> ,pred <span style="color: #87cefa;">(</span><span style="color: #569cd6;">do</span> ,@body<span style="color: #87cefa;">)</span> nil<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">unless macro</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> <span style="color: #569cd6;">unless</span> <span style="color: #da70d6;">(</span>pred . body<span style="color: #da70d6;">)</span>
+  `<span style="color: #da70d6;">(</span><span style="color: #569cd6;">if</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">not</span> ,pred<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span><span style="color: #569cd6;">do</span> ,@body<span style="color: #87cefa;">)</span> nil<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">until macro</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> <span style="color: #569cd6;">until</span> <span style="color: #da70d6;">(</span>pred . body<span style="color: #da70d6;">)</span>
+  `<span style="color: #da70d6;">(</span><span style="color: #569cd6;">while</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">not</span> ,pred<span style="color: #87cefa;">)</span> ,@body<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">cond macro</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> <span style="color: #569cd6;">cond</span> clauses
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">if</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">nilp</span> clauses<span style="color: #87cefa;">)</span>
+      nil
+      `<span style="color: #87cefa;">(</span><span style="color: #569cd6;">if</span> ,<span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">caar</span> clauses<span style="color: #ffd700;">)</span>
+           <span style="color: #ffd700;">(</span><span style="color: #569cd6;">do</span> ,@<span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">cdar</span> clauses<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+           ,<span style="color: #ffd700;">(</span><span style="color: #569cd6;">if</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cdr</span> clauses<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+                nil
+                <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #569cd6;">cond</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cdr</span> clauses<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">let macro</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> <span style="color: #569cd6;">let</span> <span style="color: #da70d6;">(</span>args . body<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #ffd700;">(</span>sepfn<span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>syms vals<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        `<span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #569cd6;">fn</span> ,syms ,@body<span style="color: #ffd700;">)</span>
+          ,@vals<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+      <span style="color: #da70d6;">(</span>sepfn args nil nil sepfn<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+   <span style="color: #87cefa;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #ffd700;">(</span>pairs syms vals recur<span style="color: #ffd700;">)</span>
+       <span style="color: #ffd700;">(</span><span style="color: #569cd6;">if</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> pairs<span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">list</span> syms vals<span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span>recur <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cdr</span> pairs<span style="color: #87cefa;">)</span>
+                  <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cons</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">caar</span> pairs<span style="color: #ffd700;">)</span> syms<span style="color: #87cefa;">)</span>
+                  <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cons</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">car</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">cdar</span> pairs<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span> vals<span style="color: #87cefa;">)</span>
+                  recur<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">let* macro</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> <span style="color: #569cd6;">let*</span> <span style="color: #da70d6;">(</span>clauses . body<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">if</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">nilp</span> clauses<span style="color: #87cefa;">)</span>
+      <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #569cd6;">do</span> body<span style="color: #87cefa;">)</span>
+      `<span style="color: #87cefa;">(</span><span style="color: #569cd6;">let</span> <span style="color: #ffd700;">(</span>,<span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">car</span> clauses<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+         ,<span style="color: #ffd700;">(</span><span style="color: #569cd6;">if</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cdr</span> clauses<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+              <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #569cd6;">do</span> body<span style="color: #da70d6;">)</span>
+              `<span style="color: #da70d6;">(</span><span style="color: #569cd6;">let*</span> ,<span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cdr</span> clauses<span style="color: #87cefa;">)</span>
+                 ,@body<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">letfn macro</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> <span style="color: #569cd6;">letfn</span> <span style="color: #da70d6;">(</span>defs . body<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #ffd700;">(</span>sepfn<span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>syms vals<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        `<span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #569cd6;">fn</span> ,syms ,@body<span style="color: #ffd700;">)</span>
+          ,@vals<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+      <span style="color: #da70d6;">(</span>sepfn defs nil nil sepfn<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+   <span style="color: #87cefa;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #ffd700;">(</span>pairs syms vals recur<span style="color: #ffd700;">)</span>
+       <span style="color: #ffd700;">(</span><span style="color: #569cd6;">if</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> pairs<span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">list</span> syms vals<span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span>recur <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cdr</span> pairs<span style="color: #87cefa;">)</span>
+                  <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cons</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">caar</span> pairs<span style="color: #ffd700;">)</span> syms<span style="color: #87cefa;">)</span>
+                  <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cons</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #569cd6;">fn</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">cdar</span> pairs<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span> vals<span style="color: #87cefa;">)</span>
+                  recur<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">letfn* macro</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> <span style="color: #569cd6;">letfn*</span> <span style="color: #da70d6;">(</span>clauses . body<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">if</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">nilp</span> clauses<span style="color: #87cefa;">)</span>
+      <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #569cd6;">do</span> body<span style="color: #87cefa;">)</span>
+      `<span style="color: #87cefa;">(</span><span style="color: #569cd6;">letfn</span> <span style="color: #ffd700;">(</span>,<span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">car</span> clauses<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+         ,<span style="color: #ffd700;">(</span><span style="color: #569cd6;">if</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cdr</span> clauses<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+              <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #569cd6;">do</span> body<span style="color: #da70d6;">)</span>
+              `<span style="color: #da70d6;">(</span><span style="color: #569cd6;">letfn*</span> ,<span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cdr</span> clauses<span style="color: #87cefa;">)</span>
+                 ,@body<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">map function</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> <span style="color: #dcdcaa;">map</span> <span style="color: #da70d6;">(</span>f <span style="color: #87cefa;">(</span>x . xs<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">unless</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">nilp</span> x<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cons</span> <span style="color: #ffd700;">(</span>f x<span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">map</span> f xs<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">mapc function</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> <span style="color: #dcdcaa;">mapc</span> <span style="color: #da70d6;">(</span>f <span style="color: #87cefa;">(</span>x . xs<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">unless</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">nilp</span> x<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span>f x<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">mapc</span> f xs<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">assp function</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> <span style="color: #dcdcaa;">assp</span> <span style="color: #da70d6;">(</span>proc <span style="color: #87cefa;">(</span>x . xs<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">unless</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">nilp</span> x<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">let</span> <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span>key . <span style="color: #dcdcaa;">rest</span><span style="color: #87cefa;">)</span> x<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+      <span style="color: #ffd700;">(</span><span style="color: #569cd6;">or</span> <span style="color: #da70d6;">(</span><span style="color: #569cd6;">and</span> <span style="color: #87cefa;">(</span>proc key<span style="color: #87cefa;">)</span> x<span style="color: #da70d6;">)</span>
+          <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">assp</span> proc xs<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">assoc function</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> <span style="color: #dcdcaa;">assoc</span> <span style="color: #da70d6;">(</span>sym alist<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">assp</span> <span style="color: #87cefa;">(</span>equal sym<span style="color: #87cefa;">)</span> alist<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">functionp function</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> <span style="color: #dcdcaa;">functionp</span> <span style="color: #da70d6;">(</span>f<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">or</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">primitivep</span> f<span style="color: #87cefa;">)</span>
+      <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">closurep</span> f<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">with-open-stream macro</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> <span style="color: #569cd6;">with-open-stream</span> <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span>sym dir file<span style="color: #87cefa;">)</span> . body<span style="color: #da70d6;">)</span>
+  `<span style="color: #da70d6;">(</span><span style="color: #569cd6;">let</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>,sym <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">open-stream</span> ,dir ,file<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+     <span style="color: #87cefa;">(</span><span style="color: #569cd6;">unwind-protect</span> <span style="color: #ffd700;">(</span><span style="color: #569cd6;">do</span> ,@body<span style="color: #ffd700;">)</span>
+       <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">close-stream</span> ,sym<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">repeat macro</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> <span style="color: #569cd6;">repeat</span> <span style="color: #da70d6;">(</span>n . body<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">let</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>it <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">gensym</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+        <span style="color: #ffd700;">(</span>res <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">gensym</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    `<span style="color: #87cefa;">(</span><span style="color: #569cd6;">let</span> <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span>,it   ,n<span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span>,res nil<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+       <span style="color: #ffd700;">(</span><span style="color: #569cd6;">while</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">&gt;</span> ,it 0<span style="color: #da70d6;">)</span>
+         <span style="color: #da70d6;">(</span><span style="color: #569cd6;">set</span> ,res <span style="color: #87cefa;">(</span><span style="color: #569cd6;">do</span> ,@body<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+         <span style="color: #da70d6;">(</span><span style="color: #569cd6;">set</span> ,it <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">1-</span> ,it<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+       ,res<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">member function</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> member <span style="color: #da70d6;">(</span>elt lst<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">unless</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">nilp</span> lst<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">let</span> <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span>x . <span style="color: #dcdcaa;">rest</span><span style="color: #87cefa;">)</span> lst<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+      <span style="color: #ffd700;">(</span><span style="color: #569cd6;">or</span> <span style="color: #da70d6;">(</span><span style="color: #569cd6;">and</span> <span style="color: #87cefa;">(</span>equal elt x<span style="color: #87cefa;">)</span>
+               lst<span style="color: #da70d6;">)</span>
+          <span style="color: #da70d6;">(</span>member elt <span style="color: #dcdcaa;">rest</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">vector= function</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> vector= <span style="color: #da70d6;">(</span>va vb<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">when</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">eq</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">vec-type</span> va<span style="color: #ffd700;">)</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">vec-type</span> vb<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">let*</span> <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span>len <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">vec-length</span> va<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span>i 0<span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span>continue t<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+      <span style="color: #ffd700;">(</span><span style="color: #569cd6;">when</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">=</span> len <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">vec-length</span> vb<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+        <span style="color: #da70d6;">(</span><span style="color: #569cd6;">while</span> <span style="color: #87cefa;">(</span><span style="color: #569cd6;">and</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">&lt;</span> i len<span style="color: #ffd700;">)</span> continue<span style="color: #87cefa;">)</span>
+          <span style="color: #87cefa;">(</span><span style="color: #569cd6;">unless</span> <span style="color: #ffd700;">(</span>equal <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">vec-at</span> i va<span style="color: #da70d6;">)</span>
+                         <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">vec-at</span> i vb<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+            <span style="color: #ffd700;">(</span><span style="color: #569cd6;">set</span> continue nil<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+          <span style="color: #87cefa;">(</span><span style="color: #569cd6;">set</span> i <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">1+</span> i<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+        continue<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">equal function</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> equal <span style="color: #da70d6;">(</span>x y<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #569cd6;">and</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">numberp</span> x<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">numberp</span> y<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">=</span> x y<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #569cd6;">and</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">vectorp</span> x<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">vectorp</span> y<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span>vector= x y<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #569cd6;">and</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">symbolp</span> x<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">symbolp</span> y<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">eq</span> x y<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #569cd6;">and</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">consp</span> x<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">consp</span> y<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #569cd6;">when</span> <span style="color: #da70d6;">(</span>equal <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">car</span> x<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">car</span> y<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span>equal <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cdr</span> x<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cdr</span> y<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #569cd6;">and</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">atomp</span> x<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">atomp</span> y<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">id</span> x y<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span>t nil<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">functionp function</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> <span style="color: #dcdcaa;">functionp</span> <span style="color: #da70d6;">(</span>f<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">or</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">primitivep</span> f<span style="color: #87cefa;">)</span>
+      <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">closurep</span> f<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">length function (optional)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> <span style="color: #dcdcaa;">length</span> <span style="color: #da70d6;">(</span>l<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">letrec</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>iter <span style="color: #da70d6;">(</span>acc <span style="color: #87cefa;">(</span>x . xs<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+             <span style="color: #da70d6;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">consp</span> xs<span style="color: #ffd700;">)</span>
+                    <span style="color: #ffd700;">(</span>iter <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">1+</span> acc<span style="color: #da70d6;">)</span> xs<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+                   <span style="color: #87cefa;">(</span>t acc<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">or</span> <span style="color: #ffd700;">(</span><span style="color: #569cd6;">and</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">atomp</span> l<span style="color: #da70d6;">)</span> 0<span style="color: #ffd700;">)</span>
+        <span style="color: #ffd700;">(</span>iter 0 l<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">TODO: max/min functions</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">depth function (optional)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> <span style="color: #dcdcaa;">depth</span> <span style="color: #da70d6;">(</span>l<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">letrec</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>iter <span style="color: #da70d6;">(</span>l<span style="color: #da70d6;">)</span>
+             <span style="color: #da70d6;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">not</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">consp</span> l<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span> 0<span style="color: #87cefa;">)</span>
+                   <span style="color: #87cefa;">(</span>t <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">1+</span> <span style="color: #da70d6;">(</span>max <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">depth</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">car</span> l<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+                               <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">depth</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cdr</span> l<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> l<span style="color: #da70d6;">)</span> 0<span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">atomp</span> l<span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">err</span> <span style="color: #ce9178;">"{} is an atom"</span> l<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span>t <span style="color: #da70d6;">(</span>iter l<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">TODO: append function</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">TODO: last function</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">identity function</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> identity <span style="color: #da70d6;">(</span>x<span style="color: #da70d6;">)</span> x<span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">constantly function</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> constantly <span style="color: #da70d6;">(</span>value<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">()</span> value<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">TODO: mod function</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">evenp function (independent of mod)</span>
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">this is not optimal. mod missing...</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> evenp <span style="color: #da70d6;">(</span>x<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">=</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">*</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">number-coerce</span> 'integer <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">/</span> x 2<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span> 2<span style="color: #87cefa;">)</span>
+     <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">number-coerce</span> 'float x<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">assert macro</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> assert <span style="color: #da70d6;">(</span>expr value<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">let</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>value-sym <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">gensym</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    `<span style="color: #87cefa;">(</span><span style="color: #569cd6;">let</span> <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span>,value-sym ,value<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+       <span style="color: #ffd700;">(</span><span style="color: #569cd6;">if</span> <span style="color: #da70d6;">(</span>equal ,expr ,value-sym<span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">";; Passed: {} =&gt; {}"</span> <span style="color: #87cefa;">(</span><span style="color: #569cd6;">quote</span> ,expr<span style="color: #87cefa;">)</span> ,value-sym<span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">err</span> <span style="color: #ce9178;">"Assertion failed: equal {} {}"</span> <span style="color: #87cefa;">(</span><span style="color: #569cd6;">quote</span> ,expr<span style="color: #87cefa;">)</span> ,value-sym<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd6a6a53" class="outline-2">
+<h2 id="orgd6a6a53"><span class="section-number-2">2.</span> Lazy evaluation</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+O exemplo a seguir reimplementa  ferramentas para <i>lazy evaluation</i> como
+vistas  em  <a href="sicp">sicp</a>, realizando  uma  conversão  do código  de
+Scheme para Majestic.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=======================</span>
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">Memoization</span>
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=======================</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> memo-proc <span style="color: #da70d6;">(</span>proc<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">let</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>*already-run* nil<span style="color: #ffd700;">)</span>
+        <span style="color: #ffd700;">(</span>*result*      nil<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #ffd700;">()</span>
+      <span style="color: #ffd700;">(</span><span style="color: #569cd6;">if</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">not</span> *already-run*<span style="color: #da70d6;">)</span>
+          <span style="color: #da70d6;">(</span><span style="color: #569cd6;">do</span> <span style="color: #87cefa;">(</span><span style="color: #569cd6;">set</span> *result* <span style="color: #ffd700;">(</span>proc<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+              <span style="color: #87cefa;">(</span><span style="color: #569cd6;">set</span> *already-run* t<span style="color: #87cefa;">)</span>
+              *result*<span style="color: #da70d6;">)</span>
+          *result*<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=======================</span>
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">Macros for creating streams</span>
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=======================</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> delay body
+  `<span style="color: #da70d6;">(</span>memo-proc <span style="color: #87cefa;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #ffd700;">()</span> ,@body<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> force <span style="color: #da70d6;">(</span>procedure<span style="color: #da70d6;">)</span>
+  `<span style="color: #da70d6;">(</span>,procedure<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defmac</span> lazy-cons <span style="color: #da70d6;">(</span>a b<span style="color: #da70d6;">)</span>
+  `<span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">cons</span> ,a <span style="color: #87cefa;">(</span>delay ,b<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=======================</span>
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">Stream accessors</span>
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=======================</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> lazy-car <span style="color: #da70d6;">(</span>stream<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">car</span> stream<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> lazy-cdr <span style="color: #da70d6;">(</span>stream<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>force <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cdr</span> stream<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=======================</span>
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">Stream operations</span>
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=======================</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> *empty-lazy* nil<span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> lazy-nil-p <span style="color: #dcdcaa;">nilp</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> lazy-filter <span style="color: #da70d6;">(</span>pred stream<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>lazy-nil-p stream<span style="color: #ffd700;">)</span>
+         *empty-lazy*<span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>pred <span style="color: #da70d6;">(</span>lazy-car stream<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span>lazy-cons <span style="color: #da70d6;">(</span>lazy-car stream<span style="color: #da70d6;">)</span>
+                    <span style="color: #da70d6;">(</span>lazy-filter
+                     pred
+                     <span style="color: #87cefa;">(</span>lazy-cdr stream<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span>t <span style="color: #ffd700;">(</span>lazy-filter pred <span style="color: #da70d6;">(</span>lazy-cdr stream<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">Warning: This may cause a stack overflow</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> lazy-take <span style="color: #da70d6;">(</span>stream n<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">when</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">&gt;</span> n 0<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cons</span> <span style="color: #ffd700;">(</span>lazy-car stream<span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span>lazy-take
+           <span style="color: #da70d6;">(</span>lazy-cdr stream<span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">1-</span> n<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">(defn map-stream (stream f)</span>
+<span style="color: #6a9955;">;;   </span><span style="color: #6a9955;">(cons-stream (f (stream-car stream))</span>
+<span style="color: #6a9955;">;;                </span><span style="color: #6a9955;">(map-stream</span>
+<span style="color: #6a9955;">;;                 </span><span style="color: #6a9955;">(stream-cdr stream)</span>
+<span style="color: #6a9955;">;;                 </span><span style="color: #6a9955;">f)))</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> lazy-print <span style="color: #da70d6;">(</span>stream n<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">when</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">&gt;</span> n 0<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">"{}"</span> <span style="color: #ffd700;">(</span>lazy-car stream<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">set</span> n <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">1-</span> n<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">set</span> stream <span style="color: #ffd700;">(</span>lazy-cdr stream<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span>lazy-print stream n<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=======================</span>
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">Sequence of integer numbers</span>
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=======================</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> integers-from <span style="color: #da70d6;">(</span>n<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>lazy-cons n <span style="color: #87cefa;">(</span>integers-from <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">1+</span> n<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> *integers-seq* <span style="color: #da70d6;">(</span>integers-from 1<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=======================</span>
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">Sequence of Fibonacci and Lucas numbers</span>
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=======================</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">letrec</span> <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span>fib-gen <span style="color: #ffd700;">(</span>a b<span style="color: #ffd700;">)</span>
+           <span style="color: #ffd700;">(</span>lazy-cons a <span style="color: #da70d6;">(</span>fib-gen b <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">+</span> a b<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">def</span> *fibonacci-seq* <span style="color: #87cefa;">(</span>fib-gen 1 1<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">def</span> *lucas-seq*     <span style="color: #87cefa;">(</span>fib-gen 2 1<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=======================</span>
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">Sequence of primes using "sieve" of Erathostenes</span>
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=======================</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> integer-division <span style="color: #da70d6;">(</span>a b<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">number-coerce</span>
+   <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">/</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">number-coerce</span> a 'integer<span style="color: #ffd700;">)</span>
+      <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">number-coerce</span> b 'integer<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+   'integer<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> remainder <span style="color: #da70d6;">(</span>a b<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">let*</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>div <span style="color: #da70d6;">(</span>integer-division a b<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span>intdiv <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">-</span> a <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">*</span> div b<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    intdiv<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> divisiblep <span style="color: #da70d6;">(</span>x y<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">zerop</span> <span style="color: #87cefa;">(</span>remainder x y<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">letrec</span> <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span>sieve <span style="color: #ffd700;">(</span>stream<span style="color: #ffd700;">)</span>
+           <span style="color: #ffd700;">(</span>lazy-cons
+            <span style="color: #da70d6;">(</span>lazy-car stream<span style="color: #da70d6;">)</span>
+            <span style="color: #da70d6;">(</span>sieve <span style="color: #87cefa;">(</span>lazy-filter
+                    <span style="color: #ffd700;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #da70d6;">(</span>x<span style="color: #da70d6;">)</span>
+                      <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">not</span> <span style="color: #87cefa;">(</span>divisiblep x
+                             <span style="color: #ffd700;">(</span>lazy-car stream<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+                    <span style="color: #ffd700;">(</span>lazy-cdr stream<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">def</span> *primes-seq* <span style="color: #87cefa;">(</span>sieve <span style="color: #ffd700;">(</span>integers-from 2<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org97beb97" class="outline-2">
+<h2 id="org97beb97"><span class="section-number-2">3.</span> Interpretador metacircular</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Interpretadores  metacirculares  são  ferramentas  interessantes  para
+estudo  de  implementação   de  interpretadores,  porque  possibilitam
+experimentar com novas  ideias em uma linguagem de  forma rápida. Esse
+processo  é   especialmente  facilitado   ao  usarmos   uma  linguagem
+homoicônica, como  dialetos de  Lisp normalmente  são, e  difere-se do
+mero <i>bootstrap</i>  uma vez que  remove a necessidade da  especificação de
+uma semântica exata para alguns elementos.
+</p>
+
+<p>
+O  algoritmo a  seguir  é uma  adaptação do  algoritmo  como visto  em
+<a href="sicp">sicp</a>.  Em especial,  substitui-se  a  linguagem Scheme  por
+Majestic Lisp, e a implementação também envolve um dialeto de Majestic
+Lisp,  que  não  possui  todos  os  seus  recursos,  para  que  a  sua
+programação fosse mais simplificada.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #6a9955;">;; </span><span style="color: #6a9955;">-*- mode: lisp; mode: majestic; -*-</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">Add set</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> eval.
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>exp env<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">cond</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">numberp</span> exp<span style="color: #da70d6;">)</span> exp<span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">stringp</span> exp<span style="color: #da70d6;">)</span> exp<span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">primitivep</span> exp<span style="color: #da70d6;">)</span> exp<span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">symbolp</span> exp<span style="color: #da70d6;">)</span>
+      <span style="color: #da70d6;">(</span>lookup. exp env<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">eq</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first</span> exp<span style="color: #87cefa;">)</span> '<span style="color: #569cd6;">quote</span><span style="color: #da70d6;">)</span>
+      <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">second</span> exp<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">eq</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first</span> exp<span style="color: #87cefa;">)</span> '<span style="color: #569cd6;">fn</span><span style="color: #da70d6;">)</span>
+      <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">list</span> 'closure <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">rest</span> exp<span style="color: #87cefa;">)</span> env<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">eq</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first</span> exp<span style="color: #87cefa;">)</span> '<span style="color: #569cd6;">cond</span><span style="color: #da70d6;">)</span>
+      <span style="color: #da70d6;">(</span>evcond. <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">rest</span> exp<span style="color: #87cefa;">)</span> env<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">eq</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first</span> exp<span style="color: #87cefa;">)</span> '<span style="color: #569cd6;">def</span><span style="color: #da70d6;">)</span>
+      <span style="color: #da70d6;">(</span>define. <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">second</span> exp<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">third</span> exp<span style="color: #87cefa;">)</span> env<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">eq</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first</span> exp<span style="color: #87cefa;">)</span> '<span style="color: #569cd6;">do</span><span style="color: #da70d6;">)</span>
+      <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">first</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">last</span> <span style="color: #ffd700;">(</span>evlist. <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">rest</span> exp<span style="color: #da70d6;">)</span> env<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">eq</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first</span> exp<span style="color: #87cefa;">)</span> '<span style="color: #569cd6;">apply</span><span style="color: #da70d6;">)</span>
+      <span style="color: #da70d6;">(</span><span style="color: #569cd6;">apply</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">second</span> exp<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">third</span> exp<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span>t <span style="color: #da70d6;">(</span>apply. <span style="color: #87cefa;">(</span>eval. <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">first</span> exp<span style="color: #ffd700;">)</span> env<span style="color: #87cefa;">)</span>
+                <span style="color: #87cefa;">(</span>evlist. <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">rest</span> exp<span style="color: #ffd700;">)</span> env<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">Review usage of "apply"</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> apply.
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>proc args<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">cond</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">primitivep</span> proc<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span><span style="color: #569cd6;">apply</span> proc args<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">eq</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first</span> proc<span style="color: #87cefa;">)</span> 'closure<span style="color: #da70d6;">)</span>
+      <span style="color: #da70d6;">(</span>eval. <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">second</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">second</span> proc<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+             <span style="color: #87cefa;">(</span>bind. <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">first</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">second</span> proc<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+                    args
+                    <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">third</span> proc<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span>t <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">err</span> <span style="color: #ce9178;">"Undefined procedure: {}"</span> proc<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> evlist.
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>L env<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">cond</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> L<span style="color: #da70d6;">)</span> nil<span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span>t <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">cons</span> <span style="color: #87cefa;">(</span>eval. <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">first</span> L<span style="color: #ffd700;">)</span> env<span style="color: #87cefa;">)</span>
+              <span style="color: #87cefa;">(</span>evlist. <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">rest</span> L<span style="color: #ffd700;">)</span> env<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> evcond.
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>clauses env<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">cond</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> clauses<span style="color: #da70d6;">)</span> nil<span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">eq</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first-of-first</span> clauses<span style="color: #87cefa;">)</span> t<span style="color: #da70d6;">)</span>
+      <span style="color: #da70d6;">(</span>eval. <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">second</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">first</span> clauses<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span> env<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> <span style="color: #87cefa;">(</span>eval. <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">first-of-first</span> clauses<span style="color: #ffd700;">)</span> env<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+      <span style="color: #da70d6;">(</span>evcond. <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">rest</span> clauses<span style="color: #87cefa;">)</span> env<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span>t <span style="color: #da70d6;">(</span>eval. <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">second</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">first</span> clauses<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span> env<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> bind.
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>vars vals env<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cons</span> <span style="color: #ffd700;">(</span>pair-up. vars vals<span style="color: #ffd700;">)</span>
+          env<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> pair-up.
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>vars vals<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">cond</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> vars<span style="color: #da70d6;">)</span>
+      <span style="color: #da70d6;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">nilp</span> vals<span style="color: #ffd700;">)</span> nil<span style="color: #87cefa;">)</span>
+            <span style="color: #87cefa;">(</span>t <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">err</span> <span style="color: #ce9178;">"Too many arguments"</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> vals<span style="color: #da70d6;">)</span>
+      <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">err</span> <span style="color: #ce9178;">"Too few arguments"</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span>t <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">cons</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cons</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">first</span> vars<span style="color: #ffd700;">)</span>
+                    <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">first</span> vals<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+              <span style="color: #87cefa;">(</span>pair-up. <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">rest</span> vars<span style="color: #ffd700;">)</span>
+                        <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">rest</span> vals<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> unboundp.
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>x<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">eq</span> 'unbound-variable x<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">Simplify using recursion!</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> lookup.
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>sym env<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #da70d6;">(</span>local-lookup<span style="color: #da70d6;">)</span>
+       <span style="color: #da70d6;">(</span><span style="color: #569cd6;">cond</span>
+        <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>unboundp. local-lookup<span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>global-lookup<span style="color: #87cefa;">)</span>
+            <span style="color: #87cefa;">(</span><span style="color: #569cd6;">cond</span>
+             <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span>unboundp. global-lookup<span style="color: #da70d6;">)</span>
+              <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">err</span> <span style="color: #ce9178;">"Unbound variable: {}"</span> sym<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+             <span style="color: #ffd700;">(</span>t global-lookup<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+          <span style="color: #da70d6;">(</span>lookup-lexical. sym &lt;E0&gt;<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span>t local-lookup<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span>lookup-lexical. sym env<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">Lexical lookup</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> lookup-lexical.
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>sym env<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">cond</span>
+     <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> env<span style="color: #da70d6;">)</span> 'unbound-variable<span style="color: #ffd700;">)</span>
+     <span style="color: #ffd700;">(</span>t <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #ffd700;">(</span>vcell<span style="color: #ffd700;">)</span>
+           <span style="color: #ffd700;">(</span><span style="color: #569cd6;">cond</span>
+            <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">nilp</span> vcell<span style="color: #87cefa;">)</span>
+             <span style="color: #87cefa;">(</span>lookup. sym <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">rest</span> env<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+            <span style="color: #da70d6;">(</span>t <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">rest</span> vcell<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+         <span style="color: #87cefa;">(</span>assq. sym <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">first</span> env<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> assq.
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>sym alist<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> alist<span style="color: #da70d6;">)</span> nil<span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">eq</span> sym <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">first</span> alist<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">first</span> alist<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span>t <span style="color: #da70d6;">(</span>assq. sym <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">rest</span> alist<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">Global environment</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> &lt;E0&gt;
+  <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">list</span>
+   <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">list</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">+</span>              <span style="color: #dcdcaa;">+</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">-</span>              <span style="color: #dcdcaa;">-</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">*</span>              <span style="color: #dcdcaa;">*</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">/</span>              <span style="color: #dcdcaa;">/</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">=</span>              <span style="color: #dcdcaa;">=</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">numberp</span>        <span style="color: #dcdcaa;">numberp</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">symbolp</span>        <span style="color: #dcdcaa;">symbolp</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">stringp</span>        <span style="color: #dcdcaa;">stringp</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">first</span>          <span style="color: #dcdcaa;">first</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">second</span>         <span style="color: #dcdcaa;">second</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">rest</span>           <span style="color: #dcdcaa;">rest</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">third</span>          <span style="color: #dcdcaa;">third</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">err</span>            <span style="color: #dcdcaa;">err</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">first-of-first</span> <span style="color: #dcdcaa;">first-of-first</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">primitivep</span>     <span style="color: #dcdcaa;">primitivep</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">cons</span>           <span style="color: #dcdcaa;">cons</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">last</span>           <span style="color: #dcdcaa;">last</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">eq</span>             <span style="color: #dcdcaa;">eq</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">nilp</span>           <span style="color: #dcdcaa;">nilp</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> '<span style="color: #dcdcaa;">list</span>           <span style="color: #dcdcaa;">list</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">Extra</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> define.
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>sym val env<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">if</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">symbolp</span> sym<span style="color: #ffd700;">)</span>
+        <span style="color: #ffd700;">(</span><span style="color: #569cd6;">let</span> <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span>val <span style="color: #ffd700;">(</span>eval. val env<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+          <span style="color: #da70d6;">(</span><span style="color: #569cd6;">if</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">errorp</span> val<span style="color: #87cefa;">)</span>
+              val
+            <span style="color: #87cefa;">(</span><span style="color: #569cd6;">do</span> <span style="color: #ffd700;">(</span><span style="color: #569cd6;">set</span> &lt;E0&gt; <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">cons</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">list</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> sym val<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+                                &lt;E0&gt;<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+                sym<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+      <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">err</span> <span style="color: #ce9178;">"Not a symbol: {}"</span> sym<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+
+<span style="color: #6a9955;">;;;; </span><span style="color: #6a9955;">Tests</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> metacircular-evaluator-test <span style="color: #da70d6;">()</span>
+  <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">"Metacircular evaluator test:"</span><span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">mapc</span> <span style="color: #87cefa;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #ffd700;">(</span>expression<span style="color: #ffd700;">)</span>
+            <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">"  &gt; {}\n    {}"</span>
+                   expression
+                   <span style="color: #da70d6;">(</span>eval. expression nil<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        '<span style="color: #87cefa;">(</span>1
+          <span style="color: #ffd700;">(</span><span style="color: #569cd6;">quote</span> foo<span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> *mynum* 7<span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> square <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>x<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">*</span> x x<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+          square
+          <span style="color: #ffd700;">(</span>square 6<span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span>square *mynum*<span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">nilp</span> 1<span style="color: #87cefa;">)</span>
+                 <span style="color: #87cefa;">(</span><span style="color: #569cd6;">quote</span> nay<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+                <span style="color: #da70d6;">(</span>t <span style="color: #87cefa;">(</span><span style="color: #569cd6;">quote</span> okay<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">eq</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">=</span> 1 1<span style="color: #ffd700;">)</span> t<span style="color: #87cefa;">)</span>
+                 <span style="color: #87cefa;">(</span><span style="color: #569cd6;">quote</span> okay<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+                <span style="color: #da70d6;">(</span>t <span style="color: #87cefa;">(</span><span style="color: #569cd6;">quote</span> nay<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>a b<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">list</span> a b<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+           1 2<span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>x<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">*</span> x x<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span> 5<span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>x<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">*</span> x x<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span> *mynum*<span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">+</span> *mynum* *mynum*<span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #ffd700;">(</span>x<span style="color: #ffd700;">)</span> <span style="color: #ffd700;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #da70d6;">(</span>y<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">+</span> x y<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span> 3<span style="color: #da70d6;">)</span> 4<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+
+<pre class="example" id="orgd15c2ff">
+Metacircular evaluator test:
+&gt; 1
+1
+&gt; 'foo
+foo
+&gt; (def *mynum* 7)
+*mynum*
+&gt; (def square (fn (x) (* x x)))
+square
+&gt; (square 6)
+36
+&gt; (cond ((nilp 1) 'nay) (t 'okay))
+okay
+&gt; (cond ((eq (= 1 1) t) 'okay) (t 'nay))
+okay
+&gt; ((fn (a b) (list a b)) 1 2)
+(1 2)
+&gt; ((fn (x) (* x x)) 5)
+25
+&gt; ((fn (x) (* x x)) *mynum*)
+49
+&gt; (+ *mynum* *mynum*)
+14
+&gt; (((fn (x) (fn (y) (+ x y))) 3) 4)
+7
+nil
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgfd49506" class="outline-2">
+<h2 id="orgfd49506"><span class="section-number-2">4.</span> Interpretador de PROLOG</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+O  próximo exemplo  é uma  implementação de  PROLOG em  Majestic Lisp,
+sendo   uma  reimplementação   da  proposta   em  <a href="holm2019">holm2019</a>,
+igualmente traduzida da linguagem Scheme.
+</p>
+
+<p>
+A implementação de PROLOG em Majestic é especialmente útil para testes
+de performance.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-majestic"><span style="color: #6a9955;">;; </span><span style="color: #6a9955;">-*- mode: lisp; mode: majestic; -*-</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> link <span style="color: #dcdcaa;">list</span><span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> link-l <span style="color: #dcdcaa;">first</span><span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> link-g <span style="color: #dcdcaa;">second</span><span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> link-r <span style="color: #dcdcaa;">third</span><span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> link-e <span style="color: #dcdcaa;">fourth</span><span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> link-n <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>x<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">car</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cddr</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">cddr</span> x<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> back5 <span style="color: #da70d6;">(</span>l g r e n<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">if</span> <span style="color: #87cefa;">(</span><span style="color: #569cd6;">and</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">consp</span> g<span style="color: #ffd700;">)</span>
+           <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">consp</span> r<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+      <span style="color: #87cefa;">(</span>prove5 l g <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">rest</span> r<span style="color: #ffd700;">)</span> e n<span style="color: #87cefa;">)</span>
+      <span style="color: #87cefa;">(</span>prove5 <span style="color: #ffd700;">(</span>link-l l<span style="color: #ffd700;">)</span>
+              <span style="color: #ffd700;">(</span>link-g l<span style="color: #ffd700;">)</span>
+              <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">rest</span> <span style="color: #da70d6;">(</span>link-r l<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+              <span style="color: #ffd700;">(</span>link-e l<span style="color: #ffd700;">)</span>
+              <span style="color: #ffd700;">(</span>link-n l<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> prove5 <span style="color: #da70d6;">(</span>l g r e n<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">nilp</span> g<span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span>print-frame e<span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span>back5 l g r e n<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">nilp</span> r<span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #569cd6;">if</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> l<span style="color: #da70d6;">)</span>
+             t
+             <span style="color: #da70d6;">(</span>back5 l g r e n<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span>t <span style="color: #ffd700;">(</span><span style="color: #569cd6;">let*</span> <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span>a  <span style="color: #ffd700;">(</span>copy. <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">first</span> r<span style="color: #da70d6;">)</span> n<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+                  <span style="color: #87cefa;">(</span>e* <span style="color: #ffd700;">(</span>unify <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">first</span> a<span style="color: #da70d6;">)</span>
+                             <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">first</span> g<span style="color: #da70d6;">)</span>
+                             e<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+             <span style="color: #da70d6;">(</span><span style="color: #569cd6;">if</span> e*
+                 <span style="color: #87cefa;">(</span>prove5
+                  <span style="color: #ffd700;">(</span>link l g r e n<span style="color: #ffd700;">)</span>
+                  <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">append</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">rest</span> a<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">rest</span> g<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+                  db
+                  e*
+                  <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">1+</span> n<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+                 <span style="color: #87cefa;">(</span>back5 l g r e n<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=====</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> link-c <span style="color: #da70d6;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #87cefa;">(</span>x<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cadr</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cddr</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">cddr</span> x<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> clear-r <span style="color: #da70d6;">(</span>x<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">set-car</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">cddr</span> x<span style="color: #87cefa;">)</span> '<span style="color: #87cefa;">(</span><span style="color: #ffd700;">()</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> back6 <span style="color: #da70d6;">(</span>l g r e n c<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #569cd6;">and</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">consp</span> g<span style="color: #da70d6;">)</span>
+              <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">consp</span> r<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span>prove6 l g <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">rest</span> r<span style="color: #da70d6;">)</span> e n c<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">consp</span> l<span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span>prove6 <span style="color: #da70d6;">(</span>link-l l<span style="color: #da70d6;">)</span>
+                 <span style="color: #da70d6;">(</span>link-g l<span style="color: #da70d6;">)</span>
+                 <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">rest</span> <span style="color: #87cefa;">(</span>link-r l<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+                 <span style="color: #da70d6;">(</span>link-e l<span style="color: #da70d6;">)</span>
+                 <span style="color: #da70d6;">(</span>link-n l<span style="color: #da70d6;">)</span>
+                 <span style="color: #da70d6;">(</span>link-c l<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span>t nil<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> prove6 <span style="color: #da70d6;">(</span>l g r e n c<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">nilp</span> g<span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span>print-frame e<span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span>back6 l g r e n c<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">eq</span> '! <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">first</span> g<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span>clear-r c<span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span>prove6 c <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">rest</span> g<span style="color: #da70d6;">)</span> r e n c<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">eq</span> 'r! <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">first</span> g<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span>prove6 l <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">rest-of-rest</span> g<span style="color: #da70d6;">)</span> r e n
+                 <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">second</span> g<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">nilp</span> r<span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #569cd6;">if</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">nilp</span> l<span style="color: #da70d6;">)</span>
+             t
+             <span style="color: #da70d6;">(</span>back6 l g r e n c<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span>t
+         <span style="color: #ffd700;">(</span><span style="color: #569cd6;">let*</span> <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span>a  <span style="color: #ffd700;">(</span>copy. <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">first</span> r<span style="color: #da70d6;">)</span> n<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+                <span style="color: #87cefa;">(</span>e* <span style="color: #ffd700;">(</span>unify <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">first</span> a<span style="color: #da70d6;">)</span>
+                           <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">first</span> g<span style="color: #da70d6;">)</span>
+                           e<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span><span style="color: #569cd6;">if</span> e*
+               <span style="color: #87cefa;">(</span>prove6
+                <span style="color: #ffd700;">(</span>link l g r e n c<span style="color: #ffd700;">)</span>
+                <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">append</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">rest</span> a<span style="color: #da70d6;">)</span>
+                        `<span style="color: #da70d6;">(</span>r! ,l<span style="color: #da70d6;">)</span>
+                        <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">rest</span> g<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+                db
+                e*
+                <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">1+</span> n<span style="color: #ffd700;">)</span>
+                l<span style="color: #87cefa;">)</span>
+               <span style="color: #87cefa;">(</span>back6 l g r e n c<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=====</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> empty '<span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span>bottom<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> var '?<span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> <span style="color: #dcdcaa;">name</span> <span style="color: #dcdcaa;">second</span><span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> time <span style="color: #dcdcaa;">rest-of-rest</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> eqv <span style="color: #da70d6;">(</span>x y<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">or</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">eq</span> x y<span style="color: #87cefa;">)</span>
+      <span style="color: #87cefa;">(</span><span style="color: #569cd6;">and</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">numberp</span> x<span style="color: #ffd700;">)</span>
+           <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">numberp</span> y<span style="color: #ffd700;">)</span>
+           <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">=</span> x y<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> varp <span style="color: #da70d6;">(</span>x<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">and</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">consp</span> x<span style="color: #87cefa;">)</span>
+       <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">eq</span> var <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">first</span> x<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> lookup <span style="color: #da70d6;">(</span>v e<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">let</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>ident <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">name</span> v<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+        <span style="color: #ffd700;">(</span>tm    <span style="color: #da70d6;">(</span>time v<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">letrec</span>
+        <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span>loop <span style="color: #87cefa;">(</span>e<span style="color: #87cefa;">)</span>
+             <span style="color: #87cefa;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">not</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">consp</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">first-of-first</span> e<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+                    nil<span style="color: #ffd700;">)</span>
+                   <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #569cd6;">and</span>
+                     <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">eq</span>  ident <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">name</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">first-of-first</span> e<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+                     <span style="color: #87cefa;">(</span>eqv tm    <span style="color: #ffd700;">(</span>time <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">first-of-first</span> e<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+                    <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">first</span> e<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+                   <span style="color: #ffd700;">(</span>t <span style="color: #da70d6;">(</span>loop <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">rest</span> e<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+      <span style="color: #ffd700;">(</span>loop e<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> value <span style="color: #da70d6;">(</span>x e<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">if</span> <span style="color: #87cefa;">(</span>varp x<span style="color: #87cefa;">)</span>
+      <span style="color: #87cefa;">(</span><span style="color: #569cd6;">let</span> <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span>v <span style="color: #87cefa;">(</span>lookup x e<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+        <span style="color: #ffd700;">(</span><span style="color: #569cd6;">if</span> v
+            <span style="color: #da70d6;">(</span>value <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">second</span> v<span style="color: #87cefa;">)</span> e<span style="color: #da70d6;">)</span>
+            x<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+      x<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> copy. <span style="color: #da70d6;">(</span>x n<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">not</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">consp</span> x<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span> x<span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>varp x<span style="color: #ffd700;">)</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">append</span> x n<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span>t <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span> <span style="color: #da70d6;">(</span>copy. <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first</span> x<span style="color: #87cefa;">)</span> n<span style="color: #da70d6;">)</span>
+                 <span style="color: #da70d6;">(</span>copy. <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">rest</span> x<span style="color: #87cefa;">)</span> n<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> bind <span style="color: #da70d6;">(</span>x y e<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">cons</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">list</span> x y<span style="color: #87cefa;">)</span> e<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> unify <span style="color: #da70d6;">(</span>x y e<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">let</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>x <span style="color: #da70d6;">(</span>value x e<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+        <span style="color: #ffd700;">(</span>y <span style="color: #da70d6;">(</span>value y e<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">eq</span> x y<span style="color: #da70d6;">)</span> e<span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span>varp x<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span>bind x y e<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span>varp y<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span>bind y x e<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span><span style="color: #da70d6;">(</span><span style="color: #569cd6;">or</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">not</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">consp</span> x<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+               <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">not</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">consp</span> y<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+           nil<span style="color: #ffd700;">)</span>
+          <span style="color: #ffd700;">(</span>t <span style="color: #da70d6;">(</span><span style="color: #569cd6;">let</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>e* <span style="color: #da70d6;">(</span>unify <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first</span> x<span style="color: #87cefa;">)</span>
+                              <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first</span> y<span style="color: #87cefa;">)</span>
+                              e<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+               <span style="color: #87cefa;">(</span><span style="color: #569cd6;">and</span> e*
+                    <span style="color: #ffd700;">(</span>unify <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">rest</span> x<span style="color: #da70d6;">)</span>
+                           <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">rest</span> y<span style="color: #da70d6;">)</span>
+                           e*<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> resolve <span style="color: #da70d6;">(</span>x e<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">cond</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">not</span> <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">consp</span> x<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span> x<span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>varp x<span style="color: #ffd700;">)</span>
+         <span style="color: #ffd700;">(</span><span style="color: #569cd6;">let</span> <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span>v <span style="color: #ffd700;">(</span>value x e<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+           <span style="color: #da70d6;">(</span><span style="color: #569cd6;">if</span> <span style="color: #87cefa;">(</span>varp v<span style="color: #87cefa;">)</span>
+               v
+               <span style="color: #87cefa;">(</span>resolve v e<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+        <span style="color: #87cefa;">(</span>t <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">cons</span>
+            <span style="color: #da70d6;">(</span>resolve <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first</span> x<span style="color: #87cefa;">)</span> e<span style="color: #da70d6;">)</span>
+            <span style="color: #da70d6;">(</span>resolve <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">rest</span> x<span style="color: #87cefa;">)</span> e<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> print-frame <span style="color: #da70d6;">(</span>e<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">letrec</span>
+      <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>loop <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span>first-ee . rest-ee<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+          <span style="color: #da70d6;">(</span><span style="color: #569cd6;">when</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">consp</span> rest-ee<span style="color: #87cefa;">)</span>
+            <span style="color: #87cefa;">(</span><span style="color: #569cd6;">when</span> <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">nilp</span> <span style="color: #da70d6;">(</span>time <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first</span> first-ee<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+              <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">"{} = {}"</span>
+                     <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">second</span> <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first</span> first-ee<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span>
+                     <span style="color: #da70d6;">(</span>resolve <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">first</span> first-ee<span style="color: #87cefa;">)</span> e<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+            <span style="color: #87cefa;">(</span>loop rest-ee<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span>loop e<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">terpri</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">=============</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> db nil<span style="color: #ffd700;">)</span>
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">def</span> goals nil<span style="color: #ffd700;">)</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> prove5-example <span style="color: #da70d6;">()</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">let</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>db
+         '<span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>edge a b<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>edge a f<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>edge a g<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>edge b c<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>edge b d<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>edge c d<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>edge c e<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>edge g h<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>edge d h<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>edge h e<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>edge h f<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>path <span style="color: #da70d6;">(</span>? A<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span>? B<span style="color: #da70d6;">)</span>
+             <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span>? A<span style="color: #87cefa;">)</span> <span style="color: #87cefa;">(</span>? B<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+            <span style="color: #ffd700;">(</span>edge <span style="color: #da70d6;">(</span>? A<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span>? B<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>path <span style="color: #da70d6;">(</span>? A<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span>? B<span style="color: #da70d6;">)</span>
+             <span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span>? A<span style="color: #87cefa;">)</span> . <span style="color: #87cefa;">(</span>? CB<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+            <span style="color: #ffd700;">(</span>edge <span style="color: #da70d6;">(</span>? A<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span>? C<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+            <span style="color: #ffd700;">(</span>path <span style="color: #da70d6;">(</span>? C<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span>? B<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span>? CB<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>tasty bananas<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>tasty bread<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>tasty chocolate<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>healthy bananas<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>healthy porridge<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>healthy bread<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>likes john <span style="color: #da70d6;">(</span>? X<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+            <span style="color: #ffd700;">(</span>healthy <span style="color: #da70d6;">(</span>? X<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+            <span style="color: #ffd700;">(</span>tasty <span style="color: #da70d6;">(</span>? X<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+        <span style="color: #ffd700;">(</span>goals '<span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>likes john <span style="color: #da70d6;">(</span>? X<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+                 <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>path a f <span style="color: #da70d6;">(</span>? P<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">"==&gt; prove5 examples"</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">"Database:"</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">pretty-display</span> db<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">terpri</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">mapc</span>
+     <span style="color: #ffd700;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #da70d6;">(</span>goal<span style="color: #da70d6;">)</span>
+         <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">"Goal: {}"</span> goal<span style="color: #da70d6;">)</span>
+         <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">"Ans:  {}\n====="</span>
+                <span style="color: #87cefa;">(</span>prove5 '<span style="color: #ffd700;">()</span> goal db empty 1<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     goals<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">==================</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> prove6-example <span style="color: #da70d6;">()</span>
+  <span style="color: #da70d6;">(</span><span style="color: #569cd6;">let</span> <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>db
+         '<span style="color: #da70d6;">(</span><span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>exists foo<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span> <span style="color: #6a9955;">; </span><span style="color: #6a9955;">exists(foo).</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>exists bar<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span> <span style="color: #6a9955;">; </span><span style="color: #6a9955;">exists(bar).</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>exists baz<span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span> <span style="color: #6a9955;">; </span><span style="color: #6a9955;">exists(baz).</span>
+           <span style="color: #6a9955;">;; </span><span style="color: #6a9955;">eq(X, X).</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">eq</span> <span style="color: #da70d6;">(</span>? X<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span>? X<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #6a9955;">;; </span><span style="color: #6a9955;">neq(X, Y) :- eq(X, Y), !, fail.</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>neq <span style="color: #da70d6;">(</span>? X<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span>? Y<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+            <span style="color: #ffd700;">(</span><span style="color: #dcdcaa;">eq</span> <span style="color: #da70d6;">(</span>? X<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span>? Y<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span> ! fail<span style="color: #87cefa;">)</span>
+           <span style="color: #6a9955;">;; </span><span style="color: #6a9955;">neq(X,Y).</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>neq <span style="color: #da70d6;">(</span>? X<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span>? Y<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+        <span style="color: #ffd700;">(</span>goals
+         '<span style="color: #da70d6;">(</span><span style="color: #6a9955;">;; </span><span style="color: #6a9955;">exists(X), exists(Y), neq(X, Y).</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>exists <span style="color: #da70d6;">(</span>? X<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+            <span style="color: #ffd700;">(</span>exists <span style="color: #da70d6;">(</span>? Y<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+            <span style="color: #ffd700;">(</span>neq <span style="color: #da70d6;">(</span>? X<span style="color: #da70d6;">)</span> <span style="color: #da70d6;">(</span>? Y<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+           <span style="color: #6a9955;">;; </span><span style="color: #6a9955;">bagof(X, exists(X), Bag).</span>
+           <span style="color: #87cefa;">(</span><span style="color: #ffd700;">(</span>exists <span style="color: #da70d6;">(</span>? X<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">"==&gt; prove6 examples"</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">"Database:"</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">pretty-display</span> db<span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">terpri</span><span style="color: #87cefa;">)</span>
+    <span style="color: #87cefa;">(</span><span style="color: #dcdcaa;">mapc</span>
+     <span style="color: #ffd700;">(</span><span style="color: #569cd6;">fn</span> <span style="color: #da70d6;">(</span>goal<span style="color: #da70d6;">)</span>
+         <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">"Goal: {}"</span> goal<span style="color: #da70d6;">)</span>
+         <span style="color: #da70d6;">(</span><span style="color: #dcdcaa;">print</span> <span style="color: #ce9178;">"Ans:  {}\n====="</span>
+                <span style="color: #87cefa;">(</span>prove6 '<span style="color: #ffd700;">()</span> goal db empty 1 '<span style="color: #ffd700;">()</span><span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+     goals<span style="color: #87cefa;">)</span><span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+
+<span style="color: #6a9955;">;; </span><span style="color: #6a9955;">======</span>
+
+<span style="color: #ffd700;">(</span><span style="color: #569cd6;">defn</span> run-examples <span style="color: #da70d6;">()</span>
+  <span style="color: #da70d6;">(</span>prove6-example<span style="color: #da70d6;">)</span>
+  <span style="color: #da70d6;">(</span>prove5-example<span style="color: #da70d6;">)</span><span style="color: #ffd700;">)</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Lucas S. Vieira</p>
+<p class="date">Created: 2022-10-24 seg 00:27</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
