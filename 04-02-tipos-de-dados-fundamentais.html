@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
 <head>
-<!-- 2022-10-23 dom 23:28 -->
+<!-- 2022-10-24 seg 00:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Tipos de dados fundamentais</title>
@@ -225,13 +225,18 @@
 <li><a href="#orgf5a10c7">12. <span class="todo TODO">TODO</span> Conversão para caractere</a></li>
 <li><a href="#org3f0ea66">13. Recuperação de símbolo cru</a></li>
 <li><a href="#orgeae756c">14. <span class="todo TODO">TODO</span> Streams</a></li>
-<li><a href="#org0f30903">15. Impressão simples</a>
+<li><a href="#org006accb">15. <span class="todo TODO">TODO</span> Vetores</a>
 <ul>
-<li><a href="#org0975106">15.1. Impressão simples de objetos</a></li>
-<li><a href="#orged1a990">15.2. Impressão de números</a></li>
+<li><a href="#org62e3718">15.1. Criação de vetores</a></li>
 </ul>
 </li>
-<li><a href="#org3b7986d">16. Construtores de símbolos constantes</a></li>
+<li><a href="#org0f30903">16. Impressão simples</a>
+<ul>
+<li><a href="#org0975106">16.1. Impressão simples de objetos</a></li>
+<li><a href="#orged1a990">16.2. Impressão de números</a></li>
+</ul>
+</li>
+<li><a href="#org3b7986d">17. Construtores de símbolos constantes</a></li>
 </ul>
 </div>
 </div>
@@ -497,7 +502,7 @@ seja <code>nil</code> ou  outra célula <i>cons</i>, que recursivamente  deverá
 mesmo princípio. Assim, a lista
 </p>
 
-<pre class="example" id="org86e987e">
+<pre class="example" id="org49529cb">
 (a . (b . (c . nil)))
 </pre>
 
@@ -551,7 +556,7 @@ Se nosso macro  se chama <code>maj_list!</code>, então podemos  identificar as 
 situações dessa forma, sintaticamente:
 </p>
 
-<pre class="example" id="orgbbb2056">
+<pre class="example" id="orge34e538">
 1. maj_list!(x)       =&gt; Maj::cons(x, Maj::nil())
 2. maj_list!(x, r...) =&gt; Maj::cons(x, maj_list!(r...))
 </pre>
@@ -601,7 +606,7 @@ objetos &#x2013; em  outras palavras, listas que não terminam  com o símbolo
 <code>nil</code>:
 </p>
 
-<pre class="example" id="org0fda5d6">
+<pre class="example" id="org9e67f41">
 (a . (b . (c . d)))
 </pre>
 
@@ -610,7 +615,7 @@ Esse tipo de lista pode  ser escrita utilizando uma sintaxe abreviada,
 da seguinte forma:
 </p>
 
-<pre class="example" id="org51bfd65">
+<pre class="example" id="org0fddb95">
 (a b c . d)
 </pre>
 
@@ -666,7 +671,7 @@ Por exemplo, suponhamos a função <code>err</code>.  O retorno dessa função p
 visto como adequando-se ao formato
 </p>
 
-<pre class="example" id="org7895422">
+<pre class="example" id="org6c8a624">
 (lit error fmt . rest)
 </pre>
 
@@ -704,7 +709,7 @@ uma  lista  <code>(a b c)</code>.  Esta operação  produzirá,  então,  o  seg
 resultado:
 </p>
 
-<pre class="example" id="orgf16dff3">
+<pre class="example" id="org9b622ef">
 (lit error "foo" . (a b c))
 </pre>
 
@@ -714,7 +719,7 @@ pontuada também é uma lista,  podemos reescrever a lista pontuada como
 a lista adequada que acabou por tornar-se:
 </p>
 
-<pre class="example" id="org7cde4ba">
+<pre class="example" id="org4809714">
 (lit error "foo" a b c)
 </pre>
 </div>
@@ -1202,10 +1207,91 @@ enquanto, o código a seguir serve de espaço reservado.
 </div>
 </div>
 
+<div id="outline-container-org006accb" class="outline-2">
+<h2 id="org006accb"><span class="section-number-2">15.</span> <span class="todo TODO">TODO</span> Vetores</h2>
+<div class="outline-text-2" id="text-15">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #c586c0;">#[derive(Debug, Trace, Finalize, Clone)]</span>
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">enum</span> <span style="color: #4ec9b0;">MajVector</span> {
+    <span style="color: #4ec9b0;">Integer</span>(<span style="color: #4ec9b0;">GcCell</span>&lt;<span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">i64</span>&gt;&gt;),
+    <span style="color: #4ec9b0;">Float</span>(<span style="color: #4ec9b0;">GcCell</span>&lt;<span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">f64</span>&gt;&gt;),
+    <span style="color: #4ec9b0;">Char</span>(<span style="color: #4ec9b0;">GcCell</span>&lt;<span style="color: #4ec9b0;">String</span>&gt;),
+    <span style="color: #4ec9b0;">Any</span>(<span style="color: #4ec9b0;">GcCell</span>&lt;<span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;&gt;&gt;)
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #c586c0;">#[derive(Debug, PartialEq)]</span>
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">enum</span> <span style="color: #4ec9b0;">MajVectorType</span> {
+    <span style="color: #4ec9b0;">Integer</span>,
+    <span style="color: #4ec9b0;">Float</span>,
+    <span style="color: #4ec9b0;">Char</span>,
+    <span style="color: #4ec9b0;">Any</span>
+}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org62e3718" class="outline-3">
+<h3 id="org62e3718"><span class="section-number-3">15.1.</span> Criação de vetores</h3>
+<div class="outline-text-3" id="text-15-1">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">vector</span>(<span style="color: #9cdcfe;">vtype</span>: <span style="color: #4ec9b0;">MajVectorType</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(
+            <span style="color: #569cd6;">match</span> vtype {
+                <span style="color: #4ec9b0;">MajVectorType</span>::<span style="color: #4ec9b0;">Integer</span> =&gt; {
+                    <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Integer</span>(
+                        <span style="color: #4ec9b0;">GcCell</span>::new(<span style="color: #4ec9b0;">Vec</span>::new()))
+                },
+                <span style="color: #4ec9b0;">MajVectorType</span>::<span style="color: #4ec9b0;">Float</span> =&gt; {
+                    <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Float</span>(
+                        <span style="color: #4ec9b0;">GcCell</span>::new(<span style="color: #4ec9b0;">Vec</span>::new()))
+                },
+                <span style="color: #4ec9b0;">MajVectorType</span>::<span style="color: #4ec9b0;">Char</span> =&gt; {
+                    <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Char</span>(
+                        <span style="color: #4ec9b0;">GcCell</span>::new(<span style="color: #4ec9b0;">String</span>::new()))
+                },
+                <span style="color: #4ec9b0;">MajVectorType</span>::<span style="color: #4ec9b0;">Any</span> =&gt; {
+                    <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Any</span>(
+                        <span style="color: #4ec9b0;">GcCell</span>::new(<span style="color: #4ec9b0;">Vec</span>::new()))
+                },
+            }))
+    }
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #4ec9b0;">Maj</span> {
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">vector_integer</span>(<span style="color: #9cdcfe;">vec</span>: <span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">i64</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(
+            <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Integer</span>(
+                <span style="color: #4ec9b0;">GcCell</span>::new(vec.clone()))))
+    }
+    
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">vector_float</span>(<span style="color: #9cdcfe;">vec</span>: <span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">f64</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(
+            <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Float</span>(
+                <span style="color: #4ec9b0;">GcCell</span>::new(vec.clone()))))
+    }
+
+    <span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">vector_any</span>(<span style="color: #9cdcfe;">vec</span>: <span style="color: #4ec9b0;">Vec</span>&lt;<span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+        <span style="color: #4ec9b0;">Gc</span>::new(<span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(
+            <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Any</span>(
+                <span style="color: #4ec9b0;">GcCell</span>::new(vec.clone()))))
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
 
 <div id="outline-container-org0f30903" class="outline-2">
-<h2 id="org0f30903"><span class="section-number-2">15.</span> Impressão simples</h2>
-<div class="outline-text-2" id="text-15">
+<h2 id="org0f30903"><span class="section-number-2">16.</span> Impressão simples</h2>
+<div class="outline-text-2" id="text-16">
 <div class="org-src-container">
 <pre class="src src-rust"><span style="color: #569cd6;">use</span> <span style="color: #569cd6;">std</span>::fmt;
 </pre>
@@ -1213,8 +1299,8 @@ enquanto, o código a seguir serve de espaço reservado.
 </div>
 
 <div id="outline-container-org0975106" class="outline-3">
-<h3 id="org0975106"><span class="section-number-3">15.1.</span> Impressão simples de objetos</h3>
-<div class="outline-text-3" id="text-15-1">
+<h3 id="org0975106"><span class="section-number-3">16.1.</span> Impressão simples de objetos</h3>
+<div class="outline-text-3" id="text-16-1">
 <div class="org-src-container">
 <pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Display</span> <span style="color: #569cd6;">for</span> <span style="color: #4ec9b0;">Maj</span> {
     <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">fmt</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">f</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Formatter</span>&lt;'<span style="color: #9cdcfe;">_</span>&gt;) -&gt; <span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Result</span> {
@@ -1260,8 +1346,8 @@ verificada sob um contexto.
 </div>
 
 <div id="outline-container-orged1a990" class="outline-3">
-<h3 id="orged1a990"><span class="section-number-3">15.2.</span> Impressão de números</h3>
-<div class="outline-text-3" id="text-15-2">
+<h3 id="orged1a990"><span class="section-number-3">16.2.</span> Impressão de números</h3>
+<div class="outline-text-3" id="text-16-2">
 <div class="org-src-container">
 <pre class="src src-rust"><span style="color: #569cd6;">impl</span> <span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Display</span> <span style="color: #569cd6;">for</span> <span style="color: #4ec9b0;">MajNumber</span> {
     <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">fmt</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">self</span>, <span style="color: #9cdcfe;">f</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Formatter</span>&lt;'<span style="color: #9cdcfe;">_</span>&gt;) -&gt; <span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Result</span> {
@@ -1287,8 +1373,8 @@ verificada sob um contexto.
 </div>
 
 <div id="outline-container-org3b7986d" class="outline-2">
-<h2 id="org3b7986d"><span class="section-number-2">16.</span> Construtores de símbolos constantes</h2>
-<div class="outline-text-2" id="text-16">
+<h2 id="org3b7986d"><span class="section-number-2">17.</span> Construtores de símbolos constantes</h2>
+<div class="outline-text-2" id="text-17">
 <div class="org-src-container">
 <pre class="src src-rust"><span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #4ec9b0;">MajRawSym</span>;
 <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">utils</span>::sym_from_raw;
@@ -1364,7 +1450,7 @@ verificada sob um contexto.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Lucas S. Vieira</p>
-<p class="date">Created: 2022-10-23 dom 23:28</p>
+<p class="date">Created: 2022-10-24 seg 00:27</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
