@@ -1,0 +1,820 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+<head>
+<!-- 2022-10-23 dom 23:49 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aplicação</title>
+<meta name="author" content="Lucas S. Vieira" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="./main.css" />
+<link rel="stylesheet" type="text/css" href="./syntax.css" />
+<link id="theme-css" rel="stylesheet" type="text/css" href="./dark-theme.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="../img/cat-i-mage.jpg">
+<meta name="theme-color" content="#14171e">
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="08-interpretador.html"> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Aplicação</h1>
+<p>
+Arquivo: <code>evaluator/application.rs</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">use</span> <span style="color: #569cd6;">gc</span>::<span style="color: #4ec9b0;">Gc</span>;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::{
+    maj_list,
+    <span style="color: #569cd6;">core</span>::{ <span style="color: #4ec9b0;">Maj</span>, <span style="color: #4ec9b0;">MajState</span> },
+    <span style="color: #569cd6;">axioms</span>::{
+        <span style="color: #569cd6;">predicates</span>::*,
+        <span style="color: #569cd6;">primitives</span>::*
+    },
+};
+
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">utils</span>::{
+    <span style="color: #4ec9b0;">STACK_RED_ZONE</span>,
+    <span style="color: #4ec9b0;">STACK_PER_RECURSION</span>
+};
+
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">super</span>::maj_eval;
+</pre>
+</div>
+
+<div id="outline-container-org52e7ebd" class="outline-2">
+<h2 id="org52e7ebd"><span class="section-number-2">1.</span> <span class="todo TODO">TODO</span> Aplicação genérica</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>Uma <i>primitiva</i> pode ser despachada para a aplicação de primitivas;</li>
+<li>Um <i>macro</i>  deverá ser aplicado  como um procedimento normal,  mas seu
+resultado deve ser <i>interpretado</i> logo em seguida;</li>
+<li>Uma <i>clausura</i>  deverá ser  aplicada a  seus argumentos.  Isso envolve
+processos mais  complexos como <i>currying</i> e  desestruturação, portanto
+esse processo deverá ser delegado para sua própria função;</li>
+<li>Caso nenhuma  das situações se  encaixe, então teremos uma  falha de
+aplicação desconhecida.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_apply</span>(
+    <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #4ec9b0;">MajState</span>,
+    <span style="color: #9cdcfe;">fun</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+    <span style="color: #9cdcfe;">args</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+    <span style="color: #9cdcfe;">env</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;
+) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">primitives</span>
+    <span style="color: #569cd6;">if</span> maj_primitivep(fun.clone()).to_bool() {
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">name</span> = maj_car(maj_cdr(maj_cdr(fun)));
+        apply_primitive(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, name, args, env)
+    }
+
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">closure</span>
+    <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> maj_closurep(fun.clone()).to_bool() {
+        maj_apply_closure(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, fun, args, env)
+    }
+
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">macro</span>
+    <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> maj_macrop(fun.clone()).to_bool() {
+        <span style="color: #569cd6;">let</span> (expr, can_evaluate) =
+            expand_macro(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, fun, args,
+                         env.clone());
+        <span style="color: #569cd6;">if</span> can_evaluate {
+            <span style="color: #569cd6;">stacker</span>::maybe_grow(
+                <span style="color: #4ec9b0;">STACK_RED_ZONE</span>,
+                <span style="color: #4ec9b0;">STACK_PER_RECURSION</span>,
+                || maj_eval(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, expr, env))
+        } <span style="color: #569cd6;">else</span> {
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Error</span>
+            expr
+        }
+    }
+
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">otherwise, fail</span>
+    <span style="color: #569cd6;">else</span> {
+        maj_err(
+            <span style="color: #4ec9b0;">Maj</span>::string(<span style="color: #ce9178;">"Cannot apply {} to args {}"</span>),
+            <span style="color: #c586c0;">maj_list!</span>(fun, args))
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orged19ac3" class="outline-2">
+<h2 id="orged19ac3"><span class="section-number-2">2.</span> <span class="todo TODO">TODO</span> Aplicação de clausuras</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+A  aplicação de  uma clausura  em  uma lista  de argumentos  é um  dos
+processos-chave  da interpretação  da  linguagem.  Aqui, tomamos  como
+argumento  a  clausura  em  si,  que chamamos  <code>fun</code>,  e  uma  lista  de
+argumentos <i>que já tenham sido interpretados</i>  &#x2013; a essa lista daremos o
+nome <code>args</code>.
+</p>
+
+<p>
+Primeiramente, verificamos se <code>fun</code> é uma clausura <i>válida</i> &#x2013; não por ser
+um  literal  designando clausura,  mas  por  ser  uma lista  de  cinco
+elementos.
+</p>
+
+<p>
+Podemos relembrar que uma clausura possui a sintaxe
+</p>
+
+<pre class="example" id="org6b3b9ea">
+(lit closure &lt;env&gt; &lt;lambda-list&gt; (&lt;body&gt;))
+</pre>
+
+<p>
+Recuperamos o contexto  capturado pela função (<code>env</code>),  a lista<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup> de
+símbolos que designam os argumentos  da função (<code>lambda-list</code>) e o corpo
+da função a ser interpretado (<code>body</code>).
+</p>
+
+<p>
+O corpo  da função pode  possuir uma  ou mais expressões,  portanto, é
+necessário  "corrigi-lo"  antes  da aplicação,  adicionando-se  um  <code>do</code>
+implícito.
+</p>
+
+<p>
+Se a <i>quantidade de argumentos fornecidos</i> for nula quando a função pede
+um número de argumentos superior a  zero, lançamos um erro. Isso evita
+uma possível aplicação parcial com zero argumentos.
+</p>
+
+<p>
+A  seguir, fazemos  <i>ligações</i> entre  os  símbolos da  <code>lambda-list</code> e  os
+argumentos, até onde  for possível, tomando o  contexto capturado como
+base.  Caso ainda  sobre  algum  símbolo para  ser  <i>ligado</i>, isso  será
+indicativo de que estamos tratando de <i>aplicação parcial</i>.
+</p>
+
+<p>
+Se  o processo  de <i>ligação</i>  apresentar um  erro no  lugar do  contexto
+extendido, interrompemos a aplicação imediatamente e retornamo-no.
+</p>
+
+<p>
+Logo  após, tratamos  a <i>aplicação  parcial</i>. Se  a lista  de argumentos
+ainda não-ligados  não for  <i>vazia</i>, então retornamos  imediatamente uma
+nova  clausura,  gerada <i>ad-hoc</i>:  o  <i>contexto</i>  capturado  por ela  é  o
+<i>contexto extendido</i>,  a <i>lista de  argumentos</i> da clausura  será composta
+pelos exatos mesmos argumentos que não  foram ligados, na ordem em que
+apareciam originalmente. O corpo da função continuará sendo o mesmo.
+</p>
+
+<p>
+Por  fim, a  aplicação total  de  uma função  representa uma  operação
+simples:  basta  interpretar o  <i>corpo</i>  da  função, usando  o  <i>contexto
+extendido</i>  pelo processo  de ligação  dos argumentos  aos símbolos  da
+<code>lambda-list</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_apply_closure</span>(
+    <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #4ec9b0;">MajState</span>,
+    <span style="color: #9cdcfe;">fun</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+    <span style="color: #9cdcfe;">args</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+    <span style="color: #9cdcfe;">lexenv</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;
+) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #569cd6;">environment</span>::maj_env_union;
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">length</span> = maj_length(fun.clone()).to_integer().unwrap();
+    <span style="color: #569cd6;">if</span> length != 5 {
+        <span style="color: #569cd6;">return</span> maj_err(
+            <span style="color: #4ec9b0;">Maj</span>::string(<span style="color: #ce9178;">"Invalid syntax: {}"</span>),
+            <span style="color: #c586c0;">maj_list!</span>(fun));
+    }
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">(lit closure &lt;env&gt; lambda-list . body)</span>
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">env</span> = maj_car(maj_cdr(maj_cdr(fun.clone())));
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">lambda_list</span> =
+        maj_car(maj_cdr(maj_cdr(maj_cdr(fun.clone()))));
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">body</span> =
+        maj_car(maj_cdr(maj_cdr(maj_cdr(maj_cdr(fun.clone())))));
+
+    <span style="color: #569cd6;">if</span> maj_nilp(args.clone()).to_bool() &amp;&amp;
+        !maj_nilp(lambda_list.clone()).to_bool() {
+            <span style="color: #569cd6;">return</span> maj_err(
+                <span style="color: #4ec9b0;">Maj</span>::string(
+                    <span style="color: #ce9178;">"Cannot curry function without arguments"</span>),
+                <span style="color: #4ec9b0;">Maj</span>::nil());
+        }
+
+    <span style="color: #569cd6;">if</span> maj_consp(lambda_list.clone()).to_bool() &amp;&amp;
+    maj_proper_list_p(lambda_list.clone()).to_bool() {
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">ll_len</span>   = maj_length(lambda_list.clone())
+            .to_integer();
+        <span style="color: #569cd6;">match</span> ll_len {
+            <span style="color: #4ec9b0;">Some</span>(ll_len) =&gt; {
+                <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">args_len</span> = maj_length(args.clone())
+                    .to_integer()
+                    .unwrap();
+                <span style="color: #569cd6;">if</span> args_len &gt; ll_len {
+                    <span style="color: #569cd6;">return</span> maj_err(<span style="color: #4ec9b0;">Maj</span>::string(
+                        <span style="color: #ce9178;">"Too many arguments in function call"</span>),
+                                   <span style="color: #4ec9b0;">Maj</span>::nil());
+                }
+            },
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Dotted list</span>
+            <span style="color: #4ec9b0;">None</span> =&gt; {},
+        }
+    }
+
+    <span style="color: #569cd6;">let</span> (uargs, extenv) = maj_bind(lambda_list, args, env.clone());
+
+    <span style="color: #569cd6;">if</span> maj_errorp(extenv.clone()).to_bool() {
+        env
+    } <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> !maj_nilp(uargs.clone()).to_bool() {
+        <span style="color: #c586c0;">maj_list!</span>(<span style="color: #4ec9b0;">Maj</span>::lit(),
+                  <span style="color: #4ec9b0;">Maj</span>::closure(),
+                  extenv,
+                  uargs,
+                  body)
+    } <span style="color: #569cd6;">else</span> {
+        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Implicit `do`</span>
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">body</span> = <span style="color: #4ec9b0;">Maj</span>::cons(<span style="color: #4ec9b0;">Maj</span>::do_sym(), body);
+        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Unite extended environment with lexical environment</span>
+        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">(on evaluation only)</span>
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">extenv</span> = maj_env_union(extenv, lexenv);
+        maj_eval(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, body, extenv)
+    }
+}
+</pre>
+</div>
+
+<p>
+A função a seguir realiza o  processo genérico de <i>ligação</i> dos símbolos
+da <code>lambda-list</code> aos <i>argumentos</i>.
+</p>
+
+<p>
+Essa função opera de forma recursiva, e retorna dois valores:
+</p>
+
+<ol class="org-ol">
+<li>Uma lista de símbolos <i>não-ligados</i> na <code>lambda-list</code>, caso existam;</li>
+<li>O novo contexto após sua extensão, <b>ou</b> um objeto de erro.</li>
+</ol>
+
+<p>
+Essa função também  é responsável pelo processo  de <i>desestruturação</i> de
+argumentos, quando  a <code>lambda-list</code>  possui sub-listas. Esse  processo é
+delegado a outra função que veremos a seguir.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_bind</span>(
+    <span style="color: #9cdcfe;">lambda_list</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+    <span style="color: #9cdcfe;">args</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+    <span style="color: #9cdcfe;">env</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;
+) -&gt; (<span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;, <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #569cd6;">environment</span>::maj_env_push;
+
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">-1. lambda_list is nil.</span>
+    <span style="color: #569cd6;">if</span> maj_nilp(lambda_list.clone()).to_bool() {
+        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">-1.1. If (not (nilp args)), then error</span>
+        <span style="color: #569cd6;">if</span> !maj_nilp(args.clone()).to_bool() {
+            <span style="color: #569cd6;">return</span>
+                (<span style="color: #4ec9b0;">Maj</span>::nil(),
+                 maj_err(
+                     <span style="color: #4ec9b0;">Maj</span>::string(<span style="color: #ce9178;">"Arguments {} exceeded lambda-list"</span>),
+                     <span style="color: #c586c0;">maj_list!</span>(args.clone())));
+        }
+        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">-1.X. Otherwise, return (lambda_list, env).</span>
+        <span style="color: #6a9955;">//      </span><span style="color: #6a9955;">Everything is already bound.</span>
+        <span style="color: #569cd6;">else</span> {
+            <span style="color: #569cd6;">return</span> (lambda_list, env);
+        }
+    }
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">0. args is nil.</span>
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">0.1. Return (lambda_list, env) as well.</span>
+    <span style="color: #6a9955;">//      </span><span style="color: #6a9955;">This does currying.</span>
+    <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> maj_nilp(args.clone()).to_bool() {
+        <span style="color: #569cd6;">return</span> (lambda_list, env);
+    }
+
+    <span style="color: #569cd6;">match</span> <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*lambda_list.clone() {
+        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">1. lambda_list is a cons.</span>
+        <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Cons</span> { car, cdr } =&gt; {
+            <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">extenv</span> =
+                <span style="color: #569cd6;">if</span> maj_consp(car.clone()).to_bool() {
+                    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">If car is a cons: Do destructuring.</span>
+                    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">newenv</span> =
+                        maj_destructuring_bind(car.clone(),
+                                               maj_car(args.clone()),
+                                               env.clone());
+                    <span style="color: #569cd6;">if</span> maj_errorp(newenv.clone()).to_bool() {
+                        <span style="color: #569cd6;">return</span> (<span style="color: #4ec9b0;">Maj</span>::nil(), newenv);
+                    }
+                    newenv
+                } <span style="color: #569cd6;">else</span> {
+                    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">If car is not a cons: Normal binding.</span>
+                    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Bind car to (car args) in the lexenv.</span>
+                    maj_env_push(env.clone(),
+                                 car.clone(),
+                                 maj_car(args.clone()))
+                };
+
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Recur with extended environment, cdr as</span>
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">lambda_list, (cdr args) as args</span>
+            maj_bind(cdr.clone(), maj_cdr(args), extenv)
+        },
+        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">2. lambda_list is a symbol.</span>
+        <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(_) =&gt; {
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">TODO: if (last args) is (&amp;), we need to curry</span>
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">while binding (butlast args) to the symbol.</span>
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Then return the symbol itself as lambda-list.</span>
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">The binding incurs in</span>
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">(append (lookup ,symbol) (butlast args)).</span>
+
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">If (last args) is not (&amp;),</span>
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Both leave no unbound syms in lambda-list.</span>
+            (<span style="color: #4ec9b0;">Maj</span>::nil(),
+             maj_env_push(
+                 env.clone(),
+                 lambda_list,
+                 <span style="color: #6a9955;">// </span><span style="color: #6a9955;">2.1. If (not (nilp args)) then bind args</span>
+                 <span style="color: #569cd6;">if</span> !maj_nilp(args.clone()).to_bool() {
+                     args
+                 }
+                 <span style="color: #6a9955;">// </span><span style="color: #6a9955;">2.2. If (nilp args) then bind nil</span>
+                 <span style="color: #569cd6;">else</span> {
+                     <span style="color: #4ec9b0;">Maj</span>::nil()
+                 }))
+        },
+        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">X. Otherwise, error. Only cons and symbols allowed.</span>
+        _ =&gt; (<span style="color: #4ec9b0;">Maj</span>::nil(),
+              maj_err(
+                   <span style="color: #4ec9b0;">Maj</span>::string(
+                      <span style="color: #ce9178;">"Lambda list can only have symbols or conses"</span>),
+                  <span style="color: #4ec9b0;">Maj</span>::nil()))
+    }
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_destructuring_bind</span>(<span style="color: #9cdcfe;">list</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+                          <span style="color: #9cdcfe;">args</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+                          <span style="color: #9cdcfe;">env</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #569cd6;">environment</span>::maj_env_push;
+
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">list_nilp</span> = maj_nilp(list.clone()).to_bool();
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">args_nilp</span> = maj_nilp(args.clone()).to_bool();
+
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Do not allow leftover args</span>
+    <span style="color: #569cd6;">if</span> list_nilp &amp;&amp; !args_nilp {
+        <span style="color: #569cd6;">return</span> maj_err(
+            <span style="color: #4ec9b0;">Maj</span>::string(<span style="color: #ce9178;">"Arguments exceed destructuring pattern"</span>),
+            <span style="color: #4ec9b0;">Maj</span>::nil());
+    }
+
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Leftover symbols, though, should bind to nil.</span>
+    <span style="color: #569cd6;">if</span> !list_nilp &amp;&amp; args_nilp {
+            <span style="color: #569cd6;">return</span> maj_bind_rec_nil(list, env);
+    }
+
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">When both are nil, we are done</span>
+    <span style="color: #569cd6;">if</span> list_nilp &amp;&amp; args_nilp {
+        <span style="color: #569cd6;">return</span> env;
+    }
+
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">When list is a symbol and args is not, bind list</span>
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">to args and return</span>
+    <span style="color: #569cd6;">if</span> !maj_consp(list.clone()).to_bool() {
+        <span style="color: #569cd6;">return</span> maj_env_push(env, list, args);
+    }
+
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">When args is a non-nil symbol, fail immediately!</span>
+    <span style="color: #569cd6;">if</span> !maj_consp(args.clone()).to_bool() {
+        <span style="color: #569cd6;">return</span> maj_err(
+            <span style="color: #4ec9b0;">Maj</span>::string(<span style="color: #ce9178;">"Cannot destructure atomic value {}"</span>),
+            <span style="color: #c586c0;">maj_list!</span>(maj_car(args.clone())));
+    }
+
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Otherwise, there is destructuring to do.</span>
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">sym</span> = maj_car(list.clone());
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">arg</span> = maj_car(args.clone());
+
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">extenv</span> =
+        <span style="color: #569cd6;">if</span> maj_consp(sym.clone()).to_bool() {
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">If sym is a cons, recursively destructure</span>
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">it with arg as new environment.</span>
+            maj_destructuring_bind(sym, arg, env)
+        } <span style="color: #569cd6;">else</span> {
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Otherwise, do an ad-hoc binding to</span>
+            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">generate the extended environment.</span>
+            maj_env_push(env, sym, arg)
+        };
+
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Proceed recursively with new environment</span>
+    maj_destructuring_bind(maj_cdr(list),
+                           maj_cdr(args),
+                           extenv)
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_bind_rec_nil</span>(<span style="color: #9cdcfe;">lambda_list</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;, <span style="color: #9cdcfe;">env</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #569cd6;">environment</span>::maj_env_push;
+    <span style="color: #569cd6;">if</span> maj_nilp(lambda_list.clone()).to_bool() {
+        <span style="color: #569cd6;">return</span> <span style="color: #4ec9b0;">Maj</span>::nil();
+    }
+
+    <span style="color: #569cd6;">match</span> <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*lambda_list.clone() {
+        <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(_) =&gt; {
+            maj_env_push(env.clone(),
+                         lambda_list.clone(),
+                         <span style="color: #4ec9b0;">Maj</span>::nil())
+        },
+        <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Cons</span> { car, cdr } =&gt; {
+            <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">extenv</span> = maj_bind_rec_nil(car.clone(), env);
+            maj_bind_rec_nil(cdr.clone(), extenv)
+        },
+        _ =&gt; <span style="color: #c586c0;">panic!</span>(<span style="color: #ce9178;">"Never try to recursively bind a list with more than symbols and conses"</span>),
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga03e26c" class="outline-2">
+<h2 id="orga03e26c"><span class="section-number-2">3.</span> <span class="todo TODO">TODO</span> Aplicação de macros</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">expand_macro</span>(
+    <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #4ec9b0;">MajState</span>,
+    <span style="color: #9cdcfe;">mac</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+    <span style="color: #9cdcfe;">args</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+    <span style="color: #9cdcfe;">env</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;
+) -&gt; (<span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;, <span style="color: #4ec9b0;">bool</span>) {
+    <span style="color: #569cd6;">if</span> maj_macrop(mac.clone()).to_bool() {
+        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">(lit macro &lt;closure&gt;)</span>
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">closure</span> = maj_car(maj_cdr(maj_cdr(mac)));
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">result</span> = maj_apply(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state,
+                               closure,
+                               args.clone(),
+                               env);
+        <span style="color: #569cd6;">if</span> maj_closurep(result.clone()).to_bool() {
+            (maj_err(
+                <span style="color: #4ec9b0;">Maj</span>::string(
+                    <span style="color: #ce9178;">"Error expanding macro expression for {}"</span>),
+                <span style="color: #c586c0;">maj_list!</span>(args)),
+             <span style="color: #569cd6;">false</span>)
+        } <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> maj_errorp(result.clone()).to_bool() {
+            (result, <span style="color: #569cd6;">false</span>)
+        } <span style="color: #569cd6;">else</span> {
+            (result, <span style="color: #569cd6;">true</span>)
+        }
+    } <span style="color: #569cd6;">else</span> {
+        (<span style="color: #4ec9b0;">Maj</span>::cons(mac, args), <span style="color: #569cd6;">false</span>)
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0e4241e" class="outline-2">
+<h2 id="org0e4241e"><span class="section-number-2">4.</span> <span class="todo TODO">TODO</span> Aplicação de primitivas</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">apply_primitive</span>(<span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #4ec9b0;">MajState</span>,
+                       <span style="color: #9cdcfe;">prim</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+                       <span style="color: #9cdcfe;">args</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+                       <span style="color: #9cdcfe;">env</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">printing</span>::maj_format;
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #4ec9b0;">MajPrimArgs</span>;
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">primitive</span> = state.find_primitive(prim.clone());
+    <span style="color: #569cd6;">match</span> primitive {
+        <span style="color: #4ec9b0;">Some</span>((function, arity)) =&gt; {
+            <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">argl</span> = maj_length(args.clone())
+                .to_integer()
+                .unwrap();
+            <span style="color: #569cd6;">match</span> *arity {
+                <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">None</span> =&gt; {
+                    <span style="color: #569cd6;">if</span> argl != 0 {
+                        maj_err(
+                            <span style="color: #4ec9b0;">Maj</span>::string(<span style="color: #ce9178;">"{} requires no arguments"</span>),
+                            <span style="color: #c586c0;">maj_list!</span>(prim))
+                    } <span style="color: #569cd6;">else</span> {
+                        function(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, <span style="color: #4ec9b0;">Maj</span>::nil(), env)
+                    }
+                },
+                <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Required</span>(n) =&gt; {
+                    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">n</span> = n <span style="color: #569cd6;">as</span> <span style="color: #4ec9b0;">i64</span>;
+                    <span style="color: #569cd6;">if</span> argl &lt; n {
+                        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Curry on argl &lt; n &amp;&amp; argl != 0.</span>
+                        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Delegate to closures</span>
+                        curry_primitive(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, prim, n, argl, args, env, <span style="color: #569cd6;">false</span>)
+                    } <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> argl &gt; n {
+                        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Fail on argl &gt; n</span>
+                        maj_err(
+                            <span style="color: #4ec9b0;">Maj</span>::string(<span style="color: #ce9178;">"Too many arguments for {}"</span>),
+                            <span style="color: #c586c0;">maj_list!</span>(prim))
+                    } <span style="color: #569cd6;">else</span> {
+                        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Apply on argl = n</span>
+                        function(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, args, env)
+                    }
+                },
+                <span style="color: #4ec9b0;">MajPrimArgs</span>::<span style="color: #4ec9b0;">Variadic</span>(n) =&gt; {
+                    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">n</span> = n <span style="color: #569cd6;">as</span> <span style="color: #4ec9b0;">i64</span>;
+                    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Check for &amp; to account for in argl.</span>
+                    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">last</span> = maj_last(args.clone());
+                    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">force_curry</span> = maj_eq(last, <span style="color: #4ec9b0;">Maj</span>::ampersand())
+                        .to_bool();
+                    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">targl</span> = <span style="color: #569cd6;">if</span> force_curry { argl - 1 } <span style="color: #569cd6;">else</span> { argl };
+
+                    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Normal and variadic currying, respectively</span>
+                    <span style="color: #569cd6;">if</span> (targl &lt; n &amp;&amp; !force_curry) ||
+                        (targl &gt; n &amp;&amp; force_curry) {
+                            <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Delegate currying to closures</span>
+                            curry_primitive(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, prim, n, targl, args, env, <span style="color: #569cd6;">true</span>)
+                        } <span style="color: #569cd6;">else</span> {
+                            function(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, args, env)
+                        }
+                },
+            }
+        },
+        _ =&gt; <span style="color: #c586c0;">panic!</span>(<span style="color: #ce9178;">"Primitive \"{}\" does not exist"</span>,
+                    maj_format(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, prim)),
+    }
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">gen_arglist</span>(<span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #4ec9b0;">MajState</span>, <span style="color: #9cdcfe;">n</span>: <span style="color: #4ec9b0;">i64</span>, <span style="color: #9cdcfe;">variadicp</span>: <span style="color: #4ec9b0;">bool</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">list</span> = <span style="color: #569cd6;">if</span> variadicp {
+        <span style="color: #4ec9b0;">Maj</span>::symbol(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, <span style="color: #ce9178;">"rest"</span>)
+    } <span style="color: #569cd6;">else</span> {
+        <span style="color: #4ec9b0;">Maj</span>::nil()
+    };
+
+    <span style="color: #569cd6;">for</span> <span style="color: #9cdcfe;">_</span> <span style="color: #569cd6;">in</span> 0..n {
+        list = <span style="color: #4ec9b0;">Maj</span>::cons(maj_gensym(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state),
+                         list.clone());
+    }
+    list
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">wrap_primitive</span>(<span style="color: #9cdcfe;">prim</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+                  <span style="color: #9cdcfe;">env</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+                  <span style="color: #9cdcfe;">arglist</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">(lit closure &lt;env&gt; &lt;arglist&gt; ((&lt;prim&gt; . &lt;arglist&gt;)))</span>
+    <span style="color: #c586c0;">maj_list!</span>(
+        <span style="color: #4ec9b0;">Maj</span>::lit(),
+        <span style="color: #4ec9b0;">Maj</span>::closure(),
+        env,
+        arglist.clone(),
+        <span style="color: #c586c0;">maj_list!</span>(
+            maj_cons(prim, arglist)))
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">curry_primitive</span>(<span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> <span style="color: #4ec9b0;">MajState</span>,
+                   <span style="color: #9cdcfe;">prim</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+                   <span style="color: #9cdcfe;">num_args</span>: <span style="color: #4ec9b0;">i64</span>,
+                   <span style="color: #9cdcfe;">num_params</span>: <span style="color: #4ec9b0;">i64</span>,
+                   <span style="color: #9cdcfe;">args</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+                   <span style="color: #9cdcfe;">env</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+                   <span style="color: #9cdcfe;">variadicp</span>: <span style="color: #4ec9b0;">bool</span>) -&gt; <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt; {
+    <span style="color: #569cd6;">if</span> num_params == 0 {
+        <span style="color: #569cd6;">return</span> maj_err(
+            <span style="color: #4ec9b0;">Maj</span>::string(
+                <span style="color: #ce9178;">"Cannot curry function without arguments"</span>),
+            <span style="color: #4ec9b0;">Maj</span>::nil());
+    }
+
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Currying a primitive function involves generating</span>
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">a wrapper closure, then performing simple application.</span>
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">arglist</span> = gen_arglist(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, num_args, variadicp);
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">wrapped</span> = wrap_primitive(prim, env.clone(), arglist);
+    maj_apply(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> state, wrapped, args, env)
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7350932" class="outline-2">
+<h2 id="org7350932"><span class="section-number-2">5.</span> <span class="todo TODO">TODO</span> Predicados auxiliares</h2>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1" role="doc-backlink">1</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+Aqui, não fazemos distinção  de a <code>lambda-list</code> ser realmente uma
+lista ou  não, pois a mesma  deve ser submetida a  regras de <i>aplicação
+parcial</i> e <i>desestruturação</i>, mas discutiremos essas regras a seguir.
+</p></div></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<p class="author">Author: Lucas S. Vieira</p>
+<p class="date">Created: 2022-10-23 dom 23:49</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

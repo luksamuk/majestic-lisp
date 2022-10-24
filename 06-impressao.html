@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+<head>
+<!-- 2022-10-23 dom 23:35 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Impressão</title>
+<meta name="author" content="Lucas S. Vieira" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="./main.css" />
+<link rel="stylesheet" type="text/css" href="./syntax.css" />
+<link id="theme-css" rel="stylesheet" type="text/css" href="./dark-theme.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:image" content="../img/cat-i-mage.jpg">
+<meta name="theme-color" content="#14171e">
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="index.html"> UP </a>
+ |
+ <a accesskey="H" href="index.html"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Impressão</h1>
+<p>
+Arquivo: <code>printing/mod.rs</code>.
+</p>
+
+<div id="outline-container-org14a1ddc" class="outline-2">
+<h2 id="org14a1ddc"><span class="section-number-2">1.</span> Importações</h2>
+<div class="outline-text-2" id="text-1">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">use</span> <span style="color: #569cd6;">std</span>::<span style="color: #569cd6;">fmt</span>::<span style="color: #4ec9b0;">Write</span>;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">gc</span>::<span style="color: #4ec9b0;">Gc</span>;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::{ <span style="color: #4ec9b0;">Maj</span>, <span style="color: #4ec9b0;">MajState</span> };
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #569cd6;">types</span>::<span style="color: #4ec9b0;">MajStream</span>;
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">predicates</span>::{
+    maj_nilp,
+    maj_stringp,
+    maj_closurep,
+    maj_primitivep,
+    maj_macrop
+};
+<span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">primitives</span>::{
+    maj_car,
+    maj_cdr
+};
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4440a07" class="outline-2">
+<h2 id="org4440a07"><span class="section-number-2">2.</span> Formatação</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org7d644fc" class="outline-3">
+<h3 id="org7d644fc"><span class="section-number-3">2.1.</span> Formatação genérica</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_format</span>(<span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">MajState</span>, <span style="color: #9cdcfe;">obj</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">String</span> {
+    maj_format_raw(state, obj, <span style="color: #569cd6;">true</span>)
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_format_raw</span>(
+    <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">MajState</span>,
+    <span style="color: #9cdcfe;">obj</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+    <span style="color: #9cdcfe;">format_read_macros</span>: <span style="color: #4ec9b0;">bool</span>
+) -&gt; <span style="color: #4ec9b0;">String</span> {
+    <span style="color: #569cd6;">match</span> <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*obj.clone() {
+        <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Sym</span>(_) =&gt; obj.symbol_name(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state),
+        <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Cons</span> { <span style="color: #9cdcfe;">car</span>: _, <span style="color: #9cdcfe;">cdr</span>: _ } =&gt;
+            maj_format_list(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, obj, format_read_macros),
+        <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Char</span>(c) =&gt; maj_format_char(*c),
+        <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Stream</span>(s) =&gt; maj_format_stream(s, obj),
+        <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(_) =&gt;
+            maj_format_vector(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, obj, format_read_macros),
+        _ =&gt; <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, obj)
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga465e42" class="outline-3">
+<h3 id="orga465e42"><span class="section-number-3">2.2.</span> Formatação de caracteres</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_format_char</span>(<span style="color: #9cdcfe;">c</span>: <span style="color: #4ec9b0;">char</span>) -&gt; <span style="color: #4ec9b0;">String</span> {
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">f</span>;
+    <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"#\\</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>,
+            <span style="color: #569cd6;">match</span> c {
+                <span style="color: #ce9178;">'\x07'</span> =&gt; <span style="color: #ce9178;">"&#9223;"</span>,
+                <span style="color: #ce9178;">' '</span> =&gt; <span style="color: #ce9178;">"space"</span>,
+                <span style="color: #ce9178;">'\n'</span> =&gt; <span style="color: #ce9178;">"newline"</span>,
+                <span style="color: #ce9178;">'\t'</span> =&gt; <span style="color: #ce9178;">"tab"</span>,
+                _ =&gt; {
+                    f = <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, c);
+                    <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>f
+                },
+            })
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org83be96a" class="outline-3">
+<h3 id="org83be96a"><span class="section-number-3">2.3.</span> Formatação de listas</h3>
+<div class="outline-text-3" id="text-2-3">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_format_list</span>(
+    <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">MajState</span>,
+    <span style="color: #9cdcfe;">list</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+    <span style="color: #9cdcfe;">rm</span>: <span style="color: #4ec9b0;">bool</span>
+) -&gt; <span style="color: #4ec9b0;">String</span> {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">predicates</span>::maj_errorp;
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">evaluator</span>::<span style="color: #569cd6;">evaluation</span>::{
+        maj_quotep,
+        maj_unquotep,
+        maj_quasiquotep,
+        maj_unquote_splice_p
+    };
+
+    <span style="color: #569cd6;">if</span> rm {
+        <span style="color: #569cd6;">if</span> maj_quotep(list.clone()).to_bool() {
+            <span style="color: #569cd6;">return</span> <span style="color: #c586c0;">format!</span>(
+                <span style="color: #ce9178;">"'</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, maj_format_raw(
+                    state,
+                    maj_car(maj_cdr(list)),
+                    rm));
+        } <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> maj_quasiquotep(list.clone()).to_bool() {
+            <span style="color: #569cd6;">return</span> <span style="color: #c586c0;">format!</span>(
+                <span style="color: #ce9178;">"`</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, maj_format_raw(
+                    state,
+                    maj_car(maj_cdr(list)),
+                    rm));
+        } <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> maj_unquotep(list.clone()).to_bool() {
+            <span style="color: #569cd6;">return</span> <span style="color: #c586c0;">format!</span>(
+                <span style="color: #ce9178;">",</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, maj_format_raw(
+                    state,
+                    maj_car(maj_cdr(list)),
+                    rm));
+        } <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> maj_unquote_splice_p(list.clone()).to_bool() {
+            <span style="color: #569cd6;">return</span> <span style="color: #c586c0;">format!</span>(
+                <span style="color: #ce9178;">",@</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, maj_format_raw(
+                    state,
+                    maj_car(maj_cdr(list)),
+                    rm));
+        }
+    }
+    
+    <span style="color: #569cd6;">if</span> maj_errorp(list.clone()).to_bool() {
+        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Handle errors</span>
+        <span style="color: #569cd6;">return</span> maj_format_error(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, list, rm);
+    } <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> maj_closurep(list.clone()).to_bool() &amp;&amp; rm {
+        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Handle closures</span>
+        <span style="color: #569cd6;">return</span> maj_format_closure(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, list, rm);
+    } <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> maj_primitivep(list.clone()).to_bool() &amp;&amp; rm {
+        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Handle primitives</span>
+        <span style="color: #569cd6;">return</span> maj_format_primitive(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, list, rm);
+    } <span style="color: #569cd6;">else</span> <span style="color: #569cd6;">if</span> maj_macrop(list.clone()).to_bool() &amp;&amp; rm {
+        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Handle macros</span>
+        <span style="color: #569cd6;">return</span> maj_format_macro(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, list, rm);
+    }
+
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Handle all other lists</span>
+    <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">buffer</span> = <span style="color: #4ec9b0;">String</span>::new();
+    <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">itr</span> = list.clone();
+    <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"("</span>).unwrap();
+    <span style="color: #569cd6;">loop</span> {
+        <span style="color: #569cd6;">match</span> <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*itr.clone() {
+            <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Cons</span> { car, cdr } =&gt; {
+                <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>,
+                       maj_format_raw(
+                           <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, car.clone(),
+                           rm))
+                    .unwrap();
+                <span style="color: #569cd6;">if</span> maj_nilp(cdr.clone()).to_bool() {
+                    <span style="color: #569cd6;">break</span>;
+                }
+                <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Cons</span> { <span style="color: #9cdcfe;">car</span>: _, <span style="color: #9cdcfe;">cdr</span>: _ } = *cdr.clone() {
+                    <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">" "</span>).unwrap();
+                    itr = cdr.clone();
+                } <span style="color: #569cd6;">else</span> {
+                    <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">" . </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>,
+                           maj_format_raw(
+                               <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, cdr.clone(),
+                               rm))
+                        .unwrap();
+                    <span style="color: #569cd6;">break</span>;
+                }
+            },
+            _ =&gt; <span style="color: #c586c0;">panic!</span>(<span style="color: #ce9178;">"Cannot print ordinary object as a list"</span>)
+        }
+    }
+    <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">")"</span>).unwrap();
+    buffer
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org344fd32" class="outline-3">
+<h3 id="org344fd32"><span class="section-number-3">2.4.</span> Formatação de vetores</h3>
+<div class="outline-text-3" id="text-2-4">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_format_vector</span>(
+    <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">MajState</span>,
+    <span style="color: #9cdcfe;">vector</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+    <span style="color: #9cdcfe;">rm</span>: <span style="color: #4ec9b0;">bool</span>
+) -&gt; <span style="color: #4ec9b0;">String</span> {
+    <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">buffer</span> = <span style="color: #4ec9b0;">String</span>::new();
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #569cd6;">types</span>::<span style="color: #4ec9b0;">MajVector</span>;
+
+    <span style="color: #569cd6;">if</span> <span style="color: #569cd6;">let</span> <span style="color: #4ec9b0;">Maj</span>::<span style="color: #4ec9b0;">Vector</span>(vector) = <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>*vector {
+        <span style="color: #569cd6;">match</span> vector {
+            <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Integer</span>(v) =&gt; {
+                <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"["</span>).unwrap();
+                <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">len</span> = v.borrow().len();
+                <span style="color: #569cd6;">for</span> (i, int) <span style="color: #569cd6;">in</span> v.borrow().iter().enumerate() {
+                    <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}{}</span><span style="color: #ce9178;">"</span>,
+                           int,
+                           <span style="color: #569cd6;">if</span> (i + 1) &lt; len {
+                               <span style="color: #ce9178;">" "</span>
+                           } <span style="color: #569cd6;">else</span> {
+                               <span style="color: #ce9178;">""</span>
+                           }).unwrap();
+                }
+                <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"]"</span>).unwrap();
+            },
+            <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Float</span>(v) =&gt; {
+                <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">utils</span>::format_raw_float;
+                <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"["</span>).unwrap();
+                <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">len</span> = v.borrow().len();
+                <span style="color: #569cd6;">for</span> (i, fl) <span style="color: #569cd6;">in</span> v.borrow().iter().enumerate() {
+                    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Bug com casas decimais?</span>
+                    <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}{}</span><span style="color: #ce9178;">"</span>,
+                           format_raw_float(*fl),
+                           <span style="color: #569cd6;">if</span> (i + 1) &lt; len {
+                               <span style="color: #ce9178;">" "</span>
+                           } <span style="color: #569cd6;">else</span> {
+                               <span style="color: #ce9178;">""</span>
+                           }).unwrap();
+                }
+                <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"]"</span>).unwrap();
+            },
+            <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Char</span>(s) =&gt; {
+                <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"\"{}\""</span>,
+                       s.borrow()).unwrap();
+            },
+            <span style="color: #4ec9b0;">MajVector</span>::<span style="color: #4ec9b0;">Any</span>(v) =&gt; {
+                <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"["</span>).unwrap();
+                <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">len</span> = v.borrow().len();
+                <span style="color: #569cd6;">for</span> (i, obj) <span style="color: #569cd6;">in</span> v.borrow().iter().enumerate() {
+                    <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}{}</span><span style="color: #ce9178;">"</span>,
+                           maj_format_raw(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, obj.clone(), rm),
+                           <span style="color: #569cd6;">if</span> (i + 1) &lt; len {
+                               <span style="color: #ce9178;">" "</span>
+                           } <span style="color: #569cd6;">else</span> {
+                               <span style="color: #ce9178;">""</span>
+                           }).unwrap();
+                }
+                <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"]"</span>).unwrap();
+            },
+        }
+    } <span style="color: #569cd6;">else</span> {
+        <span style="color: #c586c0;">panic!</span>(<span style="color: #ce9178;">"Vector printing on non-vector object"</span>);
+    }
+    buffer
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc12b7c5" class="outline-3">
+<h3 id="orgc12b7c5"><span class="section-number-3">2.5.</span> Formatação de clausuras</h3>
+<div class="outline-text-3" id="text-2-5">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_format_closure</span>(
+    <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">MajState</span>,
+    <span style="color: #9cdcfe;">closure</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+    <span style="color: #9cdcfe;">rm</span>: <span style="color: #4ec9b0;">bool</span>
+) -&gt; <span style="color: #4ec9b0;">String</span> {
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Lambda list is fourth element (cadddr).</span>
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Sorry for this ugly thing.</span>
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">lambda_list</span> = maj_car(
+        maj_cdr(maj_cdr(maj_cdr(closure.clone()))));
+    <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"#&lt;function (fn </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">) {{</span><span style="color: #ce9178; font-style: italic;">{:p}</span><span style="color: #ce9178;">}}&gt;"</span>,
+           maj_format_raw(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, lambda_list, rm),
+           <span style="color: #4ec9b0;">Gc</span>::into_raw(closure))
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgeb484d8" class="outline-3">
+<h3 id="orgeb484d8"><span class="section-number-3">2.6.</span> Formatação de macros</h3>
+<div class="outline-text-3" id="text-2-6">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_format_macro</span>(<span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">MajState</span>, <span style="color: #9cdcfe;">mac</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;, <span style="color: #9cdcfe;">rm</span>: <span style="color: #4ec9b0;">bool</span>) -&gt; <span style="color: #4ec9b0;">String</span> {
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">closure</span> = maj_car(maj_cdr(maj_cdr(mac)));
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">lambda_list</span> = maj_car(
+        maj_cdr(maj_cdr(maj_cdr(closure.clone()))));
+    <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"#&lt;macro (mac </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">) {{</span><span style="color: #ce9178; font-style: italic;">{:p}</span><span style="color: #ce9178;">}}&gt;"</span>,
+            maj_format_raw(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, lambda_list, rm),
+            <span style="color: #4ec9b0;">Gc</span>::into_raw(closure))
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6c2b45f" class="outline-3">
+<h3 id="org6c2b45f"><span class="section-number-3">2.7.</span> Formatação de primitivas</h3>
+<div class="outline-text-3" id="text-2-7">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_format_primitive</span>(
+    <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">MajState</span>,
+    <span style="color: #9cdcfe;">primitive</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+    <span style="color: #9cdcfe;">rm</span>: <span style="color: #4ec9b0;">bool</span>
+) -&gt; <span style="color: #4ec9b0;">String</span> {
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Symbol for primitive is third element (caddr)</span>
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">prim_sym</span> = maj_car(maj_cdr(maj_cdr(primitive.clone())));
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">Arity for primitive starts at fourth element (cdddr)</span>
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">prim_arity</span> = maj_cdr(maj_cdr(maj_cdr(primitive)));
+    <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"#&lt;function (prim </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;"> (arity </span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">))&gt;"</span>,
+            maj_format_raw(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, prim_sym, rm),
+            maj_format_raw(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, prim_arity, rm))
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org320c1c1" class="outline-3">
+<h3 id="org320c1c1"><span class="section-number-3">2.8.</span> Formatação de erros</h3>
+<div class="outline-text-3" id="text-2-8">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_format_error</span>(<span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">MajState</span>, <span style="color: #9cdcfe;">error</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;, <span style="color: #9cdcfe;">rm</span>: <span style="color: #4ec9b0;">bool</span>) -&gt; <span style="color: #4ec9b0;">String</span> {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">primitives</span>::maj_format_prim;
+    <span style="color: #6a9955;">// </span><span style="color: #6a9955;">(lit error fmt . rest)</span>
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">fmt</span>  = maj_car(maj_cdr(maj_cdr(error.clone())));
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">rest</span> = maj_cdr(maj_cdr(maj_cdr(error)));
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">formatted</span> = maj_format_prim(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, fmt, rest);
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">formatted</span> = maj_format_raw(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, formatted, rm);
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">len</span> = formatted.len();
+    <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>formatted[1..len-1])
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd575f20" class="outline-3">
+<h3 id="orgd575f20"><span class="section-number-3">2.9.</span> Formatação de streams</h3>
+<div class="outline-text-3" id="text-2-9">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_format_stream</span>(<span style="color: #9cdcfe;">s</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">MajStream</span>, <span style="color: #9cdcfe;">obj</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">String</span> {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">core</span>::<span style="color: #569cd6;">types</span>::<span style="color: #4ec9b0;">MajStreamDirection</span>;
+    <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"#&lt;stream (</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">) {{</span><span style="color: #ce9178; font-style: italic;">{:p}</span><span style="color: #ce9178;">}}&gt;"</span>,
+            <span style="color: #569cd6;">match</span> s.direction {
+                <span style="color: #4ec9b0;">MajStreamDirection</span>::<span style="color: #4ec9b0;">In</span>  =&gt; <span style="color: #ce9178;">"in"</span>,
+                <span style="color: #4ec9b0;">MajStreamDirection</span>::<span style="color: #4ec9b0;">Out</span> =&gt; <span style="color: #ce9178;">"out"</span>,
+            },
+            <span style="color: #4ec9b0;">Gc</span>::into_raw(obj))
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6b92226" class="outline-3">
+<h3 id="org6b92226"><span class="section-number-3">2.10.</span> <span class="todo TODO">TODO</span> Pretty printing</h3>
+<div class="outline-text-3" id="text-2-10">
+<p>
+Ligeiramente   adaptado   do  blog   de   PicoLisp,   como  visto   em
+<a href="https://picolisp.com/wiki/?prettyPrint">https://picolisp.com/wiki/?prettyPrint</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_pformat_helper</span>(
+    <span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">MajState</span>,
+    <span style="color: #9cdcfe;">obj</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;,
+    <span style="color: #9cdcfe;">ind</span>: <span style="color: #4ec9b0;">u64</span>,
+) -&gt; <span style="color: #4ec9b0;">String</span> {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">predicates</span>::maj_atomp;
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">primitives</span>::maj_length;
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">indent_max</span> = 8;
+
+    <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">buffer</span> = <span style="color: #4ec9b0;">String</span>::new();
+    <span style="color: #569cd6;">for</span> <span style="color: #9cdcfe;">_</span> <span style="color: #569cd6;">in</span> 0..ind {
+        <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">" "</span>).unwrap();
+    }
+
+    <span style="color: #569cd6;">if</span> maj_atomp(obj.clone()).to_bool()
+        || maj_stringp(obj.clone()).to_bool()
+        || (maj_length(obj.clone())
+            .to_integer()
+            .unwrap() &lt; indent_max)
+    {
+        <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>,
+               maj_format(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, obj))
+            .unwrap();
+    } <span style="color: #569cd6;">else</span> {
+        <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"("</span>).unwrap();
+        <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>,
+               maj_format(
+                   <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state,
+                   maj_car(obj.clone())))
+            .unwrap();
+        <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">itr</span> = maj_cdr(obj.clone());
+
+        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">TODO: Add check for special forms:</span>
+        <span style="color: #6a9955;">// </span><span style="color: #6a9955;">(and (member (prin1 (pop x)) *specials*)</span>
+        <span style="color: #6a9955;">//      </span><span style="color: #6a9955;">...)</span>
+        <span style="color: #569cd6;">while</span> maj_length(itr.clone())
+            .to_integer()
+            .unwrap() &gt;= indent_max
+        {
+            <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">" "</span>).unwrap();
+            itr = maj_cdr(itr);
+        }
+
+        itr = maj_cdr(obj.clone());
+        <span style="color: #569cd6;">while</span> !maj_nilp(itr.clone()).to_bool() {
+            <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"\n</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>,
+            maj_pformat_helper(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state,
+                               maj_car(itr.clone()),
+                               ind + 2))
+                   .unwrap();
+            itr = maj_cdr(itr);
+        }
+        <span style="color: #c586c0;">write!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">")"</span>).unwrap();
+    }
+    buffer
+}
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_pretty_format</span>(<span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">MajState</span>,<span style="color: #9cdcfe;">obj</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">String</span> {
+    maj_pformat_helper(state, obj, 0)
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2cfc6c4" class="outline-2">
+<h2 id="org2cfc6c4"><span class="section-number-2">3.</span> Impressão de contexto</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orga52d058" class="outline-3">
+<h3 id="orga52d058"><span class="section-number-3">3.1.</span> Impressão comum</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #c586c0;">#[cfg(not(target_arch = </span><span style="color: #ce9178;">"wasm32"</span><span style="color: #c586c0;">))]</span>
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_format_env</span>(<span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">MajState</span>, <span style="color: #9cdcfe;">env</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">String</span> {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">comfy_table</span>::*;
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">comfy_table</span>::<span style="color: #569cd6;">presets</span>::<span style="color: #4ec9b0;">UTF8_FULL</span>;
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">comfy_table</span>::<span style="color: #569cd6;">modifiers</span>::<span style="color: #4ec9b0;">UTF8_ROUND_CORNERS</span>;
+
+    <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">table</span> = <span style="color: #4ec9b0;">Table</span>::new();
+    table.load_preset(<span style="color: #4ec9b0;">UTF8_FULL</span>);
+    table.apply_modifier(<span style="color: #4ec9b0;">UTF8_ROUND_CORNERS</span>);
+    table.set_content_arrangement(<span style="color: #4ec9b0;">ContentArrangement</span>::<span style="color: #4ec9b0;">Dynamic</span>);
+    table.set_header(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #c586c0;">vec!</span>[<span style="color: #ce9178;">"Symbol"</span>, <span style="color: #ce9178;">"Value"</span>]);
+
+    <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">iter</span> = env.clone();
+    <span style="color: #569cd6;">while</span> !maj_nilp(iter.clone()).to_bool() {
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">pair</span> = maj_car(iter.clone());
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">sym</span>  = maj_car(pair.clone());
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">val</span>  = maj_cdr(pair);
+
+        table.add_row(<span style="color: #c586c0;">vec!</span>[
+            maj_format(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, sym),
+            maj_format(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, val),
+        ]);
+
+        iter = maj_cdr(iter);
+    }
+    <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, table)
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4140153" class="outline-3">
+<h3 id="org4140153"><span class="section-number-3">3.2.</span> Impressão simples (para WebAssembly)</h3>
+<div class="outline-text-3" id="text-3-2">
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #c586c0;">#[cfg(target_arch = </span><span style="color: #ce9178;">"wasm32"</span><span style="color: #c586c0;">)]</span>
+<span style="color: #c586c0;">#[inline]</span>
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_format_env_hline</span>() -&gt; <span style="color: #4ec9b0;">String</span> {
+    <span style="color: #c586c0;">format!</span>(<span style="color: #ce9178;">"+</span><span style="color: #ce9178; font-style: italic;">{:-&lt;21}</span><span style="color: #ce9178;">+</span><span style="color: #ce9178; font-style: italic;">{:-&lt;61}</span><span style="color: #ce9178;">+"</span>, <span style="color: #ce9178;">""</span>, <span style="color: #ce9178;">""</span>)
+}
+
+<span style="color: #c586c0;">#[cfg(target_arch = </span><span style="color: #ce9178;">"wasm32"</span><span style="color: #c586c0;">)]</span>
+<span style="color: #569cd6;">pub</span> <span style="color: #569cd6;">fn</span> <span style="color: #dcdcaa;">maj_format_env</span>(<span style="color: #9cdcfe;">state</span>: <span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #4ec9b0;">MajState</span>, <span style="color: #9cdcfe;">env</span>: <span style="color: #4ec9b0;">Gc</span>&lt;<span style="color: #4ec9b0;">Maj</span>&gt;) -&gt; <span style="color: #4ec9b0;">String</span> {
+    <span style="color: #569cd6;">use</span> <span style="color: #569cd6;">crate</span>::<span style="color: #569cd6;">axioms</span>::<span style="color: #569cd6;">utils</span>::truncate_format;
+    <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">buffer</span> = <span style="color: #4ec9b0;">String</span>::new();
+    <span style="color: #569cd6;">let</span> <span style="color: #569cd6;">mut</span> <span style="color: #9cdcfe;">iter</span> = env.clone();
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">_</span> =
+        <span style="color: #c586c0;">writeln!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, maj_format_env_hline())
+        .unwrap();
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">_</span> =
+        <span style="color: #c586c0;">writeln!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"|</span><span style="color: #ce9178; font-style: italic;">{:&lt;21}</span><span style="color: #ce9178;">|</span><span style="color: #ce9178; font-style: italic;">{:&lt;61}</span><span style="color: #ce9178;">|"</span>,
+                 <span style="color: #ce9178;">" Symbol"</span>, <span style="color: #ce9178;">" Value"</span>);
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">_</span> =
+        <span style="color: #c586c0;">writeln!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, maj_format_env_hline())
+        .unwrap();
+    <span style="color: #569cd6;">while</span> !maj_nilp(iter.clone()).to_bool() {
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">pair</span> = maj_car(iter.clone());
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">sym</span>  = maj_car(pair.clone());
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">val</span>  = maj_cdr(pair);
+        <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">_</span> =
+            <span style="color: #c586c0;">writeln!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer,
+                     <span style="color: #ce9178;">"| {:&lt;20}| {:&lt;60}|"</span>,
+                     truncate_format(
+                         maj_format(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, sym.clone()),
+                         20),
+                     truncate_format(
+                         maj_format(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span>state, val),
+                     60))
+            .unwrap();
+        iter = maj_cdr(iter.clone());
+    }
+    <span style="color: #569cd6;">let</span> <span style="color: #9cdcfe;">_</span> =
+        <span style="color: #c586c0;">writeln!</span>(<span style="color: #d4d4d4; background-color: #1e1e1e;">&amp;</span><span style="color: #569cd6;">mut</span> buffer, <span style="color: #ce9178;">"</span><span style="color: #ce9178; font-style: italic;">{}</span><span style="color: #ce9178;">"</span>, maj_format_env_hline())
+        .unwrap();
+    buffer
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Lucas S. Vieira</p>
+<p class="date">Created: 2022-10-23 dom 23:35</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
