@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
 <head>
-<!-- 2022-10-24 seg 00:26 -->
+<!-- 2022-10-25 ter 00:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Configurando o projeto</title>
@@ -289,8 +289,8 @@ ferramenta <code>cargo</code>.
 <div class="org-src-container">
 <pre class="src src-toml">[<span style="color: #4ec9b0;">package</span>]
 <span style="color: #9cdcfe;">name</span>        = <span style="color: #ce9178;">"majestic-lisp"</span>
-<span style="color: #9cdcfe;">version</span>     = <span style="color: #ce9178;">"0.4.0"</span>
-<span style="color: #9cdcfe;">authors</span>     = [<span style="color: #ce9178;">"Lucas Vieira <a href="mailto:lucasvieira%40protonmail.com">&lt;lucasvieira@protonmail.com&gt;</a>"</span>]
+<span style="color: #9cdcfe;">version</span>     = <span style="color: #ce9178;">"0.4.2"</span>
+<span style="color: #9cdcfe;">authors</span>     = [<span style="color: #ce9178;">"Lucas S. Vieira <a href="mailto:lucasvieira%40protonmail.com">&lt;lucasvieira@protonmail.com&gt;</a>"</span>]
 <span style="color: #9cdcfe;">description</span> = <span style="color: #ce9178;">"Lisp dialect built with Rust as a literate program"</span>
 <span style="color: #9cdcfe;">license</span>     = <span style="color: #ce9178;">"MIT"</span>
 <span style="color: #9cdcfe;">keywords</span>    = [<span style="color: #ce9178;">"lisp"</span>, <span style="color: #ce9178;">"language"</span>, <span style="color: #ce9178;">"dialect"</span>, <span style="color: #ce9178;">"interpreter"</span>]
@@ -340,9 +340,45 @@ arquivo <code>rust-toolchain</code>:
 </div>
 </div>
 
-<div id="outline-container-orgbf5f93d" class="outline-2">
-<h2 id="orgbf5f93d"><span class="section-number-2">3.</span> Compilação</h2>
+<div id="outline-container-org42ab489" class="outline-2">
+<h2 id="org42ab489"><span class="section-number-2">3.</span> Configuração para exportação de WebAssembly</h2>
 <div class="outline-text-2" id="text-3">
+<p>
+A  configuração   a  seguir  (arquivo  <code>wapm.toml</code>)   determina  a  configuração
+necessária para a publicação do pacote do Majestic Lisp no <a href="https://wapm.io/">WAPM.io</a>. Dessa forma,
+o projeto poderá também ser utilizado no <a href="https://webassembly.sh/">WebAssembly.sh</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-toml">[<span style="color: #4ec9b0;">package</span>]
+<span style="color: #9cdcfe;">name</span> = <span style="color: #ce9178;">"luksamuk/majestic-lisp"</span>
+<span style="color: #9cdcfe;">version</span> = <span style="color: #ce9178;">"0.4.2"</span>
+<span style="color: #9cdcfe;">description</span> = <span style="color: #ce9178;">"Lisp dialect built with Rust as a literate program"</span>
+<span style="color: #9cdcfe;">license</span> = <span style="color: #ce9178;">"MIT"</span>
+<span style="color: #9cdcfe;">license-file</span> = <span style="color: #ce9178;">"LICENSE"</span>
+<span style="color: #9cdcfe;">repository</span> = <span style="color: #ce9178;">"https://github.com/luksamuk/majestic-lisp"</span>
+<span style="color: #9cdcfe;">wasmer-extra-flags</span> = <span style="color: #ce9178;">"--enable-bulk-memory"</span>
+           
+[[<span style="color: #4ec9b0;">module</span>]]
+<span style="color: #9cdcfe;">name</span> = <span style="color: #ce9178;">"majestic"</span>
+<span style="color: #9cdcfe;">source</span> = <span style="color: #ce9178;">"./target/wasm32-wasi/release/majestic-lisp.wasm"</span>
+<span style="color: #9cdcfe;">abi</span> = <span style="color: #ce9178;">"wasi"</span>
+
+[<span style="color: #4ec9b0;">module.interfaces</span>]
+<span style="color: #9cdcfe;">wasi</span> = <span style="color: #ce9178;">"0.1.0-unstable"</span>
+
+[[<span style="color: #4ec9b0;">command</span>]]
+<span style="color: #9cdcfe;">name</span> = <span style="color: #ce9178;">"majestic"</span>
+<span style="color: #9cdcfe;">module</span> = <span style="color: #ce9178;">"majestic"</span>
+<span style="color: #9cdcfe;">package</span> = <span style="color: #ce9178;">"luksamuk/majestic-lisp"</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbf5f93d" class="outline-2">
+<h2 id="orgbf5f93d"><span class="section-number-2">4.</span> Compilação</h2>
+<div class="outline-text-2" id="text-4">
 <p>
 Para  compilarmos o  projeto, podemos  criar um  arquivo <code>Makefile</code>  que
 acelerará esse processo.
@@ -484,7 +520,7 @@ diretório-raiz do projeto.
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Lucas S. Vieira</p>
-<p class="date">Created: 2022-10-24 seg 00:26</p>
+<p class="date">Created: 2022-10-25 ter 00:14</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
