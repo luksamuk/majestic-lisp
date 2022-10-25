@@ -160,3 +160,25 @@ jobs:
           artifacts: "builds/majestic-lisp-x86_64.tar.gz,builds/majestic-lisp-win64.zip,builds/majestic-lisp-wasm32-wasi.tar.gz"
           token: ${{ secrets.GITHUB_TOKEN }}
 
+  wapm-release:
+    # Run only for tags
+    if: ${{ github.event_name == 'push' && contains(github.ref, 'refs/tags/') }}
+    runs-on: ubuntu-latest
+    needs: [deploy-wasi]
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      - name: Recover artifacts
+        uses: actions/download-artifact@v2
+      - name: Reposition generated WASM file
+        run: |
+          mkdir -p target/wasm32-wasi/release/
+          tar zxvf builds/majestic-lisp-wasm32-wasi.tar.gz
+          mv majestic-lisp.wasm target/wasm32-wasi/release/
+      - name: Setup Wasmer
+        uses: wasmerio/setup-wasmer@v1
+      - name: Publish to WAPM
+        uses: wasmerio/wapm-publish@v1
+        with:
+          username: ${{ secrets.WAPM_USERNAME }}
+          password: ${{ secrets.WAPM_PASSWORD }}

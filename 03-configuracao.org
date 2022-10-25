@@ -69,8 +69,8 @@ ferramenta ~cargo~.
 #+begin_src toml :tangle Cargo.toml
 [package]
 name        = "majestic-lisp"
-version     = "0.4.0"
-authors     = ["Lucas Vieira <lucasvieira@protonmail.com>"]
+version     = "0.4.2"
+authors     = ["Lucas S. Vieira <lucasvieira@protonmail.com>"]
 description = "Lisp dialect built with Rust as a literate program"
 license     = "MIT"
 keywords    = ["lisp", "language", "dialect", "interpreter"]
@@ -112,6 +112,36 @@ arquivo ~rust-toolchain~:
 
 #+begin_src text :tangle rust-toolchain
 nightly
+#+end_src
+
+* Configuração para exportação de WebAssembly
+
+A  configuração   a  seguir  (arquivo  ~wapm.toml~)   determina  a  configuração
+necessária para a publicação do pacote do Majestic Lisp no [[https://wapm.io/][WAPM.io]]. Dessa forma,
+o projeto poderá também ser utilizado no [[https://webassembly.sh/][WebAssembly.sh]].
+
+#+begin_src toml :tangle wapm.toml
+[package]
+name = "luksamuk/majestic-lisp"
+version = "0.4.2"
+description = "Lisp dialect built with Rust as a literate program"
+license = "MIT"
+license-file = "LICENSE"
+repository = "https://github.com/luksamuk/majestic-lisp"
+wasmer-extra-flags = "--enable-bulk-memory"
+           
+[[module]]
+name = "majestic"
+source = "./target/wasm32-wasi/release/majestic-lisp.wasm"
+abi = "wasi"
+
+[module.interfaces]
+wasi = "0.1.0-unstable"
+
+[[command]]
+name = "majestic"
+module = "majestic"
+package = "luksamuk/majestic-lisp"
 #+end_src
 
 * Compilação

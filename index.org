@@ -26,6 +26,22 @@ Você poderá encontrar o código  separado [[https://github.com/luksamuk/majest
 certifique-se de que *editar apenas os  arquivos .org*; nenhum arquivo de código
 deverá ser editado diretamente.
 
+* Execução do projeto no browser
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+*NOVO!* Você poderá agora executar o  projeto em sua versão mais estável através
+do [[https://webassembly.sh][WebAssembly.sh]]. Para tanto, acesse o site e, no console que abre, digite:
+
+#+begin_src bash :tangle no :eval no
+wapm install luksamuk/majestic-lisp
+majestic
+#+end_src
+
+O projeto ainda  é um pouco delicado,  e por enquanto pede input  através de uma
+janela no console, mas você poderá utilizá-lo como teste.
+
 * Licenciamento
 :PROPERTIES:
 :UNNUMBERED: t

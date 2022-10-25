@@ -17,7 +17,7 @@ Manual do ~troff~[fn:1].
 #+begin_src nroff
 .\" Majestic Lisp manpage
 .\" Copyright (c) 2020-2021 Lucas S. Vieira
-.TH majestic 1 "Updated 2022-10-24" "majestic-0.4.0" "MAJESTIC"
+.TH majestic 1 "Updated 2022-10-25" "majestic-0.4.2" "MAJESTIC"
 #+end_src
 
 ** Nome

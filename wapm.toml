@@ -1,0 +1,21 @@
+[package]
+name = "luksamuk/majestic-lisp"
+version = "0.4.2"
+description = "Lisp dialect built with Rust as a literate program"
+license = "MIT"
+license-file = "LICENSE"
+repository = "https://github.com/luksamuk/majestic-lisp"
+wasmer-extra-flags = "--enable-bulk-memory"
+           
+[[module]]
+name = "majestic"
+source = "./target/wasm32-wasi/release/majestic-lisp.wasm"
+abi = "wasi"
+
+[module.interfaces]
+wasi = "0.1.0-unstable"
+
+[[command]]
+name = "majestic"
+module = "majestic"
+package = "luksamuk/majestic-lisp"

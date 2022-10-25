@@ -5,3 +5,5 @@ target/
 .majestic_history
 test-streams-in.txt
 test-streams-out.txt
+
+wapm_packages
