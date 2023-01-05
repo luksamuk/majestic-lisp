@@ -3,7 +3,7 @@ OBJTYPE=`uname -m`
 
 all: bin
 
-buildall: bin wasm win64
+buildall: bin wasm win64 riscv64
 
 release: PROFILE += --release
 release: buildall
@@ -16,6 +16,9 @@ release-wasm: wasm
 
 release-win64: PROFILE += --release
 release-win64: win64
+
+release-riscv64: PROFILE += --release
+release-riscv64: riscv64
 
 bin:
 	cargo build ${PROFILE}
@@ -47,6 +50,9 @@ win64:
 	cargo build ${PROFILE} --target \
 		"x86_64-pc-windows-gnu" \
 		--features dumb_terminal
+
+riscv64:
+	cross build ${PROFILE} --target "riscv64gc-unknown-linux-gnu"
 
 wasmrun:
 	cargo wasi run ${PROFILE}
