@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
 <head>
-<!-- 2022-10-25 ter 00:14 -->
+<!-- 2023-01-27 sex 22:44 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Configurando o projeto</title>
@@ -420,6 +420,16 @@ System Interface)<sup><a id="fnr.4" class="footref" href="#fn.4" role="doc-backl
 </div>
 
 <p>
+Caso  você queira  também  compilar  para RISC-V  64-bit,  instale a  ferramenta
+<code>cross</code>.  <b>Note que  você precisará  ter  instalado o  Docker ou  o Podman  para
+usá-la</b>:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">cargo install cross
+</pre>
+</div>
+
+<p>
 A  seguir, especificamos  um arquivo  <code>Makefile</code>, de  nome homônimo,  no
 diretório-raiz do projeto.
 </p>
@@ -430,7 +440,7 @@ diretório-raiz do projeto.
 
 <span style="color: #dcdcaa;">all</span>: bin
 
-<span style="color: #dcdcaa;">buildall</span>: bin wasm win64
+<span style="color: #dcdcaa;">buildall</span>: bin wasm win64 riscv64
 
 <span style="color: #dcdcaa;">release</span>: <span style="color: #9cdcfe;">PROFILE</span> += --release
 <span style="color: #dcdcaa;">release</span>: buildall
@@ -443,6 +453,9 @@ diretório-raiz do projeto.
 
 <span style="color: #dcdcaa;">release-win64</span>: <span style="color: #9cdcfe;">PROFILE</span> += --release
 <span style="color: #dcdcaa;">release-win64</span>: win64
+
+<span style="color: #dcdcaa;">release-riscv64</span>: <span style="color: #9cdcfe;">PROFILE</span> += --release
+<span style="color: #dcdcaa;">release-riscv64</span>: riscv64
 </pre>
 </div>
 
@@ -477,6 +490,9 @@ diretório-raiz do projeto.
         cargo build ${<span style="color: #9cdcfe;">PROFILE</span>} --target \
                 <span style="color: #ce9178;">"x86_64-pc-windows-gnu"</span> \
                 --features dumb_terminal
+
+<span style="color: #dcdcaa;">riscv64</span>:
+        cross build ${<span style="color: #9cdcfe;">PROFILE</span>} --target <span style="color: #ce9178;">"riscv64gc-unknown-linux-gnu"</span>
 
 <span style="color: #dcdcaa;">wasmrun</span>:
         cargo wasi run ${<span style="color: #9cdcfe;">PROFILE</span>}
@@ -520,7 +536,7 @@ diretório-raiz do projeto.
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Lucas S. Vieira</p>
-<p class="date">Created: 2022-10-25 ter 00:14</p>
+<p class="date">Created: 2023-01-27 sex 22:44</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
