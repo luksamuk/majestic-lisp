@@ -23,7 +23,7 @@ podTemplate(containers: [
 
 		stage('Empacotamento') {
 		    sh '''
-                        cp target/release/majestic-list majestic-lisp
+                        cp target/release/majestic-lisp majestic-lisp
                         MAJESTIC_VERSION=`grep version Cargo.toml | awk '{print $3}' | tr -d '"'`
                         tar -czvf "majestic-lisp-${MAJESTIC_VERSION}.tar.gz" majestic-lisp
                         rm majestic-lisp
