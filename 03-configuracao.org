@@ -111,7 +111,7 @@ tanto, basta adicionarmos  o canal e a  data da versão do  mesmo em um
 arquivo ~rust-toolchain~:
 
 #+begin_src text :tangle rust-toolchain
-nightly
+nightly-2023-01-27
 #+end_src
 
 * Configuração para exportação de WebAssembly
