@@ -19,7 +19,7 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
         with:
           profile: minimal
-          toolchain: nightly
+          toolchain: nightly-2023-01-27
       - name: Checkout Repo
         uses: actions/checkout@v3
       # TODO: Tangle .org files using Emacs
@@ -41,7 +41,7 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
         with:
           profile: minimal
-          toolchain: nightly
+          toolchain: nightly-2023-01-27
           override: true
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -81,7 +81,7 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
         with:
           profile: minimal
-          toolchain: nightly
+          toolchain: nightly-2023-01-27
           target: x86_64-pc-windows-gnu
           override: true
       - name: Checkout Repo
@@ -119,7 +119,7 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
         with:
           profile: minimal
-          toolchain: nightly
+          toolchain: nightly-2023-01-27
       - name: Install Cargo WASI
         uses: actions-rs/cargo@v1
         with:
